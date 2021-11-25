@@ -5,13 +5,7 @@ import * as JFormDB from "JContainers/JFormDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
-import {
-  defaultType,
-  GetModest,
-  GetSkimpy,
-  GetSkimpyData,
-  GetSlip,
-} from "skimpify-api"
+import { defaultType, GetModest, GetSkimpy } from "skimpify-api"
 import {
   Actor,
   Armor,

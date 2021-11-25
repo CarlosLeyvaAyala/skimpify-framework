@@ -1,8 +1,8 @@
 import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
 import { DebugLib, FormLib } from "DmLib"
-import { SkimpyType } from "skimpify-api"
-import { Actor, Armor, Game, printConsole, writeLogs } from "skyrimPlatform"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
+import { GetSkimpyData, SkimpyType } from "skimpify-api"
+import { Actor, Armor, Game } from "skyrimPlatform"
 
 const LogR = DebugLib.Log.R
 
@@ -107,7 +107,7 @@ function ProcessMatches(
       })
 
     if (!CheckFor(s)) return false
-    LogI(`*** ${m[fIdx].name} is a ${s} variant\n`)
+    LogI(`*** ${m[fIdx].name} is a(n) ${s} variant\n`)
 
     MakeChild(m[0], m[fIdx], rel, output)
 
@@ -121,24 +121,44 @@ function ProcessMatches(
 
   // Test for relationships with next elements. Give priority to items with names containing "slut"
   if (TestWord("slut")) return
+  if (TestWord("xtra")) return
   if (TestWord("damage", SkimpyType.damage)) return
   if (TestWord("naked")) return
   if (TestWord("nude")) return
 
+  LogI(`--- No relationship found between elements in this list.`)
   LogI(
-    "--- No relationship found between elements in this list. Did this framework's author forget to check for some particular word?\n"
+    "Did this framework's author forget to check for some particular word?\n"
   )
 }
 
 type RawMap = Map<string, ArmorData[]>
 
+function RelAlreadyExists(p: ArmorData, c: ArmorData, r: SkimpyType) {
+  const { armor, kind } = GetSkimpyData(p.armor)
+  const L = () => {
+    LogI(
+      `-- Relationship changed from ${p.name} -> ${armor?.getName()}. To ${
+        p.name
+      } -> ${c.name}`
+    )
+  }
+  // Child is different to what was already registered. Return new relationship.
+  if (armor && armor.getFormID() !== c.armor.getFormID()) return LogR(L(), r)
+  // Return old relationship if it exists. Otherwise, return new.
+  return kind ? kind : r
+}
+
 function MakeChild(
   parent: ArmorData,
   child: ArmorData,
-  rel: SkimpyType,
+  relationship: SkimpyType,
   output: RawMap
 ) {
-  // FIX: Agregar la relación correcta si ésta ya existe
+  // Test if relationship already exists.
+  const rel = RelAlreadyExists(parent, child, relationship)
+
+  // Add keys to the json file they should be output to.
   const AddKey = (k: string) => {
     if (!output.has(k))
       output.set(LogVT("Adding key to file output map", k), [])
@@ -152,10 +172,10 @@ function MakeChild(
   child.prev = parent.uId
   child.prevT = rel
   LogI(
-    `${child.name} is now registered as a skimpy version of ${parent.name}. Type: ${rel}.\n`
+    `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${rel}.\n`
   )
 
-  // Add values
+  // Add values. These will be the ones to be exported to json.
   const AddVal = (d: ArmorData) => {
     const k = d.esp
     const a = output.get(k) as ArmorData[]
@@ -168,10 +188,12 @@ function MakeChild(
 }
 
 function RawDataToJson(d: RawMap) {
+  /** Helper object to be able to easily save to json. */
   interface ArmorI {
     [key: string]: OutputData
   }
 
+  /** Transforms an ArmorData[] to an object with armor unique ids as object properties. */
   const Transform = (x: ArmorData[]) => {
     const o: OutputData[] = x.map((v) => {
       return {

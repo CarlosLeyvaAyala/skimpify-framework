@@ -20,6 +20,8 @@ import { Armor, FormType } from "skyrimPlatform"
  *
  * Some armors have damaged versions, others are more like nip/pussy slips
  * and yet others are armor variants with missing parts (but not damaged per se).
+ *
+ * @todo {@link GetType} must be changed each time this enum changes.
  */
 export const enum SkimpyType {
   /** The `Armor` is basically the same, but moved/open to be revealing.
@@ -61,8 +63,8 @@ export const enum SkimpyType {
 export interface SkimpyData {
   /** The `Armor` to change to. `null` if it doesn't exist. */
   armor: Armor | null
-  /** What kind of "skimpification" the change entails. */
-  kind: SkimpyType
+  /** What kind of "skimpification" the change entails. `null` if no change exist. */
+  kind: SkimpyType | null
 }
 
 /** Shortcut to `Armor | null | undefined`, because it gets tedious to write it
@@ -88,10 +90,20 @@ export function GetSkimpy(a: ArmorArg) {
   return Get(a, "next")
 }
 
+/** Returns what kind of change an `Armor` has with its modest version.
+ *
+ * @param a `Armor` to see how it changes.
+ * @returns The kind of change. `null` if there's no modest version.
+ */
 export function GetModestType(a: ArmorArg) {
   return GetType(a, "prev")
 }
 
+/** Returns what kind of change an `Armor` has with its skimpier version.
+ *
+ * @param a `Armor` to see how it changes.
+ * @returns The kind of change. `null` if there's no skimpier version.
+ */
 export function GetSkimpyType(a: ArmorArg) {
   return GetType(a, "next")
 }
@@ -113,7 +125,7 @@ export function GetModestData(a: ArmorArg): SkimpyData {
  * @returns The {@link SkimpyData} for the skimpy version of `a`.
  * The `armor` part of that data may be `null` if said armor doesn't exist.
  */
-export function GetSkimpyData(a: ArmorArg) {
+export function GetSkimpyData(a: ArmorArg): SkimpyData {
   return { armor: GetSkimpy(a), kind: GetSkimpyType(a) }
 }
 
@@ -162,9 +174,13 @@ function Get(a: ArmorArg, key: keyType) {
 }
 
 function GetType(a: ArmorArg, key: keyType) {
-  if (!a) return SkimpyType.change
+  if (!a) return null
   const r = JFormDB.solveStr(a, `${fwKey}.${key}T`, defaultType)
-  return r === "slip" ? SkimpyType.slip : SkimpyType.change
+  return r === "slip"
+    ? SkimpyType.slip
+    : r === "damage"
+    ? SkimpyType.damage
+    : SkimpyType.change
 }
 
 function NextByType(a: ArmorArg, t: SkimpyType) {
