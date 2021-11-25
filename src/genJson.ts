@@ -131,7 +131,6 @@ function ProcessMatches(
 }
 
 type RawMap = Map<string, ArmorData[]>
-// type FileMap = Map<string, ArmorData[]>
 
 function MakeChild(
   parent: ArmorData,
@@ -193,7 +192,5 @@ function RawDataToJson(d: RawMap) {
   for (const e of d.entries()) {
     const f = `data/SKSE/Plugins/Skimpify Framework/${e[0]}.json`
     WriteToFile(f, Transform(e[1]), false, false)
-    // writeLogs(f, "!!!!!!!!!!!!!!!!!!!!!")
-    // writeLogs(f, Transform(e[1]))
   }
 }
