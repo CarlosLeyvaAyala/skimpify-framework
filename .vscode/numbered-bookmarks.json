@@ -8,8 +8,8 @@
 					"column": 0
 				},
 				{
-					"line": 77,
-					"column": 12
+					"line": 183,
+					"column": 9
 				},
 				{
 					"line": -1,
@@ -91,6 +91,51 @@
 			]
 		},
 		{
+			"path": "../../../../Steam/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib.ts",
+			"bookmarks": [
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": 442,
+					"column": 12
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				}
+			]
+		},
+		{
 			"path": "../../../../Steam/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api.ts",
 			"bookmarks": [
 				{
@@ -98,8 +143,53 @@
 					"column": 0
 				},
 				{
-					"line": 155,
-					"column": 32
+					"line": 170,
+					"column": 10
+				},
+				{
+					"line": 239,
+					"column": 43
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": -1,
+					"column": 0
+				}
+			]
+		},
+		{
+			"path": "../Armor sets in Skyrim/scripts/source/DM_ArmorSets_SpellScript.psc",
+			"bookmarks": [
+				{
+					"line": -1,
+					"column": 0
+				},
+				{
+					"line": 308,
+					"column": 11
 				},
 				{
 					"line": -1,

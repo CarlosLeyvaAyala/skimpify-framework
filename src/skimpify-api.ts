@@ -154,12 +154,23 @@ export function AddChangeRel(
   change: ChangeType = ChangeType.change
 ) {
   if (!modest || !skimpy) return
-  const S = (a1: Armor, a2: Armor, r: RelType) => {
-    JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
-    JFormDB.solveStrSetter(a1, ChangeK(r), change, true) // Save change type
+  SetRel(modest, skimpy, "next", change)
+  SetRel(skimpy, modest, "prev", change)
+}
+
+/** Clears all _Change Relationships_ of some armor.
+ *
+ * @param a Armor to clear relationship to.
+ */
+export function ClearChangeRel(a: ArmorArg) {
+  const C = (parent: ArmorArg, child: ArmorArg) => {
+    if (!parent || !child) return
+    SetRel(parent, null, "next", ChangeType.change)
+    SetRel(child, null, "prev", ChangeType.change)
   }
-  S(modest, skimpy, "next")
-  S(skimpy, modest, "prev")
+
+  C(GetModest(a), a)
+  C(a, GetSkimpy(a))
 }
 
 /***
@@ -222,4 +233,9 @@ function NextByType(a: ArmorArg, t: ChangeType) {
   if (!aa) return null
   if (GetSkimpyType(a) === t) return aa
   return null
+}
+
+const SetRel = (a1: ArmorArg, a2: ArmorArg, r: RelType, c: ChangeType) => {
+  JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
+  JFormDB.solveStrSetter(a1, ChangeK(r), c, true) // Save change type
 }
