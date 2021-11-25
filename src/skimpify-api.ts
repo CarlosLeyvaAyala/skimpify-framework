@@ -15,6 +15,10 @@ import { Actor, Armor } from "skyrimPlatform"
  *  Use them as you please.
  */
 
+//  ;>========================================================
+//  ;>===                  DEFINITIONS                   ===<;
+//  ;>========================================================
+
 /** Type of armor changes there are.
  *
  * @remarks
@@ -72,11 +76,28 @@ export interface SkimpyData {
   kind: ChangeType | null
 }
 
+/** All equipped armors with their modest/skimpy counterparts. */
+export interface EquippedData {
+  current: SkimpyData[]
+  next: SkimpyData[]
+}
+
 /** Shortcut to `Armor | null | undefined`, because it gets tedious to write it
  * over and over.
  */
 export type ArmorArg = Armor | null | undefined
+
+/** Shortcut to `Actor | null | undefined`, because it gets tedious to write it
+ * over and over.
+ */
 export type ActorArg = Actor | null | undefined
+
+/** A function that takes an `Armor` and returns some of its {@link SkimpyData}. */
+export type SkimpyFunc = (a: ArmorArg) => SkimpyData
+
+// ;>========================================================
+// ;>===                ARMOR FUNCTIONS                 ===<;
+// ;>========================================================
 
 /** Returns the closest _modest version_ of an `Armor`.
  *
@@ -135,29 +156,39 @@ export function GetSkimpyData(a: ArmorArg): SkimpyData {
   return { armor: GetSkimpy(a), kind: GetSkimpyType(a) }
 }
 
+/** @experimental From all equipped armors, returns all the ones that have
+ * skimpier versions.
+ *
+ * @remarks
+ * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
+ * it's not recommended to be used in real production code as long as it has not been
+ * optimized.
+ *
+ * However, it can be safely used sparingly.
+ *
+ * @param a Actor to check armors from.
+ * @returns An array with all equipped armors that have an skimpy version and the
+ * array with those versions.
+ */
 export const GetAllSkimpy = (a: ActorArg) =>
   GetAll(a, GetSkimpyData, GetModestData)
 
+/** @experimental From all equipped armors, returns all the ones that have
+ * more modest versions.
+ *
+ * @remarks
+ * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
+ * it's not recommended to be used in real production code as long as it has not been
+ * optimized.
+ *
+ * However, it can be safely used sparingly.
+ *
+ * @param a Actor to check armors from.
+ * @returns An array with all equipped armors that have a modest version and the
+ * array with those versions.
+ */
 export const GetAllModest = (a: ActorArg) =>
   GetAll(a, GetModestData, GetSkimpyData)
-
-export interface AllData {
-  current: SkimpyData[]
-  next: SkimpyData[]
-}
-
-type SkimpyFunc = (a: ArmorArg) => SkimpyData
-
-export function GetAll(
-  a: ActorArg,
-  Next: SkimpyFunc,
-  Curr: SkimpyFunc
-): AllData {
-  const aa = FormLib.GetEquippedArmors(a)
-  const n = aa.map((v) => Next(v)).filter((v) => v.armor)
-  const c = n.map((v) => Curr(v.armor))
-  return { current: c, next: n }
-}
 
 /** If the skimpy version of an `armor` is a slip, returns it.
  *
@@ -168,7 +199,11 @@ export function GetSlip(a: ArmorArg) {
   return NextByType(a, ChangeType.slip)
 }
 
-/** Adds a change relationship between two armors.\
+// ;>========================================================
+// ;>===             RELATIONSHIP FUNCTIONS             ===<;
+// ;>========================================================
+
+/** Adds a _Change Relationship_ between two armors.\
  * ***WARNING***: this relationship is saved to the game.
  *
  * @param modest More modest version of some armor.
@@ -223,7 +258,7 @@ type RelType = "next" | "prev"
 /** Default type to assume what an armor version is when it has no associated/valid type. */
 export const defaultType = ChangeType.change
 
-/** Direct handle to the JContainers DB. Don't touch this if you don't know what you are doing. */
+/** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
 export const DbHandle = () => JDB.solveObj(fwKey)
 
 /** Key used to save values added by this framework. */
@@ -268,4 +303,31 @@ function NextByType(a: ArmorArg, t: ChangeType) {
 const SetRel = (a1: ArmorArg, a2: ArmorArg, r: RelType, c: ChangeType) => {
   JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
   JFormDB.solveStrSetter(a1, ChangeK(r), c, true) // Save change type
+}
+
+/** @experimental From all equipped armors, returns all the ones that have
+ * other versions.
+ *
+ * @remarks
+ * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
+ * it's not recommended to be used in real production code as long as it has not been
+ * optimized.
+ *
+ * However, it can be safely used sparingly.
+ *
+ * @param a Actor to check armors from.
+ * @param Next Function that will get the other versions.
+ * @param Curr Function that returns the opposite of `Next`.
+ * @returns An array with all equipped armors that have another version and the
+ * array with those versions.
+ */
+export function GetAll(
+  a: ActorArg,
+  Next: SkimpyFunc,
+  Curr: SkimpyFunc
+): EquippedData {
+  const aa = FormLib.GetEquippedArmors(a)
+  const n = aa.map((v) => Next(v)).filter((v) => v.armor)
+  const c = n.map((v) => Curr(v.armor))
+  return { current: c, next: n }
 }
