@@ -1,3 +1,4 @@
+import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
 import { Armor } from "skyrimPlatform"
 
@@ -195,6 +196,9 @@ type RelType = "next" | "prev"
 
 /** Default type to assume what an armor version is when it has no associated/valid type. */
 export const defaultType = ChangeType.change
+
+/** Direct handle to the JContainers DB. Don't touch this if you don't know what you are doing. */
+export const DbHandle = () => JDB.solveObj(fwKey)
 
 /** Key used to save values added by this framework. */
 const fwKey = ".Skimpify-Framework"

@@ -1,14 +1,15 @@
 import { DebugLib, FormLib, Hotkeys, Misc } from "DmLib"
-import { AutoGenArmors } from "genJson"
+import { AutoGenArmors, SaveJson } from "genJson"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
 import * as JMap from "JContainers/JMap"
-import { JMapL } from "JContainers/JTs"
+import { JFormMapL, JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
 import {
   AddChangeRel,
   ChangeType,
   ClearChangeRel,
+  DbHandle,
   defaultType,
   GetModest,
   GetModestData,
@@ -52,10 +53,10 @@ let mModest = storage[kMModest] as number | -1
 export function main() {
   printConsole("Skimpify Framework successfully initialized.")
 
-  on("loadGame", () => {
-    InitPlugin()
-    allowInit = SIni(true)
-  })
+  // on("loadGame", () => {
+  //   InitPlugin()
+  //   allowInit = SIni(true)
+  // })
 
   // once("update", () => {
   //   if (allowInit || !WasInitialized()) InitPlugin()
@@ -63,7 +64,7 @@ export function main() {
 
   function InitPlugin() {
     LoadArmors()
-    MarkInitialized()
+    // MarkInitialized()
   }
 
   const Test = () => {
@@ -116,6 +117,8 @@ export function main() {
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G)
   const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z)
 
+  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q)
+
   const L = Hotkeys.ListenTo(DxScanCode.RightControl)
   const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl)
 
@@ -127,7 +130,9 @@ export function main() {
     OnMarkDamage(Mark.Damage)
     OnDebugEquipped(Mark.DebugOne)
 
+    OnSaveJson(SaveJson)
     OnGen(AutoGenArmors)
+
     L(Test)
   })
 }

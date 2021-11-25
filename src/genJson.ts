@@ -1,8 +1,15 @@
+import { JFormMapL, JMapL } from "JContainers/JTs"
 import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
 import { DebugLib, FormLib } from "DmLib"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
-import { GetSkimpyData, ChangeType, AddChangeRel } from "skimpify-api"
-import { Actor, Armor, Game } from "skyrimPlatform"
+import {
+  GetSkimpyData,
+  ChangeType,
+  AddChangeRel,
+  DbHandle,
+  GetSkimpy,
+} from "skimpify-api"
+import { Actor, Armor, Game, printConsole } from "skyrimPlatform"
 
 const LogR = DebugLib.Log.R
 
@@ -18,12 +25,25 @@ interface ArmorData {
   prevT?: ChangeType
 }
 
-interface OutputData {
-  name: string
-  next?: string
-  nextT?: ChangeType
-  prev?: string
-  prevT?: ChangeType
+/** Key = Filename where an Armor was defined. Values: List of all armors for some file. */
+type RawMap = Map<string, ArmorData[]>
+
+export function SaveJson() {
+  const m: RawMap = new Map()
+
+  JFormMapL.ForAllKeys(DbHandle(), (k) => {
+    const a = Armor.from(k)
+    if (!a) return
+    const ad = ArmorToData(a)
+    const c = GetSkimpy(a)
+    if (!c) return
+    const cd = ArmorToData(c)
+
+    if (!cd || !ad) return
+    MakeChild(ad, cd, ChangeType.change, m, false)
+  })
+
+  RawDataToJson(m)
 }
 
 export function AutoGenArmors() {
@@ -41,17 +61,26 @@ function GetInventoryArmors() {
   const r: ArmorData[] = new Array()
 
   FormLib.ForEachArmorR(Game.getPlayer() as Actor, (a) => {
-    const info = FormLib.GetFormEspAndId(a)
-    if (a.isPlayable())
-      r.push({
-        esp: info.modName,
-        name: LogNT("", a.getName()),
-        id: info.fixedFormId,
-        armor: a,
-        uId: LogNT("", `${info.modName}|${info.fixedFormId.toString(16)}`, L),
-      })
+    const d = ArmorToData(a)
+    if (d) r.push(d)
   })
+
   return r.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function ArmorToData(a: Armor): ArmorData | null {
+  const L = (uID: string) => `${uID}\n`
+
+  if (!a.isPlayable() || a.getName() === "") return null
+  const info = FormLib.GetFormEspAndId(a)
+
+  return {
+    esp: info.modName,
+    name: LogNT("", a.getName()),
+    id: info.fixedFormId,
+    armor: a,
+    uId: LogNT("", `${info.modName}|${info.fixedFormId.toString(16)}`, L),
+  }
 }
 
 function GenSkimpyGroupsByName(armors: ArmorData[]) {
@@ -132,8 +161,6 @@ function ProcessMatches(
   )
 }
 
-type RawMap = Map<string, ArmorData[]>
-
 function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeType) {
   const { armor, kind } = GetSkimpyData(p.armor)
   const L = () => {
@@ -153,9 +180,10 @@ function MakeChild(
   parent: ArmorData,
   child: ArmorData,
   relationship: ChangeType,
-  output: RawMap
+  output: RawMap,
+  saveToMem: boolean = true
 ) {
-  // Test if change relationship already exists.
+  // Test if Change Relationship already exists.
   const change = ChangeExists(parent, child, relationship)
 
   // Add keys to the json file they should be output to.
@@ -171,8 +199,10 @@ function MakeChild(
   parent.nextT = change
   child.prev = parent.uId
   child.prevT = change
+
   // Add it to memory, so player can test changes right away
-  AddChangeRel(parent.armor, child.armor, change)
+  if (saveToMem) AddChangeRel(parent.armor, child.armor, change)
+
   LogI(
     `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${change}.\n`
   )
@@ -190,6 +220,14 @@ function MakeChild(
 }
 
 function RawDataToJson(d: RawMap) {
+  interface OutputData {
+    name: string
+    next?: string
+    nextT?: ChangeType
+    prev?: string
+    prevT?: ChangeType
+  }
+
   /** Helper object to be able to easily save to json. */
   interface ArmorI {
     [key: string]: OutputData
