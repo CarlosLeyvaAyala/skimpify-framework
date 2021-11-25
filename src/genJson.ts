@@ -1,7 +1,7 @@
 import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
 import { DebugLib, FormLib } from "DmLib"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
-import { GetSkimpyData, SkimpyType } from "skimpify-api"
+import { GetSkimpyData, ChangeType, AddChangeRel } from "skimpify-api"
 import { Actor, Armor, Game } from "skyrimPlatform"
 
 const LogR = DebugLib.Log.R
@@ -13,20 +13,20 @@ interface ArmorData {
   armor: Armor
   uId: string
   next?: string
-  nextT?: SkimpyType
+  nextT?: ChangeType
   prev?: string
-  prevT?: SkimpyType
+  prevT?: ChangeType
 }
 
 interface OutputData {
   name: string
   next?: string
-  nextT?: SkimpyType
+  nextT?: ChangeType
   prev?: string
-  prevT?: SkimpyType
+  prevT?: ChangeType
 }
 
-export function SaveArmors() {
+export function AutoGenArmors() {
   LogN("\n")
   LogN("=================================")
   LogN("Generating armors for exporting")
@@ -94,7 +94,7 @@ function ProcessMatches(
   /** If some element of the list contains some word, adds a relationship with
    * both the start of this list and that element.
    */
-  const TestWord = (s: string, rel: SkimpyType = SkimpyType.change) => {
+  const TestWord = (s: string, rel: ChangeType = ChangeType.change) => {
     const l = baseNameLength
     let fIdx = 0
 
@@ -122,7 +122,7 @@ function ProcessMatches(
   // Test for relationships with next elements. Give priority to items with names containing "slut"
   if (TestWord("slut")) return
   if (TestWord("xtra")) return
-  if (TestWord("damage", SkimpyType.damage)) return
+  if (TestWord("damage", ChangeType.damage)) return
   if (TestWord("naked")) return
   if (TestWord("nude")) return
 
@@ -134,7 +134,7 @@ function ProcessMatches(
 
 type RawMap = Map<string, ArmorData[]>
 
-function RelAlreadyExists(p: ArmorData, c: ArmorData, r: SkimpyType) {
+function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeType) {
   const { armor, kind } = GetSkimpyData(p.armor)
   const L = () => {
     LogI(
@@ -152,11 +152,11 @@ function RelAlreadyExists(p: ArmorData, c: ArmorData, r: SkimpyType) {
 function MakeChild(
   parent: ArmorData,
   child: ArmorData,
-  relationship: SkimpyType,
+  relationship: ChangeType,
   output: RawMap
 ) {
-  // Test if relationship already exists.
-  const rel = RelAlreadyExists(parent, child, relationship)
+  // Test if change relationship already exists.
+  const change = ChangeExists(parent, child, relationship)
 
   // Add keys to the json file they should be output to.
   const AddKey = (k: string) => {
@@ -168,11 +168,13 @@ function MakeChild(
 
   // Add relationship
   parent.next = child.uId
-  parent.nextT = rel
+  parent.nextT = change
   child.prev = parent.uId
-  child.prevT = rel
+  child.prevT = change
+  // Add it to memory, so player can test changes right away
+  AddChangeRel(parent.armor, child.armor, change)
   LogI(
-    `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${rel}.\n`
+    `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${change}.\n`
   )
 
   // Add values. These will be the ones to be exported to json.

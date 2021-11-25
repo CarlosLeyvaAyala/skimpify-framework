@@ -1,5 +1,5 @@
 import * as JFormDB from "JContainers/JFormDB"
-import { Armor, FormType } from "skyrimPlatform"
+import { Armor } from "skyrimPlatform"
 
 /***
  *     █████╗ ██████╗ ██╗
@@ -21,9 +21,11 @@ import { Armor, FormType } from "skyrimPlatform"
  * Some armors have damaged versions, others are more like nip/pussy slips
  * and yet others are armor variants with missing parts (but not damaged per se).
  *
- * @todo {@link GetType} must be changed each time this enum changes.
+ * This enum represents what kind of change relationship an `Armor` has with another one.
+ *
+ * @todo {@link GetChange} must be changed each time this enum changes.
  */
-export const enum SkimpyType {
+export const enum ChangeType {
   /** The `Armor` is basically the same, but moved/open to be revealing.
    *
    * An unbuttoned bra is a good candidate to be registered as this type.
@@ -53,8 +55,9 @@ export const enum SkimpyType {
    * I know you will use this for, you predictable bastard.
    *
    * @remarks
-   * This kind of armor shouldn't be automatically restored by your mod, otherwise it
-   * will just look dumb.
+   * This kind of change shouldn't be automatically restored by your mod, otherwise it
+   * will just look dumb.\
+   * That's unless you add an armor repair mechanic, of course.
    */
   damage = "damage",
 }
@@ -64,7 +67,7 @@ export interface SkimpyData {
   /** The `Armor` to change to. `null` if it doesn't exist. */
   armor: Armor | null
   /** What kind of "skimpification" the change entails. `null` if no change exist. */
-  kind: SkimpyType | null
+  kind: ChangeType | null
 }
 
 /** Shortcut to `Armor | null | undefined`, because it gets tedious to write it
@@ -78,7 +81,7 @@ type ArmorArg = Armor | null | undefined
  * @returns An `Armor`, or `null | undefined` if the modest version doesn't exist.
  */
 export function GetModest(a: ArmorArg) {
-  return Get(a, "prev")
+  return GetArmor(a, "prev")
 }
 
 /** Returns the closest _skimpy version_ of an `Armor`.
@@ -87,7 +90,7 @@ export function GetModest(a: ArmorArg) {
  * @returns An `Armor`, or `null | undefined` if the skimpy version doesn't exist.
  */
 export function GetSkimpy(a: ArmorArg) {
-  return Get(a, "next")
+  return GetArmor(a, "next")
 }
 
 /** Returns what kind of change an `Armor` has with its modest version.
@@ -96,7 +99,7 @@ export function GetSkimpy(a: ArmorArg) {
  * @returns The kind of change. `null` if there's no modest version.
  */
 export function GetModestType(a: ArmorArg) {
-  return GetType(a, "prev")
+  return GetChange(a, "prev")
 }
 
 /** Returns what kind of change an `Armor` has with its skimpier version.
@@ -105,7 +108,7 @@ export function GetModestType(a: ArmorArg) {
  * @returns The kind of change. `null` if there's no skimpier version.
  */
 export function GetSkimpyType(a: ArmorArg) {
-  return GetType(a, "next")
+  return GetChange(a, "next")
 }
 
 /** Gets the {@link SkimpyData} for the modest version of an `Armor`.
@@ -135,7 +138,28 @@ export function GetSkimpyData(a: ArmorArg): SkimpyData {
  * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a slip.
  */
 export function GetSlip(a: ArmorArg) {
-  return NextByType(a, SkimpyType.slip)
+  return NextByType(a, ChangeType.slip)
+}
+
+/** Adds a change relationship between two armors.\
+ * ***WARNING***: this relationship is saved to the game.
+ *
+ * @param modest More modest version of some armor.
+ * @param skimpy More skimpy version of that armor.
+ * @param change What kind of change this relationship entails.
+ */
+export function AddChangeRel(
+  modest: ArmorArg,
+  skimpy: ArmorArg,
+  change: ChangeType = ChangeType.change
+) {
+  if (!modest || !skimpy) return
+  const S = (a1: Armor, a2: Armor, r: RelType) => {
+    JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
+    JFormDB.solveStrSetter(a1, ChangeK(r), change, true) // Save change type
+  }
+  S(modest, skimpy, "next")
+  S(skimpy, modest, "prev")
 }
 
 /***
@@ -147,17 +171,27 @@ export function GetSlip(a: ArmorArg) {
  *    ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
  *
  *  All things down below are meant to be internally used by
- *  this script or the framework. Ignore them.
+ *  this script or the framework.
+ *
+ *  Ignore them, unless you want to learn about its inner
+ *  workings or want to help on the crusade to make this
+ *  framework accessible to Papyrus programmers.
+ *  ... a crusade I won't take, by the way.
  */
 
 /** Which kind of internal keys are valid. */
-type keyType = "next" | "prev"
+type RelType = "next" | "prev"
 
 /** Default type to assume what an armor version is when it has no associated/valid type. */
-export const defaultType = SkimpyType.change
+export const defaultType = ChangeType.change
 
 /** Key used to save values added by this framework. */
 const fwKey = ".Skimpify-Framework"
+
+/** Key used to save armors. */
+const ArmorK = (k: RelType) => `${fwKey}.${k}`
+/** Key used to save armor change relationships. */
+const ChangeK = (k: RelType) => `${ArmorK(k)}T`
 
 /** Gets an Armor given an internal key.
  * This isn't meant to be used by final users.
@@ -166,24 +200,24 @@ const fwKey = ".Skimpify-Framework"
  * @param key Key from where we want to retrieve the armor from.
  * @returns `Armor` or `null | undefined`.
  */
-function Get(a: ArmorArg, key: keyType) {
+function GetArmor(a: ArmorArg, key: RelType) {
   if (!a) return null
-  const r = JFormDB.solveForm(a, `${fwKey}.${key}`)
+  const r = JFormDB.solveForm(a, ArmorK(key))
   if (!r) return null
   return Armor.from(r)
 }
 
-function GetType(a: ArmorArg, key: keyType) {
+function GetChange(a: ArmorArg, key: RelType) {
   if (!a) return null
-  const r = JFormDB.solveStr(a, `${fwKey}.${key}T`, defaultType)
+  const r = JFormDB.solveStr(a, ChangeK(key), defaultType)
   return r === "slip"
-    ? SkimpyType.slip
+    ? ChangeType.slip
     : r === "damage"
-    ? SkimpyType.damage
-    : SkimpyType.change
+    ? ChangeType.damage
+    : ChangeType.change
 }
 
-function NextByType(a: ArmorArg, t: SkimpyType) {
+function NextByType(a: ArmorArg, t: ChangeType) {
   const aa = GetSkimpy(a)
   if (!aa) return null
   if (GetSkimpyType(a) === t) return aa

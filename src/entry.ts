@@ -1,5 +1,5 @@
 import { Hotkeys } from "DmLib"
-import { SaveArmors } from "genJson"
+import { AutoGenArmors } from "genJson"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
 import * as JMap from "JContainers/JMap"
@@ -88,7 +88,7 @@ export function main() {
   const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl)
   on("update", () => {
     L(Test)
-    OnGen(SaveArmors)
+    OnGen(AutoGenArmors)
   })
 }
 
