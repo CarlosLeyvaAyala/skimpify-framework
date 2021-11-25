@@ -1,51 +1,6 @@
 {
 	"files": [
 		{
-			"path": "src/entry.ts",
-			"bookmarks": [
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": 183,
-					"column": 9
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				},
-				{
-					"line": -1,
-					"column": 0
-				}
-			]
-		},
-		{
 			"path": "src/genJson.ts",
 			"bookmarks": [
 				{
@@ -98,7 +53,7 @@
 					"column": 0
 				},
 				{
-					"line": 442,
+					"line": 448,
 					"column": 12
 				},
 				{

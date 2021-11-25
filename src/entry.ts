@@ -11,7 +11,10 @@ import {
   ClearChangeRel,
   defaultType,
   GetModest,
+  GetModestData,
   GetSkimpy,
+  GetSkimpyData,
+  SkimpyData,
 } from "skimpify-api"
 import {
   Actor,
@@ -25,7 +28,7 @@ import {
   printConsole,
   storage,
 } from "skyrimPlatform"
-import { LogVT } from "./debug"
+import { LogV, LogVT } from "./debug"
 
 const invalid = -1
 
@@ -54,9 +57,9 @@ export function main() {
     allowInit = SIni(true)
   })
 
-  once("update", () => {
-    if (allowInit || !WasInitialized()) InitPlugin()
-  })
+  // once("update", () => {
+  //   if (allowInit || !WasInitialized()) InitPlugin()
+  // })
 
   function InitPlugin() {
     LoadArmors()
@@ -111,6 +114,7 @@ export function main() {
   const OnMarkSlip = Hotkeys.ListenTo(DxScanCode.D)
   const OnMarkChange = Hotkeys.ListenTo(DxScanCode.F)
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G)
+  const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z)
 
   const L = Hotkeys.ListenTo(DxScanCode.RightControl)
   const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl)
@@ -121,6 +125,7 @@ export function main() {
     OnMarkSlip(Mark.Slip)
     OnMarkChange(Mark.Change)
     OnMarkDamage(Mark.Damage)
+    OnDebugEquipped(Mark.DebugOne)
 
     OnGen(AutoGenArmors)
     L(Test)
@@ -160,14 +165,28 @@ function StrToArmor(s: string) {
   return Armor.from(f)
 }
 
+/** Functions for marking armors in manual mode. */
 namespace Mark {
+  /** Does an operation only if the player has equipped one armor.
+   *
+   * @param Continue
+   */
   function OnlyOneArmor(Continue: (a: Armor) => void) {
     const aa = FormLib.GetEquippedArmors(Game.getPlayer())
-    if (aa.length > 1) {
+    aa.forEach((v) =>
+      LogV(
+        `${DebugLib.Log.IntToHex(
+          v.getFormID()
+        )}. Slot: ${v.getSlotMask()}. Name: ${v.getName()}`
+      )
+    )
+
+    if (aa.length !== 1) {
       Debug.messageBox(
         `This functionality only works with just one piece of armor equipped.
         Equip only the piece you want to mark.`
       )
+      return
     }
     Continue(aa[0])
   }
@@ -175,8 +194,10 @@ namespace Mark {
   function Child(c: ChangeType) {
     OnlyOneArmor((a) => {
       const ShowInvalid = () => {
-        const m = `Can't create relationship because a modest version for this armor hasn't been set.
-        Please do that by using the "hkMarkModest" hotkey on such armor.`
+        const m = `Can't create a Change Relationship because a modest version for this armor hasn't been set.
+
+        Please mark one by using the "hkMarkModest" hotkey when having such armor equipped.`
+        Debug.messageBox(m)
       }
 
       if (mModest === invalid) return ShowInvalid()
@@ -214,6 +235,27 @@ namespace Mark {
     OnlyOneArmor((a) => {
       ClearChangeRel(a)
       const m = `"${a.getName()}" was cleared from all its Change Relationships.`
+      Debug.messageBox(m)
+    })
+  }
+
+  export function DebugOne() {
+    OnlyOneArmor((a) => {
+      const M = (d: SkimpyData, r: string) =>
+        `It's ${r} version is ${d.armor?.getName()}. With a "${
+          d.kind
+        }" type of Change Relationship.`
+
+      const p = GetModestData(a)
+      const pm = p.armor ? M(p, "modest") : ""
+
+      const c = GetSkimpyData(a)
+      const cm = c.armor ? M(c, "skimpy") : ""
+
+      const m = `Armor: ${a.getName()}.
+      
+      ${pm + (pm && cm ? "\n" : "") + cm}`
+      LogV(m)
       Debug.messageBox(m)
     })
   }
