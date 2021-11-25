@@ -1,6 +1,7 @@
+import { FormLib } from "DmLib"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
-import { Armor } from "skyrimPlatform"
+import { Actor, Armor } from "skyrimPlatform"
 
 /***
  *     █████╗ ██████╗ ██╗
@@ -74,7 +75,8 @@ export interface SkimpyData {
 /** Shortcut to `Armor | null | undefined`, because it gets tedious to write it
  * over and over.
  */
-type ArmorArg = Armor | null | undefined
+export type ArmorArg = Armor | null | undefined
+export type ActorArg = Actor | null | undefined
 
 /** Returns the closest _modest version_ of an `Armor`.
  *
@@ -131,6 +133,30 @@ export function GetModestData(a: ArmorArg): SkimpyData {
  */
 export function GetSkimpyData(a: ArmorArg): SkimpyData {
   return { armor: GetSkimpy(a), kind: GetSkimpyType(a) }
+}
+
+export const GetAllSkimpy = (a: ActorArg) =>
+  GetAll(a, GetSkimpyData, GetModestData)
+
+export const GetAllModest = (a: ActorArg) =>
+  GetAll(a, GetModestData, GetSkimpyData)
+
+export interface AllData {
+  current: SkimpyData[]
+  next: SkimpyData[]
+}
+
+type SkimpyFunc = (a: ArmorArg) => SkimpyData
+
+export function GetAll(
+  a: ActorArg,
+  Next: SkimpyFunc,
+  Curr: SkimpyFunc
+): AllData {
+  const aa = FormLib.GetEquippedArmors(a)
+  const n = aa.map((v) => Next(v)).filter((v) => v.armor)
+  const c = n.map((v) => Curr(v.armor))
+  return { current: c, next: n }
 }
 
 /** If the skimpy version of an `armor` is a slip, returns it.

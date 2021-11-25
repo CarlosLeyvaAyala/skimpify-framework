@@ -1,0 +1,22 @@
+{
+  "[Melodic] Small Distraction.esp|d66": {
+    "name": "Small Distraction Top",
+    "next": "[Melodic] Small Distraction.esp|d67",
+    "nextT": "slip"
+  },
+  "[Melodic] Small Distraction.esp|d67": {
+    "name": "Small Distraction Top Xtra",
+    "prev": "[Melodic] Small Distraction.esp|d66",
+    "prevT": "slip"
+  },
+  "[Melodic] Small Distraction.esp|d68": {
+    "name": "Small Distraction Panty",
+    "next": "[Melodic] Small Distraction.esp|d69",
+    "nextT": "slip"
+  },
+  "[Melodic] Small Distraction.esp|d69": {
+    "name": "Small Distraction Panty Xtra",
+    "prev": "[Melodic] Small Distraction.esp|d68",
+    "prevT": "slip"
+  }
+}

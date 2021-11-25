@@ -6,11 +6,15 @@ import * as JMap from "JContainers/JMap"
 import { JFormMapL, JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
 import {
+  ActorArg,
   AddChangeRel,
+  AllData,
   ChangeType,
   ClearChangeRel,
   DbHandle,
   defaultType,
+  GetAllModest,
+  GetAllSkimpy,
   GetModest,
   GetModestData,
   GetSkimpy,
@@ -117,6 +121,10 @@ export function main() {
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G)
   const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z)
 
+  const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow)
+  const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow)
+  const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow)
+
   const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q)
 
   const L = Hotkeys.ListenTo(DxScanCode.RightControl)
@@ -130,10 +138,40 @@ export function main() {
     OnMarkDamage(Mark.Damage)
     OnDebugEquipped(Mark.DebugOne)
 
+    OnAllSkimpy(AllSkimpy)
+    OnAllModest(AllModest)
+    OnUnequipAll(UnequipAll)
+
     OnSaveJson(SaveJson)
     OnGen(AutoGenArmors)
 
     L(Test)
+  })
+}
+
+function UnequipAll() {
+  const pl = Game.getPlayer() as Actor
+  // Don't use unequipAll() because it doesn't discriminate on what it will unequip
+  const aa = FormLib.GetEquippedArmors(pl)
+  aa.forEach((a) => {
+    pl.unequipItem(a, false, true)
+  })
+}
+
+const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
+  act.unequipItem(from, false, true)
+  act.equipItem(to, false, true)
+}
+
+const AllSkimpy = () => ChangeAll(GetAllSkimpy)
+const AllModest = () => ChangeAll(GetAllModest)
+
+function ChangeAll(f: (a: ActorArg) => AllData) {
+  const pl = Game.getPlayer() as Actor
+  const aa = f(pl)
+
+  aa.current.forEach((a, i) => {
+    SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
   })
 }
 
