@@ -29,7 +29,7 @@ import { Actor, Armor } from "skyrimPlatform"
  *
  * This enum represents what kind of change relationship an `Armor` has with another one.
  *
- * @todo {@link GetChange} must be changed each time this enum changes.
+ * @todo {@link GetChangeType} must be changed each time this enum changes.
  */
 export const enum ChangeType {
   /** The `Armor` is basically the same, but moved/open to be revealing.
@@ -93,7 +93,9 @@ export type ArmorArg = Armor | null | undefined
 export type ActorArg = Actor | null | undefined
 
 /** A function that takes an `Armor` and returns some of its {@link SkimpyData}. */
-export type SkimpyFunc = (a: ArmorArg) => SkimpyData
+export type SkimpyFunc = (a: ArmorArg) => Armor | null
+
+export type SkimpyDataFunc = (a: ArmorArg) => SkimpyData
 
 // ;>========================================================
 // ;>===                ARMOR FUNCTIONS                 ===<;
@@ -123,7 +125,7 @@ export function GetSkimpy(a: ArmorArg) {
  * @returns The kind of change. `null` if there's no modest version.
  */
 export function GetModestType(a: ArmorArg) {
-  return GetChange(a, "prev")
+  return GetChangeType(a, "prev")
 }
 
 /** Returns what kind of change an `Armor` has with its skimpier version.
@@ -132,7 +134,7 @@ export function GetModestType(a: ArmorArg) {
  * @returns The kind of change. `null` if there's no skimpier version.
  */
 export function GetSkimpyType(a: ArmorArg) {
-  return GetChange(a, "next")
+  return GetChangeType(a, "next")
 }
 
 /** Gets the {@link SkimpyData} for the modest version of an `Armor`.
@@ -190,22 +192,34 @@ export const GetAllSkimpy = (a: ActorArg) =>
 export const GetAllModest = (a: ActorArg) =>
   GetAll(a, GetModestData, GetSkimpyData)
 
-/** If the skimpy version of an `armor` is a slip, returns it.
+/** If the skimpy version of an `Armor` is a `slip`, returns it.
  *
  * @param a Armor to check.
- * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a slip.
+ * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a `slip`.
  */
-export function GetSlip(a: ArmorArg) {
-  return NextByType(a, ChangeType.slip)
-}
+export const GetSlip = (a: ArmorArg) => NextByType(a, ChangeType.slip)
 
-/** Cheks if an armor has a registered modest version of itself. */
+/** If the skimpy version of an `Armor` is a `change`, returns it.
+ *
+ * @param a Armor to check.
+ * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
+ */
+export const GetChange = (a: ArmorArg) => NextByType(a, ChangeType.change)
+
+/** If the skimpy version of an `Armor` is a `damage`, returns it.
+ *
+ * @param a Armor to check.
+ * @returns The damaged `Armor`. `null` if `a` has no Skimpy version or if it isn't a `damage`.
+ */
+export const GetDamage = (a: ArmorArg) => NextByType(a, ChangeType.damage)
+
+/** Checks if an armor has a registered modest version of itself. */
 export const HasModest = (a: ArmorArg) => HasKey(a, "prev")
 
-/** Cheks if an armor has a registered skimpy version of itself. */
+/** Checks if an armor has a registered skimpy version of itself. */
 export const HasSkimpy = (a: ArmorArg) => HasKey(a, "next")
 
-/** Cheks if an armor has any registered variant of itself. */
+/** Checks if an armor has any registered variant of itself. */
 export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
 
 // ;>========================================================
@@ -292,7 +306,7 @@ function GetArmor(a: ArmorArg, key: RelType) {
   return Armor.from(r)
 }
 
-function GetChange(a: ArmorArg, key: RelType) {
+function GetChangeType(a: ArmorArg, key: RelType) {
   if (!a) return null
   const r = JFormDB.solveStr(a, ChangeK(key), defaultType)
   return r === "slip"
@@ -332,8 +346,8 @@ const SetRel = (a1: ArmorArg, a2: ArmorArg, r: RelType, c: ChangeType) => {
  */
 export function GetAll(
   a: ActorArg,
-  Next: SkimpyFunc,
-  Curr: SkimpyFunc
+  Next: SkimpyDataFunc,
+  Curr: SkimpyDataFunc
 ): EquippedData {
   const aa = FormLib.GetEquippedArmors(a)
   const n = aa.map((v) => Next(v)).filter((v) => v.armor)
