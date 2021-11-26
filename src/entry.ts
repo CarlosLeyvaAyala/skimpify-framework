@@ -8,7 +8,7 @@ import * as JValue from "JContainers/JValue"
 import {
   ActorArg,
   AddChangeRel,
-  AllData,
+  EquippedData,
   ChangeType,
   ClearChangeRel,
   DbHandle,
@@ -166,7 +166,7 @@ const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
 const AllSkimpy = () => ChangeAll(GetAllSkimpy)
 const AllModest = () => ChangeAll(GetAllModest)
 
-function ChangeAll(f: (a: ActorArg) => AllData) {
+function ChangeAll(f: (a: ActorArg) => EquippedData) {
   const pl = Game.getPlayer() as Actor
   const aa = f(pl)
 
