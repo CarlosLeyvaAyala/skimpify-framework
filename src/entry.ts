@@ -28,6 +28,7 @@ import {
   DxScanCode,
   Game,
   hooks,
+  Input,
   on,
   once,
   printConsole,
@@ -124,6 +125,7 @@ export function main() {
   const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow)
   const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow)
   const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow)
+  const OnUnequipAll2 = Hotkeys.ListenTo(DxScanCode.UpArrow)
 
   const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q)
 
@@ -131,19 +133,25 @@ export function main() {
   const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl)
 
   on("update", () => {
-    OnMarkModest(Mark.Modest)
-    OnMarkClear(Mark.Clear)
-    OnMarkSlip(Mark.Slip)
-    OnMarkChange(Mark.Change)
-    OnMarkDamage(Mark.Damage)
-    OnDebugEquipped(Mark.DebugOne)
+    if (
+      Input.isKeyPressed(DxScanCode.LeftShift) ||
+      Input.isKeyPressed(DxScanCode.RightShift)
+    ) {
+      OnMarkModest(Mark.Modest)
+      OnMarkClear(Mark.Clear)
+      OnMarkSlip(Mark.Slip)
+      OnMarkChange(Mark.Change)
+      OnMarkDamage(Mark.Damage)
+      OnDebugEquipped(Mark.DebugOne)
+
+      OnSaveJson(SaveJson)
+      OnGen(AutoGenArmors)
+    }
 
     OnAllSkimpy(AllSkimpy)
     OnAllModest(AllModest)
     OnUnequipAll(UnequipAll)
-
-    OnSaveJson(SaveJson)
-    OnGen(AutoGenArmors)
+    OnUnequipAll2(UnequipAll)
 
     L(Test)
   })
@@ -172,6 +180,7 @@ function ChangeAll(f: (a: ActorArg) => EquippedData) {
 
   aa.current.forEach((a, i) => {
     SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
+    Debug.notification(a.kind as string)
   })
 }
 
@@ -285,7 +294,7 @@ namespace Mark {
   export function DebugOne() {
     OnlyOneArmor((a) => {
       const M = (d: SkimpyData, r: string) =>
-        `It's ${r} version is ${d.armor?.getName()}. With a "${
+        `Its ${r} version is "${d.armor?.getName()}". With a "${
           d.kind
         }" type of Change Relationship.`
 
@@ -295,9 +304,14 @@ namespace Mark {
       const c = GetSkimpyData(a)
       const cm = c.armor ? M(c, "skimpy") : ""
 
+      const am = (pm + (pm && cm ? "\n" : "") + cm).trim()
+      const fm = am
+        ? am
+        : "This has no recognized variant. If it should, consider to manually create a Change Relationship."
+
       const m = `Armor: ${a.getName()}.
       
-      ${pm + (pm && cm ? "\n" : "") + cm}`
+      ${fm}`
       LogV(m)
       Debug.messageBox(m)
     })

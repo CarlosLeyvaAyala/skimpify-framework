@@ -1,15 +1,16 @@
-import { JFormMapL, JMapL } from "JContainers/JTs"
 import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
 import { DebugLib, FormLib } from "DmLib"
+import { JFormMapL } from "JContainers/JTs"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
 import {
-  GetSkimpyData,
-  ChangeType,
   AddChangeRel,
+  ChangeType,
   DbHandle,
+  defaultType,
   GetSkimpy,
+  GetSkimpyData,
 } from "skimpify-api"
-import { Actor, Armor, Game, printConsole } from "skyrimPlatform"
+import { Actor, Armor, Debug, Game } from "skyrimPlatform"
 
 const LogR = DebugLib.Log.R
 
@@ -52,7 +53,10 @@ export function AutoGenArmors() {
   LogN("Generating armors for exporting")
   LogN("=================================")
   const o = GenSkimpyGroupsByName(GetInventoryArmors())
-  RawDataToJson(o)
+  // RawDataToJson(o)
+  Debug.messageBox(`Data for armors in inventory has been automatically generated. 
+
+  Now you can test in game if things are as you expected, then you can export them to json.`)
 }
 
 function GetInventoryArmors() {
@@ -152,6 +156,7 @@ function ProcessMatches(
   if (TestWord("slut")) return
   if (TestWord("xtra")) return
   if (TestWord("damage", ChangeType.damage)) return
+  if (TestWord("broke", ChangeType.damage)) return
   if (TestWord("naked")) return
   if (TestWord("nude")) return
 
@@ -173,7 +178,7 @@ function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeType) {
   // Child is different to what was already registered. Return new relationship.
   if (armor && armor.getFormID() !== c.armor.getFormID()) return LogR(L(), r)
   // Return old relationship if it exists. Otherwise, return new.
-  return kind ? kind : r
+  return kind && kind !== defaultType ? kind : r
 }
 
 function MakeChild(
@@ -255,4 +260,8 @@ function RawDataToJson(d: RawMap) {
     const f = `data/SKSE/Plugins/Skimpify Framework/${e[0]}.json`
     WriteToFile(f, Transform(e[1]), false, false)
   }
+
+  Debug.messageBox(
+    `All data was saved to their respective Json files in "data/SKSE/Plugins/Skimpify Framework".`
+  )
 }
