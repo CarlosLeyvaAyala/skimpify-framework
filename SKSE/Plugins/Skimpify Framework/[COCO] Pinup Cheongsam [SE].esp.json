@@ -1,0 +1,52 @@
+{
+  "[COCO] Pinup Cheongsam [SE].esp|85e": {
+    "name": "Pinup Cheongsam - Top 01B",
+    "next": "[COCO] Pinup Cheongsam [SE].esp|874",
+    "nextT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|874": {
+    "name": "Pinup Cheongsam - Top 01B (Slutty)",
+    "prev": "[COCO] Pinup Cheongsam [SE].esp|85e",
+    "prevT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|85f": {
+    "name": "Pinup Cheongsam - Top 02",
+    "next": "[COCO] Pinup Cheongsam [SE].esp|875",
+    "nextT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|875": {
+    "name": "Pinup Cheongsam - Top 02 (Slutty)",
+    "prev": "[COCO] Pinup Cheongsam [SE].esp|85f",
+    "prevT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|860": {
+    "name": "Pinup Cheongsam - Top 03",
+    "next": "[COCO] Pinup Cheongsam [SE].esp|876",
+    "nextT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|876": {
+    "name": "Pinup Cheongsam - Top 03 (Slutty)",
+    "prev": "[COCO] Pinup Cheongsam [SE].esp|860",
+    "prevT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|861": {
+    "name": "Pinup Cheongsam - Top 04",
+    "next": "[COCO] Pinup Cheongsam [SE].esp|877",
+    "nextT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|877": {
+    "name": "Pinup Cheongsam - Top 04 (Slutty)",
+    "prev": "[COCO] Pinup Cheongsam [SE].esp|861",
+    "prevT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|8c9": {
+    "name": "Pinup Cheongsam - Top",
+    "next": "[COCO] Pinup Cheongsam [SE].esp|873",
+    "nextT": "slip"
+  },
+  "[COCO] Pinup Cheongsam [SE].esp|873": {
+    "name": "Pinup Cheongsam - Top (Slutty)",
+    "prev": "[COCO] Pinup Cheongsam [SE].esp|8c9",
+    "prevT": "slip"
+  }
+}
