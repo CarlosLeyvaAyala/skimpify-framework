@@ -1,4 +1,14 @@
 {
+  "[NINI] Venus Valkyrie.esp|807": {
+    "name": "Venus Valkyrie Lower",
+    "next": "[NINI] Venus Valkyrie.esp|816",
+    "nextT": "change"
+  },
+  "[NINI] Venus Valkyrie.esp|816": {
+    "name": "Venus Valkyrie Lower Slutty",
+    "prev": "[NINI] Venus Valkyrie.esp|807",
+    "prevT": "change"
+  },
   "[NINI] Venus Valkyrie.esp|808": {
     "name": "Venus Valkyrie Upper",
     "next": "[NINI] Venus Valkyrie.esp|809",

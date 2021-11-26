@@ -3,16 +3,15 @@ import { AutoGenArmors, SaveJson } from "genJson"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
 import * as JMap from "JContainers/JMap"
-import { JFormMapL, JMapL } from "JContainers/JTs"
+import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
 import {
   ActorArg,
   AddChangeRel,
-  EquippedData,
   ChangeType,
   ClearChangeRel,
-  DbHandle,
   defaultType,
+  EquippedData,
   GetAllModest,
   GetAllSkimpy,
   GetModest,

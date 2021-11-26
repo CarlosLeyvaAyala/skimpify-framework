@@ -199,6 +199,15 @@ export function GetSlip(a: ArmorArg) {
   return NextByType(a, ChangeType.slip)
 }
 
+/** Cheks if an armor has a registered modest version of itself. */
+export const HasModest = (a: ArmorArg) => HasKey(a, "prev")
+
+/** Cheks if an armor has a registered skimpy version of itself. */
+export const HasSkimpy = (a: ArmorArg) => HasKey(a, "next")
+
+/** Cheks if an armor has any registered variant of itself. */
+export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
+
 // ;>========================================================
 // ;>===             RELATIONSHIP FUNCTIONS             ===<;
 // ;>========================================================
@@ -331,3 +340,7 @@ export function GetAll(
   const c = n.map((v) => Curr(v.armor))
   return { current: c, next: n }
 }
+
+/** Checks if an armor has a registered variant. */
+const HasKey = (a: ArmorArg, r: RelType) =>
+  !a ? false : JFormDB.solveForm(a, ArmorK(r)) !== null

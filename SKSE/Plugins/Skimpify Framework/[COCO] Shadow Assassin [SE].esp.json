@@ -1,0 +1,262 @@
+{
+  "[COCO] Shadow Assassin [SE].esp|8da": {
+    "name": "[COCO]Assassin_mask2b",
+    "next": "[COCO] Shadow Assassin [SE].esp|8e6",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8e6": {
+    "name": "[COCO]Assassin_masksex2b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|8da",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8dc": {
+    "name": "[COCO]Assassin_panti2b",
+    "next": "[COCO] Shadow Assassin [SE].esp|8e8",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8e8": {
+    "name": "[COCO]Assassin_pantisex2b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|8dc",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8e2": {
+    "name": "[COCO]Assassin_corset2b",
+    "next": "[COCO] Shadow Assassin [SE].esp|8de",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8de": {
+    "name": "[COCO]Assassin_corsetsex2b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|8e2",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8fe": {
+    "name": "[COCO]Assassin_mask1",
+    "next": "[COCO] Shadow Assassin [SE].esp|935",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|935": {
+    "name": "[COCO]Assassin_masksex1",
+    "prev": "[COCO] Shadow Assassin [SE].esp|8fe",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|916": {
+    "name": "[COCO]Assassin_panti1",
+    "next": "[COCO] Shadow Assassin [SE].esp|937",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|937": {
+    "name": "[COCO]Assassin_pantisex1",
+    "prev": "[COCO] Shadow Assassin [SE].esp|916",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|929": {
+    "name": "[COCO]Assassin_glove1",
+    "next": "[COCO] Shadow Assassin [SE].esp|9d0",
+    "nextT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9d0": {
+    "name": "[COCO]Assassin_glove1b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|929",
+    "prevT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|931": {
+    "name": "[COCO]Assassin_corset1",
+    "next": "[COCO] Shadow Assassin [SE].esp|927",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|927": {
+    "name": "[COCO]Assassin_corsetsex1",
+    "prev": "[COCO] Shadow Assassin [SE].esp|931",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|933": {
+    "name": "[COCO]Assassin_boots1",
+    "next": "[COCO] Shadow Assassin [SE].esp|9d4",
+    "nextT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9d4": {
+    "name": "[COCO]Assassin_boots1b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|933",
+    "prevT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|941": {
+    "name": "[COCO]Assassin_mask2",
+    "next": "[COCO] Shadow Assassin [SE].esp|95e",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|95e": {
+    "name": "[COCO]Assassin_masksex2",
+    "prev": "[COCO] Shadow Assassin [SE].esp|941",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|948": {
+    "name": "[COCO]Assassin_panti2",
+    "next": "[COCO] Shadow Assassin [SE].esp|960",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|960": {
+    "name": "[COCO]Assassin_pantisex2",
+    "prev": "[COCO] Shadow Assassin [SE].esp|948",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|952": {
+    "name": "[COCO]Assassin_glove2",
+    "next": "[COCO] Shadow Assassin [SE].esp|8e0",
+    "nextT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8e0": {
+    "name": "[COCO]Assassin_glove2b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|952",
+    "prevT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|95a": {
+    "name": "[COCO]Assassin_corset2",
+    "next": "[COCO] Shadow Assassin [SE].esp|950",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|950": {
+    "name": "[COCO]Assassin_corsetsex2",
+    "prev": "[COCO] Shadow Assassin [SE].esp|95a",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|95c": {
+    "name": "[COCO]Assassin_boots2",
+    "next": "[COCO] Shadow Assassin [SE].esp|8e4",
+    "nextT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|8e4": {
+    "name": "[COCO]Assassin_boots2b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|95c",
+    "prevT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|968": {
+    "name": "[COCO]Assassin_mask3",
+    "next": "[COCO] Shadow Assassin [SE].esp|97e",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|97e": {
+    "name": "[COCO]Assassin_masksex3",
+    "prev": "[COCO] Shadow Assassin [SE].esp|968",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|96a": {
+    "name": "[COCO]Assassin_panti3",
+    "next": "[COCO] Shadow Assassin [SE].esp|980",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|980": {
+    "name": "[COCO]Assassin_pantisex3",
+    "prev": "[COCO] Shadow Assassin [SE].esp|96a",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|97a": {
+    "name": "[COCO]Assassin_corset3",
+    "next": "[COCO] Shadow Assassin [SE].esp|970",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|970": {
+    "name": "[COCO]Assassin_corsetsex3",
+    "prev": "[COCO] Shadow Assassin [SE].esp|97a",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|988": {
+    "name": "[COCO]Assassin_mask4",
+    "next": "[COCO] Shadow Assassin [SE].esp|99e",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|99e": {
+    "name": "[COCO]Assassin_masksex4",
+    "prev": "[COCO] Shadow Assassin [SE].esp|988",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|98a": {
+    "name": "[COCO]Assassin_panti4",
+    "next": "[COCO] Shadow Assassin [SE].esp|9a0",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9a0": {
+    "name": "[COCO]Assassin_pantisex4",
+    "prev": "[COCO] Shadow Assassin [SE].esp|98a",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|99a": {
+    "name": "[COCO]Assassin_corset4",
+    "next": "[COCO] Shadow Assassin [SE].esp|990",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|990": {
+    "name": "[COCO]Assassin_corsetsex4",
+    "prev": "[COCO] Shadow Assassin [SE].esp|99a",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|99c": {
+    "name": "[COCO]Assassin_boots4",
+    "next": "[COCO] Shadow Assassin [SE].esp|9cc",
+    "nextT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9cc": {
+    "name": "[COCO]Assassin_boots4b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|99c",
+    "prevT": "damage"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9a8": {
+    "name": "[COCO]Assassin_mask5",
+    "next": "[COCO] Shadow Assassin [SE].esp|9be",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9be": {
+    "name": "[COCO]Assassin_masksex5",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9a8",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9aa": {
+    "name": "[COCO]Assassin_panti5",
+    "next": "[COCO] Shadow Assassin [SE].esp|9c0",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9c0": {
+    "name": "[COCO]Assassin_pantisex5",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9aa",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9ba": {
+    "name": "[COCO]Assassin_corset5",
+    "next": "[COCO] Shadow Assassin [SE].esp|9b0",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9b0": {
+    "name": "[COCO]Assassin_corsetsex5",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9ba",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9c8": {
+    "name": "[COCO]Assassin_mask1b",
+    "next": "[COCO] Shadow Assassin [SE].esp|9d6",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9d6": {
+    "name": "[COCO]Assassin_masksex1b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9c8",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9ca": {
+    "name": "[COCO]Assassin_panti1b",
+    "next": "[COCO] Shadow Assassin [SE].esp|9d8",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9d8": {
+    "name": "[COCO]Assassin_pantisex1b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9ca",
+    "prevT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9d2": {
+    "name": "[COCO]Assassin_corset1b",
+    "next": "[COCO] Shadow Assassin [SE].esp|9ce",
+    "nextT": "slip"
+  },
+  "[COCO] Shadow Assassin [SE].esp|9ce": {
+    "name": "[COCO]Assassin_corsetsex1b",
+    "prev": "[COCO] Shadow Assassin [SE].esp|9d2",
+    "prevT": "slip"
+  }
+}
