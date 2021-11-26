@@ -14,9 +14,7 @@ import {
   EquippedData,
   GetAllModest,
   GetAllSkimpy,
-  GetModest,
   GetModestData,
-  GetSkimpy,
   GetSkimpyData,
   SkimpyData,
 } from "skimpify-api"
@@ -26,10 +24,8 @@ import {
   Debug,
   DxScanCode,
   Game,
-  hooks,
   Input,
   on,
-  once,
   printConsole,
   settings,
   storage,
@@ -115,6 +111,7 @@ export function main() {
   printConsole(`Skimpify Framework successfully initialized${i}.`)
 }
 
+/** Uequips all armor on the player. */
 function UnequipAll() {
   const pl = Game.getPlayer() as Actor
   // Don't use unequipAll() because it doesn't discriminate on what it will unequip
@@ -124,14 +121,18 @@ function UnequipAll() {
   })
 }
 
+/** Swap an armor on an actor. */
 const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
   act.unequipItem(from, false, true)
   act.equipItem(to, false, true)
 }
 
+/** Changes all equipped armors to their skimpier counterparts. */
 const AllSkimpy = () => ChangeAll(GetAllSkimpy)
+/** Changes all equipped armors to their modest counterparts. */
 const AllModest = () => ChangeAll(GetAllModest)
 
+/** Swaps all armors the player is using for some variant. */
 function ChangeAll(f: (a: ActorArg) => EquippedData) {
   const pl = Game.getPlayer() as Actor
   const aa = f(pl)
@@ -175,11 +176,13 @@ function StrToArmor(s: string) {
   return Armor.from(f)
 }
 
-/** Functions for marking armors in manual mode. */
+/** Functions for marking armors in manual mode. All of these only work on
+ * armors the player is wearing.
+ */
 namespace Mark {
   /** Does an operation only if the player has equipped one armor.
    *
-   * @param Continue
+   * @param Continue What to do if only one piece of armor is equipped.
    */
   function OnlyOneArmor(Continue: (a: Armor) => void) {
     const aa = FormLib.GetEquippedArmors(Game.getPlayer())
@@ -194,13 +197,17 @@ namespace Mark {
     if (aa.length !== 1) {
       Debug.messageBox(
         `This functionality only works with just one piece of armor equipped.
-        Equip only the piece you want to mark.`
+        Equip only the piece you want to work on.`
       )
       return
     }
     Continue(aa[0])
   }
 
+  /** Manually adds a _Change Relationship_ between a marked piece of armor and the one the player is wearing.
+   *
+   * @param c What kind of _Change Relationship_ will be added between two armors.
+   */
   function Child(c: ChangeType) {
     OnlyOneArmor((a) => {
       const ShowInvalid = () => {
@@ -223,10 +230,14 @@ namespace Mark {
     })
   }
 
+  /** Marks a `slip` relationship between two armors. */
   export const Slip = () => Child(ChangeType.slip)
+  /** Marks a `change` relationship between two armors. */
   export const Change = () => Child(ChangeType.change)
+  /** Marks a `damage` relationship between two armors. */
   export const Damage = () => Child(ChangeType.damage)
 
+  /** Marks the armor the player is using as the modest version of another. */
   export function Modest() {
     OnlyOneArmor((a) => {
       const m = `"${a.getName()}" was marked as a modest version of some armor.
@@ -241,6 +252,7 @@ namespace Mark {
     })
   }
 
+  /** Clears all _Change Relationships_ of the current weared armor. */
   export function Clear() {
     OnlyOneArmor((a) => {
       ClearChangeRel(a)
@@ -249,6 +261,7 @@ namespace Mark {
     })
   }
 
+  /** Show info about the armor the player is currently wearing. */
   export function DebugOne() {
     OnlyOneArmor((a) => {
       const M = (d: SkimpyData, r: string) =>
