@@ -31,6 +31,7 @@ import {
   on,
   once,
   printConsole,
+  settings,
   storage,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
@@ -55,7 +56,8 @@ let allowInit = storage[kIni] as boolean | false
 let mModest = storage[kMModest] as number | -1
 
 export function main() {
-  printConsole("Skimpify Framework successfully initialized.")
+  const n = "skimpify-framework"
+  const develop = settings[n]["developerMode"] as boolean
 
   // on("loadGame", () => {
   //   InitPlugin()
@@ -71,70 +73,26 @@ export function main() {
     // MarkInitialized()
   }
 
-  const Test = () => {
-    const pl = Game.getPlayer() as Actor
-    const e = pl.getWornForm(4)
-    if (!e) return
+  const OnMarkClear = Hotkeys.ListenTo(DxScanCode.A, develop)
+  const OnMarkModest = Hotkeys.ListenTo(DxScanCode.S, develop)
+  const OnMarkSlip = Hotkeys.ListenTo(DxScanCode.D, develop)
+  const OnMarkChange = Hotkeys.ListenTo(DxScanCode.F, develop)
+  const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G, develop)
+  const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z, develop)
 
-    const Swap = (a: Armor) => {
-      pl.unequipItem(e, false, true)
-      pl.equipItem(a, false, true)
-    }
-    const a = Armor.from(e)
-    const s = GetSkimpy(a)
-    if (s) {
-      Swap(s)
-      return
-    }
+  const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow, develop)
+  const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow, develop)
+  const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow, develop)
+  const OnUnequipAll2 = Hotkeys.ListenTo(DxScanCode.UpArrow, develop)
 
-    const m = GetModest(a)
-    if (m) Swap(m)
-  }
-
-  hooks.sendAnimationEvent.add(
-    {
-      enter(ctx) {},
-      leave(ctx) {
-        if (ctx.animationSucceeded) once("update", () => Test())
-      },
-    },
-    0x14,
-    0x14,
-    "SneakStart"
-  )
-  hooks.sendAnimationEvent.add(
-    {
-      enter(ctx) {},
-      leave(ctx) {
-        if (ctx.animationSucceeded) once("update", () => Test())
-      },
-    },
-    0x14,
-    0x14,
-    "SneakStop"
-  )
-
-  const OnMarkClear = Hotkeys.ListenTo(DxScanCode.A)
-  const OnMarkModest = Hotkeys.ListenTo(DxScanCode.S)
-  const OnMarkSlip = Hotkeys.ListenTo(DxScanCode.D)
-  const OnMarkChange = Hotkeys.ListenTo(DxScanCode.F)
-  const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G)
-  const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z)
-
-  const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow)
-  const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow)
-  const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow)
-  const OnUnequipAll2 = Hotkeys.ListenTo(DxScanCode.UpArrow)
-
-  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q)
-
-  const L = Hotkeys.ListenTo(DxScanCode.RightControl)
-  const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl)
+  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q, develop)
+  const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl, develop)
 
   on("update", () => {
     if (
-      Input.isKeyPressed(DxScanCode.LeftShift) ||
-      Input.isKeyPressed(DxScanCode.RightShift)
+      develop &&
+      (Input.isKeyPressed(DxScanCode.LeftShift) ||
+        Input.isKeyPressed(DxScanCode.RightShift))
     ) {
       OnMarkModest(Mark.Modest)
       OnMarkClear(Mark.Clear)
@@ -151,9 +109,10 @@ export function main() {
     OnAllModest(AllModest)
     OnUnequipAll(UnequipAll)
     OnUnequipAll2(UnequipAll)
-
-    L(Test)
   })
+
+  const i = develop ? " in DEVELOPER MODE" : ""
+  printConsole(`Skimpify Framework successfully initialized${i}.`)
 }
 
 function UnequipAll() {
