@@ -4,6 +4,7 @@ import { JFormMapL } from "JContainers/JTs"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
 import {
   AddChangeRel,
+  cfgDir,
   ChangeType,
   DbHandle,
   defaultType,
@@ -280,7 +281,7 @@ function OutputMapToJSon(m: OutputMap) {
     return JSON.stringify(oo, undefined, 2)
   }
   for (const e of m.entries()) {
-    const f = `data/SKSE/Plugins/Skimpify Framework/${e[0]}.json`
+    const f = `${cfgDir}${e[0]}.json`
     WriteToFile(f, Transform(e[1]), false, false)
   }
 

@@ -8,6 +8,7 @@ import * as JValue from "JContainers/JValue"
 import {
   ActorArg,
   AddChangeRel,
+  cfgDir,
   ChangeType,
   ClearChangeRel,
   defaultType,
@@ -16,7 +17,11 @@ import {
   GetAllSkimpy,
   GetModestData,
   GetSkimpyData,
+  JcChangeK,
+  RelType,
+  SetRel,
   SkimpyData,
+  ValidateChangeType,
 } from "skimpify-api"
 import {
   Actor,
@@ -51,10 +56,10 @@ const SMModest = Misc.PreserveVar<number>(MemOnly, kMModest)
 let allowInit = storage[kIni] as boolean | false
 let mModest = storage[kMModest] as number | -1
 
-export function main() {
-  const n = "skimpify-framework"
-  const develop = settings[n]["developerMode"] as boolean
+const n = "skimpify-framework"
+const develop = settings[n]["developerMode"] as boolean
 
+export function main() {
   // on("loadGame", () => {
   //   InitPlugin()
   //   allowInit = SIni(true)
@@ -65,9 +70,14 @@ export function main() {
   // })
 
   function InitPlugin() {
-    LoadArmors()
+    Load.Armors()
     // MarkInitialized()
   }
+
+  // Shift + key
+  const OnLoadJson = Hotkeys.ListenTo(DxScanCode.Q, develop)
+  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.W, develop)
+  const OnAutoGen = Hotkeys.ListenTo(DxScanCode.E, develop)
 
   const OnMarkClear = Hotkeys.ListenTo(DxScanCode.A, develop)
   const OnMarkModest = Hotkeys.ListenTo(DxScanCode.S, develop)
@@ -76,13 +86,11 @@ export function main() {
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G, develop)
   const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z, develop)
 
+  // Only key
   const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow, develop)
   const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow, develop)
   const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow, develop)
   const OnUnequipAll2 = Hotkeys.ListenTo(DxScanCode.UpArrow, develop)
-
-  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.Q, develop)
-  const OnGen = Hotkeys.ListenTo(DxScanCode.LeftControl, develop)
 
   on("update", () => {
     if (
@@ -98,7 +106,8 @@ export function main() {
       OnDebugEquipped(Mark.DebugOne)
 
       OnSaveJson(SaveJson)
-      OnGen(AutoGenArmors)
+      OnLoadJson(Load.Armors)
+      OnAutoGen(AutoGenArmors)
     }
 
     OnAllSkimpy(AllSkimpy)
@@ -143,37 +152,48 @@ function ChangeAll(f: (a: ActorArg) => EquippedData) {
   })
 }
 
-function LoadArmors() {
-  // Read from file
-  const p = "data/SKSE/Plugins/Skimpify Framework/armors.json"
+namespace Load {
+  export function Armors() {
+    // Read from all files
+    const d = JValue.readFromDirectory(cfgDir, ".json")
+    let n = 0
 
-  // Save to disk
-  JMapL.ForAllKeys(JValue.readFromFile(p), (armor, i) => {
-    const a = StrToArmor(armor)
-    if (!a) return
-    const data = JMap.getObj(i, armor)
-    SaveChild(a, data, "next")
-    SaveChild(a, data, "prev")
-  })
-}
+    JMapL.ForAllKeys(d, (k) => {
+      const fileO = JMap.getObj(d, k)
 
-function SaveChild(parent: Armor, data: number, rel: string) {
-  const n = StrToArmor(JMap.getStr(data, rel))
-  if (!n) return // Don't save inexisting children
-  const relT = `${rel}T`
-  const rt = JMap.getStr(data, relT)
-  const t = rt ? rt : defaultType // Assume it's default type
+      JMapL.ForAllKeys(fileO, (armor, i) => {
+        const a = StrToArmor(armor)
+        if (!a) return
+        n++
+        const data = JMap.getObj(i, armor)
+        SaveVariant(a, data, "next")
+        SaveVariant(a, data, "prev")
+      })
+    })
 
-  const k = ".Skimpify-Framework" // Save key
-  JFormDB.solveFormSetter(parent, `${k}.${rel}`, n, true) // Save form
-  JFormDB.solveStrSetter(parent, `${k}.${relT}`, t, true) // Save form type
-}
+    const f = JMap.count(d)
+    const m = `File loading completed.
+    ${n} armors were read from ${f} files.`
 
-function StrToArmor(s: string) {
-  if (!s) return null
-  const [esp, id] = s.split("|")
-  const f = Game.getFormFromFile(parseInt(id, 16), esp)
-  return Armor.from(f)
+    if (develop) Debug.messageBox(m)
+  }
+
+  function SaveVariant(parent: Armor, data: number, rel: RelType) {
+    const n = StrToArmor(JMap.getStr(data, rel))
+    if (!n) return // Don't save inexisting variants
+
+    const c = JMap.getStr(data, JcChangeK(rel))
+    const cT = ValidateChangeType(c)
+
+    SetRel(parent, n, rel, cT)
+  }
+
+  function StrToArmor(s: string) {
+    if (!s) return null
+    const [esp, id] = s.split("|")
+    const f = Game.getFormFromFile(parseInt(id, 16), esp)
+    return Armor.from(f)
+  }
 }
 
 /** Functions for marking armors in manual mode. All of these only work on

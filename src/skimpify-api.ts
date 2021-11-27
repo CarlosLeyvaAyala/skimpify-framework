@@ -276,13 +276,15 @@ export function ClearChangeRel(a: ArmorArg) {
  */
 
 /** Which kind of internal keys are valid. */
-type RelType = "next" | "prev"
+export type RelType = "next" | "prev"
 
 /** Default type to assume what an armor version is when it has no associated/valid type. */
 export const defaultType = ChangeType.change
 
 /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
 export const DbHandle = () => JDB.solveObj(fwKey)
+
+export const cfgDir = "data/SKSE/Plugins/Skimpify Framework/"
 
 /** Key used to save values added by this framework. */
 const fwKey = ".Skimpify-Framework"
@@ -291,6 +293,8 @@ const fwKey = ".Skimpify-Framework"
 const ArmorK = (k: RelType) => `${fwKey}.${k}`
 /** Key used to save armor change relationships. */
 const ChangeK = (k: RelType) => `${ArmorK(k)}T`
+/** Key used to read armor change relationships from JContainers. */
+export const JcChangeK = (k: RelType) => `${k}T`
 
 /** Gets an Armor given an internal key.
  * This isn't meant to be used by final users.
@@ -323,7 +327,13 @@ function NextByType(a: ArmorArg, t: ChangeType) {
   return null
 }
 
-const SetRel = (a1: ArmorArg, a2: ArmorArg, r: RelType, c: ChangeType) => {
+/** Sets a _Change Relationship_ between two armors. */
+export const SetRel = (
+  a1: ArmorArg,
+  a2: ArmorArg,
+  r: RelType,
+  c: ChangeType
+) => {
   JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
   JFormDB.solveStrSetter(a1, ChangeK(r), c, true) // Save change type
 }
@@ -358,3 +368,11 @@ export function GetAll(
 /** Checks if an armor has a registered variant. */
 const HasKey = (a: ArmorArg, r: RelType) =>
   !a ? false : JFormDB.solveForm(a, ArmorK(r)) !== null
+
+/** Ensures a string is a valid {@link ChangeType}. Returns {@link defaultType} if string was invalid. */
+export const ValidateChangeType = (rel: string) =>
+  rel === ChangeType.slip
+    ? ChangeType.slip
+    : rel === ChangeType.damage
+    ? ChangeType.damage
+    : defaultType
