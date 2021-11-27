@@ -1,0 +1,14 @@
+{
+  "[NINI] Blue Elfin.esp|807": {
+    "name": "Blue Elfin - Outfit",
+    "next": "[NINI] Blue Elfin.esp|808",
+    "nextN": "Blue Elfin - Outfit (Slutty)",
+    "nextT": "change"
+  },
+  "[NINI] Blue Elfin.esp|808": {
+    "name": "Blue Elfin - Outfit (Slutty)",
+    "prev": "[NINI] Blue Elfin.esp|807",
+    "prevN": "Blue Elfin - Outfit",
+    "prevT": "change"
+  }
+}

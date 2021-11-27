@@ -1,0 +1,170 @@
+{
+  "[COCO] Ahri Uniforms v2 [SE].esp|801": {
+    "name": "[COCO]Ahri_v2_Brasex7",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|809",
+    "prevN": "[COCO]Ahri_v2_Bra7",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|803": {
+    "name": "[COCO]Ahri_v2_Skirtsex7",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|807",
+    "prevN": "[COCO]Ahri_v2_Skirt7",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|807": {
+    "name": "[COCO]Ahri_v2_Skirt7",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|803",
+    "nextN": "[COCO]Ahri_v2_Skirtsex7",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|809": {
+    "name": "[COCO]Ahri_v2_Bra7",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|801",
+    "nextN": "[COCO]Ahri_v2_Brasex7",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|80b": {
+    "name": "[COCO]Ahri_v2_Brasex6",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|813",
+    "prevN": "[COCO]Ahri_v2_Bra6",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|80d": {
+    "name": "[COCO]Ahri_v2_Skirtsex6",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|811",
+    "prevN": "[COCO]Ahri_v2_Skirt6",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|811": {
+    "name": "[COCO]Ahri_v2_Skirt6",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|80d",
+    "nextN": "[COCO]Ahri_v2_Skirtsex6",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|813": {
+    "name": "[COCO]Ahri_v2_Bra6",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|80b",
+    "nextN": "[COCO]Ahri_v2_Brasex6",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|815": {
+    "name": "[COCO]Ahri_v2_Brasex5",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|821",
+    "prevN": "[COCO]Ahri_v2_Bra5",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|819": {
+    "name": "[COCO]Ahri_v2_Skirtsex5",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|81f",
+    "prevN": "[COCO]Ahri_v2_Skirt5",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|81f": {
+    "name": "[COCO]Ahri_v2_Skirt5",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|819",
+    "nextN": "[COCO]Ahri_v2_Skirtsex5",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|821": {
+    "name": "[COCO]Ahri_v2_Bra5",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|815",
+    "nextN": "[COCO]Ahri_v2_Brasex5",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|827": {
+    "name": "[COCO]Ahri_v2_Brasex4",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|835",
+    "prevN": "[COCO]Ahri_v2_Bra4",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|82b": {
+    "name": "[COCO]Ahri_v2_Skirtsex4",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|833",
+    "prevN": "[COCO]Ahri_v2_Skirt4",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|833": {
+    "name": "[COCO]Ahri_v2_Skirt4",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|82b",
+    "nextN": "[COCO]Ahri_v2_Skirtsex4",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|835": {
+    "name": "[COCO]Ahri_v2_Bra4",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|827",
+    "nextN": "[COCO]Ahri_v2_Brasex4",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|83b": {
+    "name": "[COCO]Ahri_v2_Brasex3",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|849",
+    "prevN": "[COCO]Ahri_v2_Bra3",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|83f": {
+    "name": "[COCO]Ahri_v2_Skirtsex3",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|847",
+    "prevN": "[COCO]Ahri_v2_Skirt3",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|847": {
+    "name": "[COCO]Ahri_v2_Skirt3",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|83f",
+    "nextN": "[COCO]Ahri_v2_Skirtsex3",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|849": {
+    "name": "[COCO]Ahri_v2_Bra3",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|83b",
+    "nextN": "[COCO]Ahri_v2_Brasex3",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|84f": {
+    "name": "[COCO]Ahri_v2_Brasex2",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|85d",
+    "prevN": "[COCO]Ahri_v2_Bra2",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|853": {
+    "name": "[COCO]Ahri_v2_Skirtsex2",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|85b",
+    "prevN": "[COCO]Ahri_v2_Skirt2",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|85b": {
+    "name": "[COCO]Ahri_v2_Skirt2",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|853",
+    "nextN": "[COCO]Ahri_v2_Skirtsex2",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|85d": {
+    "name": "[COCO]Ahri_v2_Bra2",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|84f",
+    "nextN": "[COCO]Ahri_v2_Brasex2",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|86b": {
+    "name": "[COCO]Ahri_v2_Brasex1",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|898",
+    "prevN": "[COCO]Ahri_v2_Bra1",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|87b": {
+    "name": "[COCO]Ahri_v2_Skirtsex1",
+    "prev": "[COCO] Ahri Uniforms v2 [SE].esp|88e",
+    "prevN": "[COCO]Ahri_v2_Skirt1",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|88e": {
+    "name": "[COCO]Ahri_v2_Skirt1",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|87b",
+    "nextN": "[COCO]Ahri_v2_Skirtsex1",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Uniforms v2 [SE].esp|898": {
+    "name": "[COCO]Ahri_v2_Bra1",
+    "next": "[COCO] Ahri Uniforms v2 [SE].esp|86b",
+    "nextN": "[COCO]Ahri_v2_Brasex1",
+    "nextT": "slip"
+  }
+}

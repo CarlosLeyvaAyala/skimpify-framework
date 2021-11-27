@@ -1,0 +1,74 @@
+{
+  "[Rektas] Diversion [SE].esp|b7f": {
+    "name": "Diversion Suit - 01",
+    "next": "[Rektas] Diversion [SE].esp|bea",
+    "nextN": "Diversion Suit (Slutty) - 01",
+    "nextT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|be9": {
+    "name": "Diversion Suit - 02",
+    "next": "[Rektas] Diversion [SE].esp|beb",
+    "nextN": "Diversion Suit (Slutty) - 02",
+    "nextT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|bea": {
+    "name": "Diversion Suit (Slutty) - 01",
+    "prev": "[Rektas] Diversion [SE].esp|b7f",
+    "prevN": "Diversion Suit - 01",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|beb": {
+    "name": "Diversion Suit (Slutty) - 02",
+    "prev": "[Rektas] Diversion [SE].esp|be9",
+    "prevN": "Diversion Suit - 02",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c05": {
+    "name": "Diversion Suit - 03",
+    "next": "[Rektas] Diversion [SE].esp|c06",
+    "nextN": "Diversion Suit (Slutty) - 03",
+    "nextT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c06": {
+    "name": "Diversion Suit (Slutty) - 03",
+    "prev": "[Rektas] Diversion [SE].esp|c05",
+    "prevN": "Diversion Suit - 03",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c0a": {
+    "name": "Diversion Suit (Slutty) - 04",
+    "prev": "[Rektas] Diversion [SE].esp|c0b",
+    "prevN": "Diversion Suit - 04",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c0b": {
+    "name": "Diversion Suit - 04",
+    "next": "[Rektas] Diversion [SE].esp|c0a",
+    "nextN": "Diversion Suit (Slutty) - 04",
+    "nextT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c12": {
+    "name": "Diversion Suit (Slutty) - 05",
+    "prev": "[Rektas] Diversion [SE].esp|c14",
+    "prevN": "Diversion Suit - 05",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c13": {
+    "name": "Diversion Suit (Slutty) - 06",
+    "prev": "[Rektas] Diversion [SE].esp|c15",
+    "prevN": "Diversion Suit - 06",
+    "prevT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c14": {
+    "name": "Diversion Suit - 05",
+    "next": "[Rektas] Diversion [SE].esp|c12",
+    "nextN": "Diversion Suit (Slutty) - 05",
+    "nextT": "slip"
+  },
+  "[Rektas] Diversion [SE].esp|c15": {
+    "name": "Diversion Suit - 06",
+    "next": "[Rektas] Diversion [SE].esp|c13",
+    "nextN": "Diversion Suit (Slutty) - 06",
+    "nextT": "slip"
+  }
+}

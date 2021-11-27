@@ -1,0 +1,74 @@
+{
+  "[COCO] Ahri Halloween [SE].esp|87a": {
+    "name": "[COCO]AHRIall_brasex2",
+    "prev": "[COCO] Ahri Halloween [SE].esp|8af",
+    "prevN": "[COCO]AHRIall_bra2",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Halloween [SE].esp|882": {
+    "name": "[COCO]AHRIall_beltdiam2",
+    "next": "[COCO] Ahri Halloween [SE].esp|886",
+    "nextN": "[COCO]AHRIall_belt2",
+    "nextT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|886": {
+    "name": "[COCO]AHRIall_belt2",
+    "prev": "[COCO] Ahri Halloween [SE].esp|882",
+    "prevN": "[COCO]AHRIall_beltdiam2",
+    "prevT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8af": {
+    "name": "[COCO]AHRIall_bra2",
+    "next": "[COCO] Ahri Halloween [SE].esp|87a",
+    "nextN": "[COCO]AHRIall_brasex2",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8ba": {
+    "name": "[COCO]AHRIall_brasex1",
+    "prev": "[COCO] Ahri Halloween [SE].esp|8d0",
+    "prevN": "[COCO]AHRIall_bra1",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8c2": {
+    "name": "[COCO]AHRIall_beltdiam1",
+    "next": "[COCO] Ahri Halloween [SE].esp|8c6",
+    "nextN": "[COCO]AHRIall_belt1",
+    "nextT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8c6": {
+    "name": "[COCO]AHRIall_belt1",
+    "prev": "[COCO] Ahri Halloween [SE].esp|8c2",
+    "prevN": "[COCO]AHRIall_beltdiam1",
+    "prevT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8d0": {
+    "name": "[COCO]AHRIall_bra1",
+    "next": "[COCO] Ahri Halloween [SE].esp|8ba",
+    "nextN": "[COCO]AHRIall_brasex1",
+    "nextT": "slip"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8d8": {
+    "name": "[COCO]AHRIall_brasex3",
+    "prev": "[COCO] Ahri Halloween [SE].esp|8ee",
+    "prevN": "[COCO]AHRIall_bra3",
+    "prevT": "slip"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8e0": {
+    "name": "[COCO]AHRIall_beltdiam3",
+    "next": "[COCO] Ahri Halloween [SE].esp|8e4",
+    "nextN": "[COCO]AHRIall_belt3",
+    "nextT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8e4": {
+    "name": "[COCO]AHRIall_belt3",
+    "prev": "[COCO] Ahri Halloween [SE].esp|8e0",
+    "prevN": "[COCO]AHRIall_beltdiam3",
+    "prevT": "change"
+  },
+  "[COCO] Ahri Halloween [SE].esp|8ee": {
+    "name": "[COCO]AHRIall_bra3",
+    "next": "[COCO] Ahri Halloween [SE].esp|8d8",
+    "nextN": "[COCO]AHRIall_brasex3",
+    "nextT": "slip"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "Fallen Wanderer's.esp|80b": {
+    "name": "Fallen Wanderer's Armor Slutty",
+    "prev": "Fallen Wanderer's.esp|d66",
+    "prevN": "Fallen Wanderer's Armor",
+    "prevT": "change"
+  },
+  "Fallen Wanderer's.esp|d66": {
+    "name": "Fallen Wanderer's Armor",
+    "next": "Fallen Wanderer's.esp|80b",
+    "nextN": "Fallen Wanderer's Armor Slutty",
+    "nextT": "change"
+  }
+}

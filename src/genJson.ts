@@ -96,16 +96,21 @@ const GetUniqueId = (esp: string, fixedFormId: number) =>
 
 // Add keys to the json file they should be output to.
 const AddKey = (k: EspFileName, output: OutputMap | RawMap) => {
-  if (!output.has(k)) output.set(LogVT("Adding key to file output map", k), [])
+  if (!output.has(k)) output.set(k, [])
 }
+
+/** Number of automatically generated armors. */
+let autoN = 0
 
 export function AutoGenArmors() {
   LogN("\n")
   LogN("=================================")
   LogN("Generating armors for exporting")
   LogN("=================================")
+
+  autoN = 0
   GenSkimpyGroupsByName(GetInventoryArmors())
-  Debug.messageBox(`Data for armors in inventory has been automatically generated. 
+  Debug.messageBox(`Data for ${autoN} pairs of armors in inventory has been automatically generated. 
 
   Now you can test in game if things are as you expected, then you can export them to json.`)
 }
@@ -250,6 +255,7 @@ function MakeChild(
 
   // Add it to memory, so player can test changes right away
   if (saveToMem) AddChangeRel(parent.armor, child.armor, change)
+  autoN++
 
   LogI(
     `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${change}.\n`

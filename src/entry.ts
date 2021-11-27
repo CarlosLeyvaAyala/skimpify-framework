@@ -285,9 +285,8 @@ namespace Mark {
   export function DebugOne() {
     OnlyOneArmor((a) => {
       const M = (d: SkimpyData, r: string) =>
-        `Its ${r} version is "${d.armor?.getName()}". With a "${
-          d.kind
-        }" type of Change Relationship.`
+        `Its ${r} version is "${d.armor?.getName()}". 
+        Change Relationship type: "${d.kind}".`
 
       const p = GetModestData(a)
       const pm = p.armor ? M(p, "modest") : ""

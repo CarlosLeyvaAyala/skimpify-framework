@@ -1,0 +1,38 @@
+{
+  "Tara [SE].esp|816": {
+    "name": "Tara - Calm Courier Dress",
+    "next": "Tara [SE].esp|82c",
+    "nextN": "Tara - Calm Courier Dress (Slutty)",
+    "nextT": "change"
+  },
+  "Tara [SE].esp|82c": {
+    "name": "Tara - Calm Courier Dress (Slutty)",
+    "prev": "Tara [SE].esp|816",
+    "prevN": "Tara - Calm Courier Dress",
+    "prevT": "change"
+  },
+  "Tara [SE].esp|830": {
+    "name": "Tara - Dress (Slutty)",
+    "prev": "Tara [SE].esp|dc3",
+    "prevN": "Tara - Dress",
+    "prevT": "change"
+  },
+  "Tara [SE].esp|831": {
+    "name": "Tara - Peaceside Wayfinder Dress (Slutty)",
+    "prev": "Tara [SE].esp|de1",
+    "prevN": "Tara - Peaceside Wayfinder Dress",
+    "prevT": "change"
+  },
+  "Tara [SE].esp|dc3": {
+    "name": "Tara - Dress",
+    "next": "Tara [SE].esp|830",
+    "nextN": "Tara - Dress (Slutty)",
+    "nextT": "change"
+  },
+  "Tara [SE].esp|de1": {
+    "name": "Tara - Peaceside Wayfinder Dress",
+    "next": "Tara [SE].esp|831",
+    "nextN": "Tara - Peaceside Wayfinder Dress (Slutty)",
+    "nextT": "change"
+  }
+}
