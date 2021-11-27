@@ -1,0 +1,12 @@
+{
+  "VtawWardrobe5.esp|8e1": {
+    "name": "DoS - Main (Black)",
+    "next": "VtawWardrobe5.esp|8e6",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|8e6": {
+    "name": "DoS - Main V2 (Black)",
+    "prev": "VtawWardrobe5.esp|8e1",
+    "prevT": "change"
+  }
+}

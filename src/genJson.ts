@@ -159,6 +159,7 @@ function ProcessMatches(
   if (TestWord("broke", ChangeType.damage)) return
   if (TestWord("naked")) return
   if (TestWord("nude")) return
+  if (TestWord("topless")) return
 
   LogI(`--- No relationship found between elements in this list.`)
   LogI(

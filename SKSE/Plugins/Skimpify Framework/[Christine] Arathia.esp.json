@@ -1,0 +1,12 @@
+{
+  "[Christine] Arathia.esp|806": {
+    "name": "Arathia Upper",
+    "next": "[Christine] Arathia.esp|807",
+    "nextT": "change"
+  },
+  "[Christine] Arathia.esp|807": {
+    "name": "Arathia Upper Slutty",
+    "prev": "[Christine] Arathia.esp|806",
+    "prevT": "change"
+  }
+}

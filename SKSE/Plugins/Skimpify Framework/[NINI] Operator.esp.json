@@ -1,0 +1,12 @@
+{
+  "[NINI] Operator.esp|805": {
+    "name": "Operator Outfit",
+    "next": "[NINI] Operator.esp|809",
+    "nextT": "change"
+  },
+  "[NINI] Operator.esp|809": {
+    "name": "Operator Outfit Slutty",
+    "prev": "[NINI] Operator.esp|805",
+    "prevT": "change"
+  }
+}

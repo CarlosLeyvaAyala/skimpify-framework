@@ -1,0 +1,12 @@
+{
+  "[NINI] Deified.esp|805": {
+    "name": "Deified Armor",
+    "next": "[NINI] Deified.esp|809",
+    "nextT": "change"
+  },
+  "[NINI] Deified.esp|809": {
+    "name": "Deified Armor Slutty",
+    "prev": "[NINI] Deified.esp|805",
+    "prevT": "change"
+  }
+}

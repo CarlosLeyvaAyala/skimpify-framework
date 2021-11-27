@@ -1,0 +1,12 @@
+{
+  "[YS]Ancient Sands.esp|822": {
+    "name": "Ancient Sands Top 3",
+    "next": "[YS]Ancient Sands.esp|84a",
+    "nextT": "change"
+  },
+  "[YS]Ancient Sands.esp|84a": {
+    "name": "Ancient Sands Top 4",
+    "prev": "[YS]Ancient Sands.esp|822",
+    "prevT": "change"
+  }
+}

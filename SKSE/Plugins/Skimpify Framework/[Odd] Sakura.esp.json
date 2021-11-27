@@ -1,0 +1,62 @@
+{
+  "[Odd] Sakura.esp|800": {
+    "name": "[Odd] Sakura's Dress Alt",
+    "next": "[Odd] Sakura.esp|805",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|805": {
+    "name": "[Odd] Sakura's Dress Alt (Topless)",
+    "prev": "[Odd] Sakura.esp|800",
+    "prevT": "change"
+  },
+  "[Odd] Sakura.esp|803": {
+    "name": "[Odd] Sakura's Dress Uchiha",
+    "next": "[Odd] Sakura.esp|81d",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|81d": {
+    "name": "[Odd] Sakura's Dress Uchiha (Topless)",
+    "prev": "[Odd] Sakura.esp|803",
+    "prevT": "change"
+  },
+  "[Odd] Sakura.esp|85c": {
+    "name": "[Odd] Sakura's Dress SMP",
+    "next": "[Odd] Sakura.esp|85d",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|85d": {
+    "name": "[Odd] Sakura's Dress SMP (Topless)",
+    "prev": "[Odd] Sakura.esp|85c",
+    "prevT": "change"
+  },
+  "[Odd] Sakura.esp|85f": {
+    "name": "[Odd] Sakura's Dress Alt SMP",
+    "next": "[Odd] Sakura.esp|85e",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|85e": {
+    "name": "[Odd] Sakura's Dress Alt SMP (Topless)",
+    "prev": "[Odd] Sakura.esp|85f",
+    "prevT": "change"
+  },
+  "[Odd] Sakura.esp|860": {
+    "name": "[Odd] Sakura's Dress Uchiha SMP",
+    "next": "[Odd] Sakura.esp|861",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|861": {
+    "name": "[Odd] Sakura's Dress Uchiha SMP (Topless)",
+    "prev": "[Odd] Sakura.esp|860",
+    "prevT": "change"
+  },
+  "[Odd] Sakura.esp|d69": {
+    "name": "[Odd] Sakura's Dress",
+    "next": "[Odd] Sakura.esp|804",
+    "nextT": "change"
+  },
+  "[Odd] Sakura.esp|804": {
+    "name": "[Odd] Sakura's Dress (Topless)",
+    "prev": "[Odd] Sakura.esp|d69",
+    "prevT": "change"
+  }
+}
