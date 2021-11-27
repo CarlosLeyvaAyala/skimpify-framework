@@ -1,12 +1,14 @@
 {
   "[Christine] Arathia.esp|806": {
-    "name": "Arathia Upper",
+    "name": "  Nightblade [1]: Arathia Upper",
     "next": "[Christine] Arathia.esp|807",
+    "nextN": "  Nightblade [1]: Arathia Upper Slutty",
     "nextT": "change"
   },
   "[Christine] Arathia.esp|807": {
-    "name": "Arathia Upper Slutty",
+    "name": "  Nightblade [1]: Arathia Upper Slutty",
     "prev": "[Christine] Arathia.esp|806",
+    "prevN": "  Nightblade [1]: Arathia Upper",
     "prevT": "change"
   }
 }

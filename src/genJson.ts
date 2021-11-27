@@ -7,12 +7,28 @@ import {
   ChangeType,
   DbHandle,
   defaultType,
-  GetSkimpy,
+  GetModestData,
   GetSkimpyData,
 } from "skimpify-api"
 import { Actor, Armor, Debug, Game } from "skyrimPlatform"
 
 const LogR = DebugLib.Log.R
+
+interface OutputObject {
+  uId: string
+  data: OutputData
+}
+
+/** Data used for pouring armor data to Json files. */
+interface OutputData {
+  name: string
+  next?: string
+  nextN?: string
+  nextT?: ChangeType | null
+  prev?: string
+  prevN?: string
+  prevT?: ChangeType | null
+}
 
 interface ArmorData {
   name: string
@@ -26,25 +42,60 @@ interface ArmorData {
   prevT?: ChangeType
 }
 
-/** Key = Filename where an Armor was defined. Values: List of all armors for some file. */
-type RawMap = Map<string, ArmorData[]>
+/** Filename where an Armor was defined. */
+type EspFileName = string
 
+/** Key = Filename where an Armor was defined. Values: List of all armors for some file. */
+type RawMap = Map<EspFileName, ArmorData[]>
+
+/** Map used to write armors to Json files that will be used by players. */
+type OutputMap = Map<EspFileName, OutputObject[]>
+
+/** Saves all registered armors to json files. */
 export function SaveJson() {
-  const m: RawMap = new Map()
+  const m: OutputMap = new Map()
 
   JFormMapL.ForAllKeys(DbHandle(), (k) => {
     const a = Armor.from(k)
     if (!a) return
-    const ad = ArmorToData(a)
-    const c = GetSkimpy(a)
-    if (!c) return
-    const cd = ArmorToData(c)
 
-    if (!cd || !ad) return
-    MakeChild(ad, cd, ChangeType.change, m, false)
+    const curr = FormLib.GetFormEspAndId(a)
+    const p = GetModestData(a)
+    const n = GetSkimpyData(a)
+
+    AddKey(curr.modName, m)
+    AddVal(curr.modName, m, {
+      uId: GetUniqueId(curr.modName, curr.fixedFormId),
+      data: {
+        name: a.getName(),
+        next: ArmorUniqueId(n.armor),
+        nextN: n.armor?.getName(),
+        nextT: n.armor ? n.kind : undefined,
+        prev: ArmorUniqueId(p.armor),
+        prevN: p.armor?.getName(),
+        prevT: p.armor ? p.kind : undefined,
+      },
+    })
   })
+  OutputMapToJSon(m)
+}
 
-  RawDataToJson(m)
+const AddVal = (esp: string, m: OutputMap, v: OutputObject) => {
+  const k = esp
+  const a = m.get(k) as OutputObject[]
+  a.push(v)
+  m.set(k, a)
+}
+
+const ArmorUniqueId = (a: Armor | null) =>
+  !a ? undefined : FormLib.GetFormUniqueId(a, GetUniqueId)
+
+const GetUniqueId = (esp: string, fixedFormId: number) =>
+  `${esp}|${fixedFormId.toString(16)}`
+
+// Add keys to the json file they should be output to.
+const AddKey = (k: EspFileName, output: OutputMap | RawMap) => {
+  if (!output.has(k)) output.set(LogVT("Adding key to file output map", k), [])
 }
 
 export function AutoGenArmors() {
@@ -52,8 +103,7 @@ export function AutoGenArmors() {
   LogN("=================================")
   LogN("Generating armors for exporting")
   LogN("=================================")
-  const o = GenSkimpyGroupsByName(GetInventoryArmors())
-  // RawDataToJson(o)
+  GenSkimpyGroupsByName(GetInventoryArmors())
   Debug.messageBox(`Data for armors in inventory has been automatically generated. 
 
   Now you can test in game if things are as you expected, then you can export them to json.`)
@@ -61,7 +111,6 @@ export function AutoGenArmors() {
 
 function GetInventoryArmors() {
   LogN("Armors in inventory:\n")
-  const L = (uID: string) => `${uID}\n`
   const r: ArmorData[] = new Array()
 
   FormLib.ForEachArmorR(Game.getPlayer() as Actor, (a) => {
@@ -83,7 +132,7 @@ function ArmorToData(a: Armor): ArmorData | null {
     name: LogNT("", a.getName()),
     id: info.fixedFormId,
     armor: a,
-    uId: LogNT("", `${info.modName}|${info.fixedFormId.toString(16)}`, L),
+    uId: LogNT("", GetUniqueId(info.modName, info.fixedFormId), L),
   }
 }
 
@@ -192,14 +241,6 @@ function MakeChild(
   // Test if Change Relationship already exists.
   const change = ChangeExists(parent, child, relationship)
 
-  // Add keys to the json file they should be output to.
-  const AddKey = (k: string) => {
-    if (!output.has(k))
-      output.set(LogVT("Adding key to file output map", k), [])
-  }
-  AddKey(parent.esp)
-  AddKey(child.esp)
-
   // Add relationship
   parent.next = child.uId
   parent.nextT = change
@@ -212,42 +253,24 @@ function MakeChild(
   LogI(
     `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${change}.\n`
   )
-
-  // Add values. These will be the ones to be exported to json.
-  const AddVal = (d: ArmorData) => {
-    const k = d.esp
-    const a = output.get(k) as ArmorData[]
-    const has = a.some((v) => v.uId === d.uId)
-    if (!has) a.push(d)
-    output.set(k, a)
-  }
-  AddVal(parent)
-  AddVal(child)
 }
 
-function RawDataToJson(d: RawMap) {
-  interface OutputData {
-    name: string
-    next?: string
-    nextT?: ChangeType
-    prev?: string
-    prevT?: ChangeType
-  }
-
+function OutputMapToJSon(m: OutputMap) {
   /** Helper object to be able to easily save to json. */
   interface ArmorI {
     [key: string]: OutputData
   }
-
   /** Transforms an ArmorData[] to an object with armor unique ids as object properties. */
-  const Transform = (x: ArmorData[]) => {
+  const Transform = (x: OutputObject[]) => {
     const o: OutputData[] = x.map((v) => {
       return {
-        name: v.name,
-        next: v.next,
-        nextT: v.nextT,
-        prev: v.prev,
-        prevT: v.prevT,
+        name: v.data.name,
+        next: v.data.next,
+        nextN: v.data.nextN,
+        nextT: v.data.nextT,
+        prev: v.data.prev,
+        prevN: v.data.prevN,
+        prevT: v.data.prevT,
       }
     })
 
@@ -256,8 +279,7 @@ function RawDataToJson(d: RawMap) {
 
     return JSON.stringify(oo, undefined, 2)
   }
-
-  for (const e of d.entries()) {
+  for (const e of m.entries()) {
     const f = `data/SKSE/Plugins/Skimpify Framework/${e[0]}.json`
     WriteToFile(f, Transform(e[1]), false, false)
   }
