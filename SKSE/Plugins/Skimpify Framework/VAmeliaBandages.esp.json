@@ -1,0 +1,62 @@
+{
+  "VAmeliaBandages.esp|d63": {
+    "name": "Bandages of Familiarity",
+    "next": "VAmeliaBandages.esp|1835",
+    "nextN": "Scanty Bandages of Familiarity",
+    "nextT": "slip"
+  },
+  "VAmeliaBandages.esp|1835": {
+    "name": "Scanty Bandages of Familiarity",
+    "prev": "VAmeliaBandages.esp|d63",
+    "prevN": "Bandages of Familiarity",
+    "prevT": "slip"
+  },
+  "VAmeliaBandages.esp|1836": {
+    "name": "Scanty Bandages of Darkness",
+    "prev": "VAmeliaBandages.esp|1837",
+    "prevN": "Bandages of Darkness",
+    "prevT": "slip"
+  },
+  "VAmeliaBandages.esp|1837": {
+    "name": "Bandages of Darkness",
+    "next": "VAmeliaBandages.esp|1836",
+    "nextN": "Scanty Bandages of Darkness",
+    "nextT": "slip"
+  },
+  "VAmeliaBandages.esp|1838": {
+    "name": "Bandages of Bloodshed",
+    "next": "VAmeliaBandages.esp|183b",
+    "nextN": "Scanty Bandages of Bloodshed",
+    "nextT": "slip"
+  },
+  "VAmeliaBandages.esp|1839": {
+    "name": "Bandages of Enchantments",
+    "next": "VAmeliaBandages.esp|183c",
+    "nextN": "Scanty Bandages of Enchantments",
+    "nextT": "slip"
+  },
+  "VAmeliaBandages.esp|183a": {
+    "name": "Bandages of Lesser Enchantments",
+    "next": "VAmeliaBandages.esp|183d",
+    "nextN": "Scanty Bandages of Lesser Enchantments",
+    "nextT": "slip"
+  },
+  "VAmeliaBandages.esp|183b": {
+    "name": "Scanty Bandages of Bloodshed",
+    "prev": "VAmeliaBandages.esp|1838",
+    "prevN": "Bandages of Bloodshed",
+    "prevT": "slip"
+  },
+  "VAmeliaBandages.esp|183c": {
+    "name": "Scanty Bandages of Enchantments",
+    "prev": "VAmeliaBandages.esp|1839",
+    "prevN": "Bandages of Enchantments",
+    "prevT": "slip"
+  },
+  "VAmeliaBandages.esp|183d": {
+    "name": "Scanty Bandages of Lesser Enchantments",
+    "prev": "VAmeliaBandages.esp|183a",
+    "prevN": "Bandages of Lesser Enchantments",
+    "prevT": "slip"
+  }
+}
