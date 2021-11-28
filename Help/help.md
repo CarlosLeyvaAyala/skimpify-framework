@@ -1,14 +1,71 @@
 # Overview
 
-We all love armors with skimpy or damaged variants, but there's no other way than to equip them manually to simulate things happening while playing... until now.
+We all love armors with skimpy or damaged variants, but there's no other way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
 
-This framework enables modders to make mods that automatically swap and restore those variants, so the player can concentrate on what really matters: playing.
+This framework enables modders to make mods that automatically swap to those variants, so the player can concentrate on what really matters: playing.
 
-It works for both men and women... at least theoretically, since I don't know about male armors that have these kind of variants.
+This framework is the result of an idea that have been floating around my mind for many years: having [wardrobe malfunctions][Wardrobe Malfunction] and broken armors while playing.
 
-This framework is the result of an idea that have been floating around my mind for many years, but that it wasn't really feasible because of Papyrus' hilarious slowness and sorry clunkiness.
+But that it wasn't really feasible because of Papyrus' hilarious slowness and sorry clunkiness.
+It's just now that [Skyrim Platform][] exists that this idea was finally able to come true.
 
-It's just now that Skyrim Platform exists that this idea can finally come true.
+# Features
+
+Things we owe to [Skyrim Platform][]:
+
+- Fast.
+- Easy to use... because Typescript.
+- Can enter [developer mode][DeveloperMode] without needing to restart the game.
+- Armor registering can be done while playing.
+  No need to go to xEdit to generate configuration files.
+
+Features of the framework itself:
+
+- It works for both men[^MenTheory] and women.
+- It doesn't care about how armors are named.
+- It doesn't care about which body replacements you are using.
+
+[^MenTheory]: ... at least theoretically, since I don't know about male armors that have variants that can be exploited by this framework.
+
+# Usage
+
+There are two basic usages of the framework.
+
+1. As a player.
+2. As a modder.
+
+## Using it as a player
+[Go here][JsonCfgFiles] and download all the files you need for the mods you have, then pray those files work.
+
+If your mod of choice isn't there or any of the configuration files don't work, then you will use this framework as a modder.
+
+## Using it as a modder
+
+These are the basic steps:
+
+- Enable [_developer mode_][DeveloperMode] in `Data\Platform\Plugins\skimpify-framework-settings.txt`.
+- Either:
+  - Register armors one by one using provided hotkeys.
+  - Try your luck and use _automatic mode_ to let the framework try to guess which armors to register.
+- Use hotkeys to test and confirm everything is as expected.
+- Export your settings to json.
+- Give a quick glance at each of the generated files to see if things are as expected.
+  If they aren't you can manually change those files in your text editor, if you want.
+
+All this help file is dedicated to guiding you through those steps.
+
+# Warning: heavy reading ahead
+
+What a damn shame is to be warning people that they are required to read, but we are in the 20's, what should I expect?
+
+If you don't like to read, tough luck.
+You will need until someone else wants to do a video on how to use this framework or something.
+
+... I hate videos, so don't ever expect me to be that guy.
+
+# Developer mode
+
+When active,
 
 # Change Relationships
 
@@ -84,3 +141,6 @@ The aformented [Wardrobe Malfunction][] never restores these kind of changes for
 
 [Wardrobe Malfunction]: todo
 [AutoGen]: tede
+[Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
+[JsonCfgFiles]: https://github.com/CarlosLeyvaAyala/skimpify-framework/tree/main/SKSE/Plugins/Skimpify%20Framework
+[DeveloperMode]: #developer-mode
