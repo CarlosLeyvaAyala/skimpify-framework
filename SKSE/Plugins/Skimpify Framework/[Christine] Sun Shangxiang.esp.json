@@ -1,0 +1,14 @@
+{
+  "[Christine] Sun Shangxiang.esp|d6a": {
+    "name": "Shangxiang Upper",
+    "next": "[Christine] Sun Shangxiang.esp|d6c",
+    "nextN": "Shangxiang Upper Slutty",
+    "nextT": "change"
+  },
+  "[Christine] Sun Shangxiang.esp|d6c": {
+    "name": "Shangxiang Upper Slutty",
+    "prev": "[Christine] Sun Shangxiang.esp|d6a",
+    "prevN": "Shangxiang Upper",
+    "prevT": "change"
+  }
+}

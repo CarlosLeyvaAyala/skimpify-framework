@@ -1,0 +1,14 @@
+{
+  "[Xuniana] 2nd Design Contest.esp|d63": {
+    "name": "[DOA] 2nd Design Contest",
+    "next": "[Xuniana] 2nd Design Contest.esp|d65",
+    "nextN": "[DOA] 2nd Design Contest Sexy",
+    "nextT": "slip"
+  },
+  "[Xuniana] 2nd Design Contest.esp|d65": {
+    "name": "[DOA] 2nd Design Contest Sexy",
+    "prev": "[Xuniana] 2nd Design Contest.esp|d63",
+    "prevN": "[DOA] 2nd Design Contest",
+    "prevT": "slip"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "[Rektas] Mystique 2 [SE].esp|db7": {
+    "name": "Mystique 2 - Teddy Taupe (Exposed)",
+    "prev": "[Rektas] Mystique 2 [SE].esp|dd2",
+    "prevN": "Mystique 2 - Teddy Taupe (Covered Lace)",
+    "prevT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dba": {
+    "name": "Mystique 2 - Teddy White (Exposed)",
+    "prev": "[Rektas] Mystique 2 [SE].esp|dd3",
+    "prevN": "Mystique 2 - Teddy White (Covered Lace)",
+    "prevT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dc1": {
+    "name": "Mystique 2 - Teddy Red (Exposed)",
+    "prev": "[Rektas] Mystique 2 [SE].esp|dd4",
+    "prevN": "Mystique 2 - Teddy Red (Covered Lace)",
+    "prevT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dc2": {
+    "name": "Mystique 2 - Teddy Pink (Exposed)",
+    "prev": "[Rektas] Mystique 2 [SE].esp|dd5",
+    "prevN": "Mystique 2 - Teddy Pink (Covered Lace)",
+    "prevT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dc3": {
+    "name": "Mystique 2 - Teddy Purple (Exposed)",
+    "prev": "[Rektas] Mystique 2 [SE].esp|dd6",
+    "prevN": "Mystique 2 - Teddy Purple (Covered Lace)",
+    "prevT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dd2": {
+    "name": "Mystique 2 - Teddy Taupe (Covered Lace)",
+    "next": "[Rektas] Mystique 2 [SE].esp|db7",
+    "nextN": "Mystique 2 - Teddy Taupe (Exposed)",
+    "nextT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dd3": {
+    "name": "Mystique 2 - Teddy White (Covered Lace)",
+    "next": "[Rektas] Mystique 2 [SE].esp|dba",
+    "nextN": "Mystique 2 - Teddy White (Exposed)",
+    "nextT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dd4": {
+    "name": "Mystique 2 - Teddy Red (Covered Lace)",
+    "next": "[Rektas] Mystique 2 [SE].esp|dc1",
+    "nextN": "Mystique 2 - Teddy Red (Exposed)",
+    "nextT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dd5": {
+    "name": "Mystique 2 - Teddy Pink (Covered Lace)",
+    "next": "[Rektas] Mystique 2 [SE].esp|dc2",
+    "nextN": "Mystique 2 - Teddy Pink (Exposed)",
+    "nextT": "change"
+  },
+  "[Rektas] Mystique 2 [SE].esp|dd6": {
+    "name": "Mystique 2 - Teddy Purple (Covered Lace)",
+    "next": "[Rektas] Mystique 2 [SE].esp|dc3",
+    "nextN": "Mystique 2 - Teddy Purple (Exposed)",
+    "nextT": "change"
+  }
+}

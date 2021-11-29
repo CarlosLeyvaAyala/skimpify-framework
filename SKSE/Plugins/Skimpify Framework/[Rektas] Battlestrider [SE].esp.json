@@ -1,0 +1,38 @@
+{
+  "[Rektas] Battlestrider [SE].esp|80e": {
+    "name": "Battlestrider - Shirt 01 (Slutty)",
+    "prev": "[Rektas] Battlestrider [SE].esp|f9b",
+    "prevN": "Battlestrider - Shirt 01",
+    "prevT": "slip"
+  },
+  "[Rektas] Battlestrider [SE].esp|80f": {
+    "name": "Battlestrider - Shirt 02 (Slutty)",
+    "prev": "[Rektas] Battlestrider [SE].esp|ff7",
+    "prevN": "Battlestrider - Shirt 02",
+    "prevT": "slip"
+  },
+  "[Rektas] Battlestrider [SE].esp|810": {
+    "name": "Battlestrider - Shirt 03 (Slutty)",
+    "prev": "[Rektas] Battlestrider [SE].esp|ff8",
+    "prevN": "Battlestrider - Shirt 03",
+    "prevT": "slip"
+  },
+  "[Rektas] Battlestrider [SE].esp|f9b": {
+    "name": "Battlestrider - Shirt 01",
+    "next": "[Rektas] Battlestrider [SE].esp|80e",
+    "nextN": "Battlestrider - Shirt 01 (Slutty)",
+    "nextT": "slip"
+  },
+  "[Rektas] Battlestrider [SE].esp|ff7": {
+    "name": "Battlestrider - Shirt 02",
+    "next": "[Rektas] Battlestrider [SE].esp|80f",
+    "nextN": "Battlestrider - Shirt 02 (Slutty)",
+    "nextT": "slip"
+  },
+  "[Rektas] Battlestrider [SE].esp|ff8": {
+    "name": "Battlestrider - Shirt 03",
+    "next": "[Rektas] Battlestrider [SE].esp|810",
+    "nextN": "Battlestrider - Shirt 03 (Slutty)",
+    "nextT": "slip"
+  }
+}

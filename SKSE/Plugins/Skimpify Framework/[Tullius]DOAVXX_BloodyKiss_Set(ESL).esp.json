@@ -1,0 +1,35 @@
+{
+  "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|805": {
+    "name": "[DOAXVV]Bloody Kiss A",
+    "next": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|829",
+    "nextN": "[DOAXVV]Bloody Kiss AXX",
+    "nextT": "slip"
+  },
+  "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|829": {
+    "name": "[DOAXVV]Bloody Kiss AXX",
+    "prev": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|805",
+    "prevN": "[DOAXVV]Bloody Kiss A",
+    "prevT": "slip"
+  },
+  "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82a": {
+    "name": "[DOAXVV]Bloody Kiss B",
+    "next": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82b",
+    "nextN": "[DOAXVV]Bloody Kiss BX",
+    "nextT": "change"
+  },
+  "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82b": {
+    "name": "[DOAXVV]Bloody Kiss BX",
+    "next": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82c",
+    "nextN": "[DOAXVV]Bloody Kiss BXX",
+    "nextT": "change",
+    "prev": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82a",
+    "prevN": "[DOAXVV]Bloody Kiss B",
+    "prevT": "change"
+  },
+  "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82c": {
+    "name": "[DOAXVV]Bloody Kiss BXX",
+    "prev": "[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp|82b",
+    "prevN": "[DOAXVV]Bloody Kiss BX",
+    "prevT": "change"
+  }
+}

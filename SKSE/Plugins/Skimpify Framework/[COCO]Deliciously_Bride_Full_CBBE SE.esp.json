@@ -1,0 +1,107 @@
+{
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|801": {
+    "name": "[COCO]Bride_body1c",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|826",
+    "prevN": "[COCO]Bride_body1b",
+    "prevT": "slip"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|825": {
+    "name": "[COCO]Bride_body1a",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|826",
+    "nextN": "[COCO]Bride_body1b",
+    "nextT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|826": {
+    "name": "[COCO]Bride_body1b",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|801",
+    "nextN": "[COCO]Bride_body1c",
+    "nextT": "slip",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|825",
+    "prevN": "[COCO]Bride_body1a",
+    "prevT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|848": {
+    "name": "[COCO]Bride_body2a",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|849",
+    "nextN": "[COCO]Bride_body2b",
+    "nextT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|849": {
+    "name": "[COCO]Bride_body2b",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|889",
+    "nextN": "[COCO]Bride_body2c",
+    "nextT": "slip",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|848",
+    "prevN": "[COCO]Bride_body2a",
+    "prevT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|85e": {
+    "name": "[COCO]Bride_body3a",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|85f",
+    "nextN": "[COCO]Bride_body3b",
+    "nextT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|85f": {
+    "name": "[COCO]Bride_body3b",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88b",
+    "nextN": "[COCO]Bride_body3c",
+    "nextT": "slip",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|85e",
+    "prevN": "[COCO]Bride_body3a",
+    "prevT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|86b": {
+    "name": "[COCO]Bride_body5b",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88d",
+    "nextN": "[COCO]Bride_body5c",
+    "nextT": "slip",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|893",
+    "prevN": "[COCO]Bride_body5a",
+    "prevT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|87e": {
+    "name": "[COCO]Bride_body4a",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|87f",
+    "nextN": "[COCO]Bride_body4b",
+    "nextT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|87f": {
+    "name": "[COCO]Bride_body4b",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88f",
+    "nextN": "[COCO]Bride_body4c",
+    "nextT": "slip",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|87e",
+    "prevN": "[COCO]Bride_body4a",
+    "prevT": "change"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|889": {
+    "name": "[COCO]Bride_body2c",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|849",
+    "prevN": "[COCO]Bride_body2b",
+    "prevT": "slip"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88b": {
+    "name": "[COCO]Bride_body3c",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|85f",
+    "prevN": "[COCO]Bride_body3b",
+    "prevT": "slip"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88d": {
+    "name": "[COCO]Bride_body5c",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|86b",
+    "prevN": "[COCO]Bride_body5b",
+    "prevT": "slip"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|88f": {
+    "name": "[COCO]Bride_body4c",
+    "prev": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|87f",
+    "prevN": "[COCO]Bride_body4b",
+    "prevT": "slip"
+  },
+  "[COCO]Deliciously_Bride_Full_CBBE SE.esp|893": {
+    "name": "[COCO]Bride_body5a",
+    "next": "[COCO]Deliciously_Bride_Full_CBBE SE.esp|86b",
+    "nextN": "[COCO]Bride_body5b",
+    "nextT": "change"
+  }
+}

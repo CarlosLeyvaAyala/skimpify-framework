@@ -1,0 +1,14 @@
+{
+  "[NINI] Egyptian Pharaoh.esp|808": {
+    "name": "Egyptian Pharaoh Outfit",
+    "next": "[NINI] Egyptian Pharaoh.esp|809",
+    "nextN": "Egyptian Pharaoh Outfit Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Egyptian Pharaoh.esp|809": {
+    "name": "Egyptian Pharaoh Outfit Slutty",
+    "prev": "[NINI] Egyptian Pharaoh.esp|808",
+    "prevN": "Egyptian Pharaoh Outfit",
+    "prevT": "change"
+  }
+}

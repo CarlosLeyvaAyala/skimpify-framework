@@ -1,0 +1,14 @@
+{
+  "PeroPeroArmorPackSE.esp|862": {
+    "name": "Caged Vixen Outfit Alt",
+    "next": "PeroPeroArmorPackSE.esp|864",
+    "nextN": "Caged Vixen Outfit",
+    "nextT": "change"
+  },
+  "PeroPeroArmorPackSE.esp|864": {
+    "name": "Caged Vixen Outfit",
+    "prev": "PeroPeroArmorPackSE.esp|862",
+    "prevN": "Caged Vixen Outfit Alt",
+    "prevT": "change"
+  }
+}

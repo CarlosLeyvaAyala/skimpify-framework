@@ -1,0 +1,98 @@
+{
+  "[Christine] Nord Ascended.esp|83b": {
+    "name": "Nord Lower [Mara's Might]",
+    "next": "[Christine] Nord Ascended.esp|83d",
+    "nextN": "Nord Lower Damaged [Mara's Might]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|83c": {
+    "name": "Nord Lower [Dark Lord]",
+    "next": "[Christine] Nord Ascended.esp|83e",
+    "nextN": "Nord Lower Damaged [Dark Lord]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|83d": {
+    "name": "Nord Lower Damaged [Mara's Might]",
+    "prev": "[Christine] Nord Ascended.esp|83b",
+    "prevN": "Nord Lower [Mara's Might]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|83e": {
+    "name": "Nord Lower Damaged [Dark Lord]",
+    "prev": "[Christine] Nord Ascended.esp|83c",
+    "prevN": "Nord Lower [Dark Lord]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|841": {
+    "name": "Nord Upper [Mara's Might]",
+    "next": "[Christine] Nord Ascended.esp|843",
+    "nextN": "Nord Upper Damaged [Mara's Might]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|842": {
+    "name": "Nord Upper [Dark Lord]",
+    "next": "[Christine] Nord Ascended.esp|844",
+    "nextN": "Nord Upper Damaged [Dark Lord]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|843": {
+    "name": "Nord Upper Damaged [Mara's Might]",
+    "prev": "[Christine] Nord Ascended.esp|841",
+    "prevN": "Nord Upper [Mara's Might]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|844": {
+    "name": "Nord Upper Damaged [Dark Lord]",
+    "prev": "[Christine] Nord Ascended.esp|842",
+    "prevN": "Nord Upper [Dark Lord]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d79": {
+    "name": "Nord Lower [Ascended]",
+    "next": "[Christine] Nord Ascended.esp|d7b",
+    "nextN": "Nord Lower Damaged [Ascended]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d7a": {
+    "name": "Nord Lower [God-King]",
+    "next": "[Christine] Nord Ascended.esp|d7c",
+    "nextN": "Nord Lower Damaged [God-King]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d7b": {
+    "name": "Nord Lower Damaged [Ascended]",
+    "prev": "[Christine] Nord Ascended.esp|d79",
+    "prevN": "Nord Lower [Ascended]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d7c": {
+    "name": "Nord Lower Damaged [God-King]",
+    "prev": "[Christine] Nord Ascended.esp|d7a",
+    "prevN": "Nord Lower [God-King]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d7f": {
+    "name": "Nord Upper [Ascended]",
+    "next": "[Christine] Nord Ascended.esp|d80",
+    "nextN": "Nord Upper Damaged [Ascended]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d80": {
+    "name": "Nord Upper Damaged [Ascended]",
+    "prev": "[Christine] Nord Ascended.esp|d7f",
+    "prevN": "Nord Upper [Ascended]",
+    "prevT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d81": {
+    "name": "Nord Upper [God-King]",
+    "next": "[Christine] Nord Ascended.esp|d82",
+    "nextN": "Nord Upper Damaged [God-King]",
+    "nextT": "damage"
+  },
+  "[Christine] Nord Ascended.esp|d82": {
+    "name": "Nord Upper Damaged [God-King]",
+    "prev": "[Christine] Nord Ascended.esp|d81",
+    "prevN": "Nord Upper [God-King]",
+    "prevT": "damage"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "[Melodic] Dream Armor.esp|803": {
+    "name": "Dream armor Boots",
+    "next": "[Melodic] Dream Armor.esp|821",
+    "nextN": "Dream armor Boots Xtra",
+    "nextT": "change"
+  },
+  "[Melodic] Dream Armor.esp|808": {
+    "name": "Dream Armor Armor",
+    "next": "[Melodic] Dream Armor.esp|823",
+    "nextN": "Dream Armor Armor Xtra",
+    "nextT": "slip"
+  },
+  "[Melodic] Dream Armor.esp|80b": {
+    "name": "Dreamarmor Skirt",
+    "next": "[Melodic] Dream Armor.esp|820",
+    "nextN": "Dreamarmor Skirt Xtra",
+    "nextT": "change"
+  },
+  "[Melodic] Dream Armor.esp|820": {
+    "name": "Dreamarmor Skirt Xtra",
+    "prev": "[Melodic] Dream Armor.esp|80b",
+    "prevN": "Dreamarmor Skirt",
+    "prevT": "change"
+  },
+  "[Melodic] Dream Armor.esp|821": {
+    "name": "Dream armor Boots Xtra",
+    "prev": "[Melodic] Dream Armor.esp|803",
+    "prevN": "Dream armor Boots",
+    "prevT": "change"
+  },
+  "[Melodic] Dream Armor.esp|823": {
+    "name": "Dream Armor Armor Xtra",
+    "prev": "[Melodic] Dream Armor.esp|808",
+    "prevN": "Dream Armor Armor",
+    "prevT": "slip"
+  }
+}
