@@ -296,6 +296,8 @@ const ChangeK = (k: RelType) => `${ArmorK(k)}T`
 /** Key used to read armor change relationships from JContainers. */
 export const JcChangeK = (k: RelType) => `${k}T`
 
+export const ClearDB = () => JDB.setObj(fwKey, 0)
+
 /** Gets an Armor given an internal key.
  * This isn't meant to be used by final users.
  *
@@ -312,10 +314,10 @@ function GetArmor(a: ArmorArg, key: RelType) {
 
 function GetChangeType(a: ArmorArg, key: RelType) {
   if (!a) return null
-  const r = JFormDB.solveStr(a, ChangeK(key), defaultType)
-  return r === "slip"
+  const r = JFormDB.solveStr(a, ChangeK(key), defaultType).toLowerCase()
+  return r === ChangeRel.slip
     ? ChangeRel.slip
-    : r === "damage"
+    : r === ChangeRel.damage
     ? ChangeRel.damage
     : ChangeRel.change
 }
@@ -371,8 +373,8 @@ const HasKey = (a: ArmorArg, r: RelType) =>
 
 /** Ensures a string is a valid {@link ChangeRel}. Returns {@link defaultType} if string was invalid. */
 export const ValidateChangeRel = (rel: string) =>
-  rel === ChangeRel.slip
+  rel.toLowerCase() === ChangeRel.slip
     ? ChangeRel.slip
-    : rel === ChangeRel.damage
+    : rel.toLowerCase() === ChangeRel.damage
     ? ChangeRel.damage
     : defaultType

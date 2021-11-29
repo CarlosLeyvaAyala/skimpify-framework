@@ -10,6 +10,8 @@ import {
   cfgDir,
   ChangeRel,
   ClearChangeRel,
+  ClearDB,
+  DbHandle,
   EquippedData,
   GetAllModest,
   GetAllSkimpy,
@@ -33,7 +35,7 @@ import {
   settings,
   storage,
 } from "skyrimPlatform"
-import { LogV, LogVT } from "./debug"
+import { LogI, LogV, LogVT } from "./debug"
 
 const invalid = -1
 
@@ -83,6 +85,7 @@ export function main() {
   const OnMarkChange = Hotkeys.ListenTo(DxScanCode.F, develop)
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G, develop)
   const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z, develop)
+  const OnDump = Hotkeys.ListenTo(DxScanCode.X, develop)
 
   // Only key
   const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow, develop)
@@ -93,8 +96,8 @@ export function main() {
   on("update", () => {
     if (
       develop &&
-      (Input.isKeyPressed(DxScanCode.LeftShift) ||
-        Input.isKeyPressed(DxScanCode.RightShift))
+      (Input.isKeyPressed(DxScanCode.LeftAlt) ||
+        Input.isKeyPressed(DxScanCode.RightAlt))
     ) {
       OnMarkModest(Mark.Modest)
       OnMarkClear(Mark.Clear)
@@ -102,6 +105,7 @@ export function main() {
       OnMarkChange(Mark.Change)
       OnMarkDamage(Mark.Damage)
       OnDebugEquipped(Mark.DebugOne)
+      OnDump(Dump)
 
       OnSaveJson(SaveJson)
       OnLoadJson(Load.Armors)
@@ -116,6 +120,16 @@ export function main() {
 
   const i = develop ? " in DEVELOPER MODE" : ""
   printConsole(`Skimpify Framework successfully initialized${i}.`)
+}
+
+function Dump() {
+  ClearDB()
+
+  const f = `${cfgDir}dump/dump.json`
+  JValue.writeToFile(DbHandle(), f)
+  JDB.writeToFile(`${cfgDir}dump/dump all.json`)
+
+  Debug.messageBox(`File was dumped to ${f}`)
 }
 
 /** Uequips all armor on the player. */
@@ -146,7 +160,8 @@ function ChangeAll(f: (a: ActorArg) => EquippedData) {
 
   aa.current.forEach((a, i) => {
     SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
-    Debug.notification(a.kind as string)
+    //@ts-ignore
+    Debug.notification(a.kind)
   })
 }
 
@@ -155,6 +170,7 @@ namespace Load {
     // Read from all files
     const d = JValue.readFromDirectory(cfgDir, ".json")
     let n = 0
+    // JValue.writeToFile(d, `${cfgDir}dump/dump load.json`)
 
     JMapL.ForAllKeys(d, (k) => {
       const fileO = JMap.getObj(d, k)

@@ -3,9 +3,9 @@ import { DebugLib } from "DmLib"
 const L = DebugLib.Log
 const fs = DebugLib.Log.CreateAll(
   "Skimpify Framework",
-  L.Level.verbose,
-  L.ConsoleFmt
-  // L.FileFmt
+  L.Level.info,
+  L.ConsoleFmt,
+  L.FileFmt
 )
 
 /** Log at `none` level. Basically, ignore logging settings, except when using special modes. */

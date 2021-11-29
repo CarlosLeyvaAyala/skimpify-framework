@@ -110,12 +110,12 @@ export function AutoGenArmors() {
 
   autoN = 0
   GenSkimpyGroupsByName(GetInventoryArmors())
-  Debug.messageBox(`Data for ${autoN} pairs of armors in inventory has been automatically generated. 
+  Debug.messageBox(`Data for ${autoN} pairs of armors in inventory has been automatically generated.
 
   Now you can test in game if things are as you expected, then you can export them to json.`)
 }
 
-function GetInventoryArmors() {
+function GetInventoryArmors(): ArmorData[] {
   LogN("Armors in inventory:\n")
   const r: ArmorData[] = new Array()
 
@@ -124,7 +124,21 @@ function GetInventoryArmors() {
     if (d) r.push(d)
   })
 
-  return r.sort((a, b) => a.name.localeCompare(b.name))
+  const rr: ArmorData[] = r.map((v) => {
+    return {
+      uId: v.uId,
+      id: v.id,
+      name: FindPreprocessed(v.name),
+      armor: v.armor,
+      esp: v.esp,
+      next: v.next,
+      nextT: v.nextT,
+      prev: v.prev,
+      prevT: v.prevT,
+    }
+  })
+
+  return rr.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 function ArmorToData(a: Armor): ArmorData | null {
@@ -140,6 +154,52 @@ function ArmorToData(a: Armor): ArmorData | null {
     armor: a,
     uId: LogNT("", GetUniqueId(info.modName, info.fixedFormId), L),
   }
+}
+
+interface AutoSearchPair {
+  search: string
+  rel: ChangeRel
+}
+
+const skimpyNames: AutoSearchPair[] = [
+  { search: "slutty", rel: ChangeRel.change },
+  { search: "slut", rel: ChangeRel.change },
+  { search: "xtra", rel: ChangeRel.change },
+  { search: "damaged", rel: ChangeRel.damage },
+  { search: "damage", rel: ChangeRel.damage },
+  { search: "broken", rel: ChangeRel.damage },
+  { search: "broke", rel: ChangeRel.damage },
+  { search: "naked", rel: ChangeRel.change },
+  { search: "nude", rel: ChangeRel.change },
+  { search: "topless", rel: ChangeRel.change },
+  { search: "sex", rel: ChangeRel.change },
+]
+
+function PreprocessName(n: string, search: string) {
+  // LogI(`-------- ${search} ${n}`)
+  const i = n.indexOf(search)
+  if (i < 0) return n
+  const s = new RegExp(`\\s*${search}`)
+  const m = n.match(s)
+  if (!m) return n
+  const m0 = m[0]
+
+  const mx = n.split(s).join("") + m0
+
+  LogV(`Armor name was rearranged because it may be a variant`)
+  LogV(`Original: ${n}`)
+  LogV(`Rearranged: ${mx}\n`)
+  return mx
+}
+
+function FindPreprocessed(n: string) {
+  const o = n.toLowerCase()
+
+  for (const e of skimpyNames) {
+    const nn = PreprocessName(o, e.search)
+    if (nn !== o) return nn
+  }
+  return LogVT("Armor name didn't need preprocess", o)
 }
 
 function GenSkimpyGroupsByName(armors: ArmorData[]) {
@@ -158,7 +218,7 @@ function GenSkimpyGroupsByName(armors: ArmorData[]) {
     }
 
     // Process matching items
-    ProcessMatches(matches, output, matches[0].name.length)
+    ProcessMatches(matches, output)
 
     // Delete the tentative base armor
     armors.shift()
@@ -167,28 +227,28 @@ function GenSkimpyGroupsByName(armors: ArmorData[]) {
   return output
 }
 
-function ProcessMatches(
-  m: ArmorData[],
-  output: RawMap,
-  baseNameLength: number
-) {
+function ProcessMatches(m: ArmorData[], output: RawMap) {
   const n = m.length
   if (n < 2) return
 
   LogI("These armors seem to be variants")
   LogI("=================================")
+  const l = LogVT("Base name length", m[0].name.length)
+
+  // Sorting by word length makes it easier to get correct matches
+  m = m.sort((a, b) => a.name.length - b.name.length)
   m.forEach((a, i) => LogV(`${a.name}${i === n - 1 ? "\n" : ""}`))
 
   /** If some element of the list contains some word, adds a relationship with
    * both the start of this list and that element.
    */
   const TestWord = (s: string, rel: ChangeRel = ChangeRel.change) => {
-    const l = baseNameLength
     let fIdx = 0
 
     /** Checks if next items' name end with some particular word */
     const CheckFor = (s: string) =>
       m.slice(1).some((a, i) => {
+        // Find searched word after the end of the base
         const t = a.name.toLowerCase().indexOf(s, l) > -1
         fIdx = t ? i + 1 : 0
         return t
@@ -203,18 +263,12 @@ function ProcessMatches(
     m.splice(0, 1) // Delete first element
 
     // Process again the rest of the list
-    ProcessMatches(b.concat(m), output, l)
+    ProcessMatches(b.concat(m), output)
     return true
   }
 
   // Test for relationships with next elements. Give priority to items with names containing "slut"
-  if (TestWord("slut")) return
-  if (TestWord("xtra")) return
-  if (TestWord("damage", ChangeRel.damage)) return
-  if (TestWord("broke", ChangeRel.damage)) return
-  if (TestWord("naked")) return
-  if (TestWord("nude")) return
-  if (TestWord("topless")) return
+  for (const e of skimpyNames) if (TestWord(e.search, e.rel)) return
 
   LogI(`--- No relationship found between elements in this list.`)
   LogI(
@@ -245,20 +299,20 @@ function MakeChild(
   saveToMem: boolean = true
 ) {
   // Test if Change Relationship already exists.
-  const change = ChangeExists(parent, child, relationship)
+  const ch = ChangeExists(parent, child, relationship)
 
   // Add relationship
   parent.next = child.uId
-  parent.nextT = change
+  parent.nextT = ch
   child.prev = parent.uId
-  child.prevT = change
+  child.prevT = ch
 
   // Add it to memory, so player can test changes right away
-  if (saveToMem) AddChangeRel(parent.armor, child.armor, change)
+  if (saveToMem) AddChangeRel(parent.armor, child.armor, ch)
   autoN++
 
   LogI(
-    `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${change}.\n`
+    `${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${ch}.\n`
   )
 }
 
