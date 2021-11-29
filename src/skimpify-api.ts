@@ -31,7 +31,7 @@ import { Actor, Armor } from "skyrimPlatform"
  *
  * @todo {@link GetChangeType} must be changed each time this enum changes.
  */
-export const enum ChangeType {
+export const enum ChangeRel {
   /** The `Armor` is basically the same, but moved/open to be revealing.
    *
    * An unbuttoned bra is a good candidate to be registered as this type.
@@ -73,7 +73,7 @@ export interface SkimpyData {
   /** The `Armor` to change to. `null` if it doesn't exist. */
   armor: Armor | null
   /** What kind of "skimpification" the change entails. `null` if no change exist. */
-  kind: ChangeType | null
+  kind: ChangeRel | null
 }
 
 /** All equipped armors with their modest/skimpy counterparts. */
@@ -197,21 +197,21 @@ export const GetAllModest = (a: ActorArg) =>
  * @param a Armor to check.
  * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a `slip`.
  */
-export const GetSlip = (a: ArmorArg) => NextByType(a, ChangeType.slip)
+export const GetSlip = (a: ArmorArg) => NextByType(a, ChangeRel.slip)
 
 /** If the skimpy version of an `Armor` is a `change`, returns it.
  *
  * @param a Armor to check.
  * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
  */
-export const GetChange = (a: ArmorArg) => NextByType(a, ChangeType.change)
+export const GetChange = (a: ArmorArg) => NextByType(a, ChangeRel.change)
 
 /** If the skimpy version of an `Armor` is a `damage`, returns it.
  *
  * @param a Armor to check.
  * @returns The damaged `Armor`. `null` if `a` has no Skimpy version or if it isn't a `damage`.
  */
-export const GetDamage = (a: ArmorArg) => NextByType(a, ChangeType.damage)
+export const GetDamage = (a: ArmorArg) => NextByType(a, ChangeRel.damage)
 
 /** Checks if an armor has a registered modest version of itself. */
 export const HasModest = (a: ArmorArg) => HasKey(a, "prev")
@@ -236,7 +236,7 @@ export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
 export function AddChangeRel(
   modest: ArmorArg,
   skimpy: ArmorArg,
-  change: ChangeType = ChangeType.change
+  change: ChangeRel = ChangeRel.change
 ) {
   if (!modest || !skimpy) return
   SetRel(modest, skimpy, "next", change)
@@ -250,8 +250,8 @@ export function AddChangeRel(
 export function ClearChangeRel(a: ArmorArg) {
   const C = (parent: ArmorArg, child: ArmorArg) => {
     if (!parent || !child) return
-    SetRel(parent, null, "next", ChangeType.change)
-    SetRel(child, null, "prev", ChangeType.change)
+    SetRel(parent, null, "next", ChangeRel.change)
+    SetRel(child, null, "prev", ChangeRel.change)
   }
 
   C(GetModest(a), a)
@@ -279,7 +279,7 @@ export function ClearChangeRel(a: ArmorArg) {
 export type RelType = "next" | "prev"
 
 /** Default type to assume what an armor version is when it has no associated/valid type. */
-export const defaultType = ChangeType.change
+export const defaultType = ChangeRel.change
 
 /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
 export const DbHandle = () => JDB.solveObj(fwKey)
@@ -314,13 +314,13 @@ function GetChangeType(a: ArmorArg, key: RelType) {
   if (!a) return null
   const r = JFormDB.solveStr(a, ChangeK(key), defaultType)
   return r === "slip"
-    ? ChangeType.slip
+    ? ChangeRel.slip
     : r === "damage"
-    ? ChangeType.damage
-    : ChangeType.change
+    ? ChangeRel.damage
+    : ChangeRel.change
 }
 
-function NextByType(a: ArmorArg, t: ChangeType) {
+function NextByType(a: ArmorArg, t: ChangeRel) {
   const aa = GetSkimpy(a)
   if (!aa) return null
   if (GetSkimpyType(a) === t) return aa
@@ -332,7 +332,7 @@ export const SetRel = (
   a1: ArmorArg,
   a2: ArmorArg,
   r: RelType,
-  c: ChangeType
+  c: ChangeRel
 ) => {
   JFormDB.solveFormSetter(a1, ArmorK(r), a2, true) // Save form
   JFormDB.solveStrSetter(a1, ChangeK(r), c, true) // Save change type
@@ -369,10 +369,10 @@ export function GetAll(
 const HasKey = (a: ArmorArg, r: RelType) =>
   !a ? false : JFormDB.solveForm(a, ArmorK(r)) !== null
 
-/** Ensures a string is a valid {@link ChangeType}. Returns {@link defaultType} if string was invalid. */
-export const ValidateChangeType = (rel: string) =>
-  rel === ChangeType.slip
-    ? ChangeType.slip
-    : rel === ChangeType.damage
-    ? ChangeType.damage
+/** Ensures a string is a valid {@link ChangeRel}. Returns {@link defaultType} if string was invalid. */
+export const ValidateChangeRel = (rel: string) =>
+  rel === ChangeRel.slip
+    ? ChangeRel.slip
+    : rel === ChangeRel.damage
+    ? ChangeRel.damage
     : defaultType

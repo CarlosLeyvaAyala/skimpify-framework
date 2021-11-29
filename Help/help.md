@@ -236,7 +236,7 @@ flowchart LR
 ```ts
 function MostModest(a: Armor): Armor | null {
   const p = GetModestData(a)
-  if (!p.armor || p.kind === ChangeType.damage) return null
+  if (!p.armor || p.kind === ChangeRel.damage) return null
   const pp = MostModest(p.armor)
   return pp ? pp : p.armor
 }
@@ -386,13 +386,42 @@ flowchart LR
     B <-- change --> C[Red Nose Just Bones]
 ```
 
-## Armor finding
+## Armor identity solving
 
-Had to take them out from the PDF because they looked like shit, but some lines in the json sample above should have been highlighted:
+Had to take them out from the PDF because they looked like shit, but some lines in the json sample above should had been highlighted:
 
 ![](img/json-highlight.png)
 
-Those are the kind of lines the framework actually uses for recognizing armors  
+Those are the kind of lines the framework actually uses for recognizing armors.
+
+The basic structure is:
+
+```mermaid
+flowchart LR
+    A[Esp file name] o-- separator --> B[Hex FormId]
+```
+
+```json
+"esp|formId"
+```
+
+That's all the framework needs to know for recognizing an armor and that's why if configuration files have different FormIds defined in them than the data your actual game carries, they won't work.
+
+Even the `"prevT"` and `"nextT"` lines (which define the _Change Relationship_ between two armors), can be ommited.
+In that case, their relationship will be assumed to be `change`.
+
+!!!info Did you know...?
+    When I first started to write this framework, I originally named them _"Change Types"_. That's why those things were named `prevT(ype)` and `nextT(ype)`.
+
+    It was until way later that I settled down to call them _Change Relationships_, but at that point it was too risky to change `"prevT"` and `"nextT"` names to reflect that, since that could be a source of **VERY** hard to track bugs.
+
+    So... just remember this when you wonder why those things aren't named `"prevR"` and `"nextR"`.
+
+All this info is quite useful if you plan to manually modify json files.
+For example, sometimes it's way easier to use [automatic generation mode][AutoGen], save those files, and use a text editor to change all relationships to `"slip"`.
+
+Still, only a weirdo would create json config files by hand.
+That's why there are functions for registering armors while in game.
 
 # Known issues
 

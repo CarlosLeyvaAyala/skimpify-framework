@@ -1,7 +1,6 @@
 import { DebugLib, FormLib, Hotkeys, Misc } from "DmLib"
 import { AutoGenArmors, SaveJson } from "genJson"
 import * as JDB from "JContainers/JDB"
-import * as JFormDB from "JContainers/JFormDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
@@ -9,9 +8,8 @@ import {
   ActorArg,
   AddChangeRel,
   cfgDir,
-  ChangeType,
+  ChangeRel,
   ClearChangeRel,
-  defaultType,
   EquippedData,
   GetAllModest,
   GetAllSkimpy,
@@ -21,7 +19,7 @@ import {
   RelType,
   SetRel,
   SkimpyData,
-  ValidateChangeType,
+  ValidateChangeRel,
 } from "skimpify-api"
 import {
   Actor,
@@ -183,7 +181,7 @@ namespace Load {
     if (!n) return // Don't save inexisting variants
 
     const c = JMap.getStr(data, JcChangeK(rel))
-    const cT = ValidateChangeType(c)
+    const cT = ValidateChangeRel(c)
 
     SetRel(parent, n, rel, cT)
   }
@@ -228,7 +226,7 @@ namespace Mark {
    *
    * @param c What kind of _Change Relationship_ will be added between two armors.
    */
-  function Child(c: ChangeType) {
+  function Child(c: ChangeRel) {
     OnlyOneArmor((a) => {
       const ShowInvalid = () => {
         const m = `Can't create a Change Relationship because a modest version for this armor hasn't been set.
@@ -251,11 +249,11 @@ namespace Mark {
   }
 
   /** Marks a `slip` relationship between two armors. */
-  export const Slip = () => Child(ChangeType.slip)
+  export const Slip = () => Child(ChangeRel.slip)
   /** Marks a `change` relationship between two armors. */
-  export const Change = () => Child(ChangeType.change)
+  export const Change = () => Child(ChangeRel.change)
   /** Marks a `damage` relationship between two armors. */
-  export const Damage = () => Child(ChangeType.damage)
+  export const Damage = () => Child(ChangeRel.damage)
 
   /** Marks the armor the player is using as the modest version of another. */
   export function Modest() {

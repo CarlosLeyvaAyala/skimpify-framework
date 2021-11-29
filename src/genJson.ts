@@ -5,7 +5,7 @@ import { WriteToFile } from "PapyrusUtil/MiscUtil"
 import {
   AddChangeRel,
   cfgDir,
-  ChangeType,
+  ChangeRel,
   DbHandle,
   defaultType,
   GetModestData,
@@ -25,10 +25,10 @@ interface OutputData {
   name: string
   next?: string
   nextN?: string
-  nextT?: ChangeType | null
+  nextT?: ChangeRel | null
   prev?: string
   prevN?: string
-  prevT?: ChangeType | null
+  prevT?: ChangeRel | null
 }
 
 interface ArmorData {
@@ -38,9 +38,9 @@ interface ArmorData {
   armor: Armor
   uId: string
   next?: string
-  nextT?: ChangeType
+  nextT?: ChangeRel
   prev?: string
-  prevT?: ChangeType
+  prevT?: ChangeRel
 }
 
 /** Filename where an Armor was defined. */
@@ -182,7 +182,7 @@ function ProcessMatches(
   /** If some element of the list contains some word, adds a relationship with
    * both the start of this list and that element.
    */
-  const TestWord = (s: string, rel: ChangeType = ChangeType.change) => {
+  const TestWord = (s: string, rel: ChangeRel = ChangeRel.change) => {
     const l = baseNameLength
     let fIdx = 0
 
@@ -210,8 +210,8 @@ function ProcessMatches(
   // Test for relationships with next elements. Give priority to items with names containing "slut"
   if (TestWord("slut")) return
   if (TestWord("xtra")) return
-  if (TestWord("damage", ChangeType.damage)) return
-  if (TestWord("broke", ChangeType.damage)) return
+  if (TestWord("damage", ChangeRel.damage)) return
+  if (TestWord("broke", ChangeRel.damage)) return
   if (TestWord("naked")) return
   if (TestWord("nude")) return
   if (TestWord("topless")) return
@@ -222,7 +222,7 @@ function ProcessMatches(
   )
 }
 
-function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeType) {
+function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeRel) {
   const { armor, kind } = GetSkimpyData(p.armor)
   const L = () => {
     LogI(
@@ -240,7 +240,7 @@ function ChangeExists(p: ArmorData, c: ArmorData, r: ChangeType) {
 function MakeChild(
   parent: ArmorData,
   child: ArmorData,
-  relationship: ChangeType,
+  relationship: ChangeRel,
   output: RawMap,
   saveToMem: boolean = true
 ) {
