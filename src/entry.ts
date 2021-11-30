@@ -175,7 +175,7 @@ namespace Armors {
     FormLib.ForEachArmorR(p, (a) => {
       p.removeItem(a, p.getItemCount(a), true, null)
     })
-    Debug.messageBox(`All armors equipped on the player were deleted.`)
+    Debug.messageBox(`All armors in the player inventory were deleted.`)
   }
 }
 

@@ -365,17 +365,25 @@ This defines the middle armor relationships in [the chain we saw above](#a-real-
 ```
 Since we are only defining one armor, this is a rough visual representation of what those lines are saying:
 
-```sequence
-participant Upper
-participant Slutty
-participant Just Bones
-Note over Slutty: 11ed3c
-note over Slutty,Just Bones: next
-Note over Just Bones: 123e40
-Slutty->>Just Bones: change
-note over Slutty,Upper: prev
-Note over Upper: 119c2d
-Slutty->>Upper: slip
+```mermaid
+sequenceDiagram
+  participant U as Upper
+  participant S as Slutty
+  participant J as Just Bones
+
+  Note over S: 11ed3c
+
+  Note over J: 123e40
+  rect rgb(200, 150, 255)
+  S->>J: change
+  Note over S,J: next
+  end
+
+  Note over U: 119c2d
+  rect rgb(200, 150, 255)
+  S->>U: slip
+  Note over S,U: prev
+  end
 ```
 
 And this is how the whole chain looks like:
