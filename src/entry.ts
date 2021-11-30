@@ -74,7 +74,7 @@ export function main() {
     // MarkInitialized()
   }
 
-  // Shift + key
+  // Alt + key
   const OnLoadJson = Hotkeys.ListenTo(DxScanCode.Q, develop)
   const OnSaveJson = Hotkeys.ListenTo(DxScanCode.W, develop)
   const OnAutoGen = Hotkeys.ListenTo(DxScanCode.E, develop)
@@ -86,6 +86,8 @@ export function main() {
   const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G, develop)
   const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z, develop)
   const OnDump = Hotkeys.ListenTo(DxScanCode.X, develop)
+
+  const OnDiscardArmors = Hotkeys.ListenTo(DxScanCode.M, develop)
 
   // Only key
   const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow, develop)
@@ -107,15 +109,17 @@ export function main() {
       OnDebugEquipped(Mark.DebugOne)
       OnDump(Dump)
 
+      OnDiscardArmors(Armors.Discard)
+
       OnSaveJson(SaveJson)
       OnLoadJson(Load.Armors)
       OnAutoGen(AutoGenArmors)
     }
 
-    OnAllSkimpy(AllSkimpy)
-    OnAllModest(AllModest)
-    OnUnequipAll(UnequipAll)
-    OnUnequipAll2(UnequipAll)
+    OnAllSkimpy(Armors.AllSkimpy)
+    OnAllModest(Armors.AllModest)
+    OnUnequipAll(Armors.UnequipAll)
+    OnUnequipAll2(Armors.UnequipAll)
   })
 
   const i = develop ? " in DEVELOPER MODE" : ""
@@ -132,37 +136,47 @@ function Dump() {
   Debug.messageBox(`File was dumped to ${f}`)
 }
 
-/** Uequips all armor on the player. */
-function UnequipAll() {
-  const pl = Game.getPlayer() as Actor
-  // Don't use unequipAll() because it doesn't discriminate on what it will unequip
-  const aa = FormLib.GetEquippedArmors(pl)
-  aa.forEach((a) => {
-    pl.unequipItem(a, false, true)
-  })
-}
+namespace Armors {
+  /** Uequips all armor on the player. */
+  export function UnequipAll() {
+    const pl = Game.getPlayer() as Actor
+    // Don't use unequipAll() because it doesn't discriminate on what it will unequip
+    const aa = FormLib.GetEquippedArmors(pl)
+    aa.forEach((a) => {
+      pl.unequipItem(a, false, true)
+    })
+  }
 
-/** Swap an armor on an actor. */
-const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
-  act.unequipItem(from, false, true)
-  act.equipItem(to, false, true)
-}
+  /** Swap an armor on an actor. */
+  const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
+    act.unequipItem(from, false, true)
+    act.equipItem(to, false, true)
+  }
 
-/** Changes all equipped armors to their skimpier counterparts. */
-const AllSkimpy = () => ChangeAll(GetAllSkimpy)
-/** Changes all equipped armors to their modest counterparts. */
-const AllModest = () => ChangeAll(GetAllModest)
+  /** Changes all equipped armors to their skimpier counterparts. */
+  export const AllSkimpy = () => ChangeAll(GetAllSkimpy)
+  /** Changes all equipped armors to their modest counterparts. */
+  export const AllModest = () => ChangeAll(GetAllModest)
 
-/** Swaps all armors the player is using for some variant. */
-function ChangeAll(f: (a: ActorArg) => EquippedData) {
-  const pl = Game.getPlayer() as Actor
-  const aa = f(pl)
+  /** Swaps all armors the player is using for some variant. */
+  function ChangeAll(f: (a: ActorArg) => EquippedData) {
+    const pl = Game.getPlayer() as Actor
+    const aa = f(pl)
 
-  aa.current.forEach((a, i) => {
-    SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
-    //@ts-ignore
-    Debug.notification(a.kind)
-  })
+    aa.current.forEach((a, i) => {
+      SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
+      //@ts-ignore
+      Debug.notification(a.kind)
+    })
+  }
+
+  export function Discard() {
+    const p = Game.getPlayer() as Actor
+    FormLib.ForEachArmorR(p, (a) => {
+      p.removeItem(a, p.getItemCount(a), true, null)
+    })
+    Debug.messageBox(`All armors equipped on the player were deleted.`)
+  }
 }
 
 namespace Load {
