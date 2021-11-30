@@ -1,3 +1,27 @@
+- [Overview](#overview)
+- [Features](#features)
+- [Usage](#usage)
+  - [Using it as a player](#using-it-as-a-player)
+  - [Using it as a modder](#using-it-as-a-modder)
+- [Warning: heavy reading ahead](#warning-heavy-reading-ahead)
+- [Developer mode](#developer-mode)
+- [Change Relationships](#change-relationships)
+  - [`slip`](#slip)
+  - [`change`](#change)
+  - [`damage`](#damage)
+    - [Skip this if you are not a programmer!](#skip-this-if-you-are-not-a-programmer)
+  - [Relationship chains](#relationship-chains)
+    - [A real life example](#a-real-life-example)
+  - [Understanding API calls](#understanding-api-calls)
+- [Configuration files](#configuration-files)
+  - [Armor identity solving](#armor-identity-solving)
+- [Automatically registering armors](#automatically-registering-armors)
+  - [In depth explanation of how it setups relationships](#in-depth-explanation-of-how-it-setups-relationships)
+- [Manual mode](#manual-mode)
+- [Known issues](#known-issues)
+  - [It will delete custom armor enchantments](#it-will-delete-custom-armor-enchantments)
+  - [There will be some hiccups](#there-will-be-some-hiccups)
+
 # Overview
 
 We all love armors with skimpy or damaged variants, but there's no other way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
@@ -418,10 +442,232 @@ In that case, their relationship will be assumed to be `change`.
     So... just remember this when you wonder why those things aren't named `"prevR"` and `"nextR"`.
 
 All this info is quite useful if you plan to manually modify json files.
-For example, sometimes it's way easier to use [automatic generation mode][AutoGen], save those files, and use a text editor to change all relationships to `"slip"`.
+For example, sometimes it's way easier to use [automatic generation mode][AutoGen], save those files, then use a text editor to change all relationships to `"slip"`.
 
-Still, only a weirdo would create json config files by hand.
+At any rate, only a weirdo would create json config files by hand.
 That's why there are functions for registering armors while in game.
+
+# Automatically registering armors
+
+This is the first of the ==hotkey based functions== we will learn about.
+
+This mode ***tries*** to automatically set relationships based on armor names.[^ArmorNames]
+[^ArmorNames]: This is the only thing armor names are used for.
+
+To use it:
+
+1. Put the armors you want to set relationships for in your inventory.
+2. Press the hotkey.
+3. ==Test that relationships were setup as expected==.
+
+![](img/inventory.jpg)
+
+This mode is quite limited by the fact that armors names don't really follow any kind of covention, so most of the time it will setup relationships as being of type [`change`](#change).
+The only single time it will set them up with any other value is if a variant contains the word _"damage"_ or _"damaged"_ (see picture above).
+
+Since you will get a `change` relationship most of the time, you will most probably follow these steps when using this auto function:
+
+1. Automatically register armors.
+2. ==Save database to json files==.
+3. Manually modify your newly generated [configuration file][ConfigFiles] using some text editor.
+4. ==Reload data from json files==, so your changes made in the json file are lodaded into the game.
+
+By the way...
+
+!!!warning
+    If this function finds that a _Change Relationship_ was already been stablished between two armors, it won't change it.
+
+## In depth explanation of how it setups relationships
+
+You can skip this part if you like, but it will give you a better insight of what to expect when using this functionality.
+
+As I said, there's no way this function knows what an armor is supposed to represent.
+
+For example, many skimpy variants of armors are named _"slutty"_, but that doesn't say anything at all about what the armor actually looks like.
+In practice, it may mean anything: a nipslip, a pussy slip, revealing armor...
+
+So, since the most common variant found is of `change` type, this assumes everything that isn't named _"damage"_ is a `change` type.
+
+How does it know which armors **MAY** be related? By looking at their names.
+
+This is the overall process[^Alogrithm]:
+
+[^Alogrithm]: It took me some tries and some ingenuity to come up with this algorithm. I don't think it will get better than this.
+
+1. First it rearranges the name of all armors based on some list (more on that soon).
+2. Then it compares all armors that seem to be related.
+3. If some armor on the list has one of the words on the llist I talked about in step 1, it will be marked.
+
+The list I told about is a list of words I know are ususally used to denote skimpy versions.
+If an armor name has any of those words on it, it will get sent to the end of the word so it can be more easily compared.
+
+Here's the list; and the automatic registering process will try to find words in this order:
+
+1. slutty
+1. slut
+1. xtra
+2. naked
+3. nude
+4. topless
+5. sex
+6. damaged
+7. damage
+8. broken
+9. broke
+
+This how it looks in action (taken from an actual log):
+
+```
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Generating armors for exporting
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armors in inventory:
+
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Nord Upper [Dark Lord]
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [Christine] Nord Ascended.esp|842
+
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Nord Upper Damaged [Dark Lord]
+[none] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [Christine] Nord Ascended.esp|844
+
+... etc
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name didn't need preprocess: nord upper [dark lord]
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name was rearranged because it may be a variant
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Original: nord upper damaged [dark lord]
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Rearranged: nord upper [dark lord] damaged
+
+... etc
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name didn't need preprocess: [coco]assassin_corset1
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name was rearranged because it may be a variant
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Original: [coco]assassin_corsetsex1
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Rearranged: [coco]assassin_corset1sex
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name didn't need preprocess: [coco]assassin_corset1b
+
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Armor name was rearranged because it may be a variant
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Original: [coco]assassin_corsetsex1b
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Rearranged: [coco]assassin_corset1bsex
+```
+
+As you can see, it found the word `damaged` in `nord upper damaged [dark lord]`, so it send it to the end of the name, ending up with `nord upper [dark lord] damaged`.
+
+Same with:
+
+`[coco]assassin_corsetsex1` &rarr; `[coco]assassin_corset1sex`
+`[coco]assassin_corsetsex1b` &rarr; `[coco]assassin_corset1bsex`
+
+Why doing that? Because, as you saw in the log, base armors are named:
+
+```
+nord upper [dark lord]
+[coco]assassin_corset1
+[coco]assassin_corset1b
+```
+
+Are you seeing why it's easier for a computer to compare:
+
+```
+nord upper [dark lord]
+nord upper [dark lord] damaged
+
+[coco]assassin_corset1
+[coco]assassin_corset1sex
+
+[coco]assassin_corset1b
+[coco]assassin_corset1bsex
+```
+
+than:
+
+```
+nord upper [dark lord]
+nord upper damaged [dark lord]
+
+[coco]assassin_corset1
+[coco]assassin_corsetsex1
+
+[coco]assassin_corset1b
+[coco]assassin_corsetsex1b
+```
+
+?
+
+Yeah, the first version is just the same name but with with some word added at the end of if.
+
+By the way, this renaming stuff is only done for the purpose of finding possible matches.
+It won't change your armor name in game. At all.
+
+!!!warning
+      Knowing in what order words are searched and how items are renamed is important because if a base armor has a name like `Slutty elf armor` and a broken variant named `Slutty elf damaged armor`, they will be renamed as `elf armor slutty` and `elf damaged armor slutty`.
+
+      ... those names won't be recognized as the same armor because they don't share the same word radix.
+
+Once things are renamed, it tries to find which armors seem to be the same, but with a new word added at the end:
+
+```
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: These armors seem to be variants
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1b
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1sex
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1bsex
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: *** [coco]assassin_corset1sex is a(n) sex variant
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1sex is now registered as a skimpy version of [coco]assassin_corset1. Change type: slip.
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: These armors seem to be variants
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1b
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1sex
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1bsex
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: *** [coco]assassin_corset1bsex is a(n) sex variant
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1bsex is now registered as a skimpy version of [coco]assassin_corset1b. Change type: slip.
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: These armors seem to be variants
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1sex
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: [coco]assassin_corset1bsex
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: --- No relationship found between elements in this list.
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: Did this framework's author forget to check for some particular word?
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: These armors seem to be variants
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: =================================
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: nord lower [ascended]
+[verbose] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: nord lower [ascended] damaged
+
+[info] ‎29‎/‎11‎/‎2021‎ ‎02‎:‎54‎:‎12‎ ‎a. m.: *** nord lower [ascended] damaged is a(n) damaged variant
+```
+
+Coco Assassin armors were recognized as `slip` because I had already added them to the framework, but the Nord Ascended ones hadn't and were recognized as damaged variants because of their name.
+
+You may be wondering what would happen if you had these armors in you inventory:
+
+```
+Armor
+Armor Slutty
+Armor Broken
+```
+
+Well, this is what this function would create:
+
+```mermaid
+flowchart LR
+    A[Armor] <-- change --> B[Armor Slutty]
+    B <-- damage --> C[Armor Broken]
+```
+
+Yeah... ***as long as armors are named in certain ways, it can automatically create full chains***.
+
+# Manual mode
+
+Automatic generation may be useful under certain conditions, but this will be your bread and butter.
 
 # Known issues
 
@@ -460,11 +706,12 @@ Again, there's nothing I can do about this. There's no way I could preload armor
 Still, it's not that bad.
 Once the armor actually gets loaded into memory you can expect changes to be mostly unnoticeable.
 
-[AutoGen]: tede
+[AutoGen]: #automatically-registering-armors
+[ChangeRels]: #change-relationships
 [DeveloperMode]: #developer-mode
 [JsonCfgFiles]: https://github.com/CarlosLeyvaAyala/skimpify-framework/tree/main/SKSE/Plugins/Skimpify%20Framework
+[KnownIssues]: #known-issues
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [SPHotReload]: https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/features.md#hot-reload
 [Wardrobe Malfunction]: todo
-[ChangeRels]: #change-relationships
-[KnownIssues]: #known-issues
+[ConfigFiles]: #configuration-files

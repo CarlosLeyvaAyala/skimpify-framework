@@ -165,14 +165,14 @@ const skimpyNames: AutoSearchPair[] = [
   { search: "slutty", rel: ChangeRel.change },
   { search: "slut", rel: ChangeRel.change },
   { search: "xtra", rel: ChangeRel.change },
-  { search: "damaged", rel: ChangeRel.damage },
-  { search: "damage", rel: ChangeRel.damage },
-  { search: "broken", rel: ChangeRel.damage },
-  { search: "broke", rel: ChangeRel.damage },
   { search: "naked", rel: ChangeRel.change },
   { search: "nude", rel: ChangeRel.change },
   { search: "topless", rel: ChangeRel.change },
   { search: "sex", rel: ChangeRel.change },
+  { search: "damaged", rel: ChangeRel.damage },
+  { search: "damage", rel: ChangeRel.damage },
+  { search: "broken", rel: ChangeRel.damage },
+  { search: "broke", rel: ChangeRel.damage },
 ]
 
 function PreprocessName(n: string, search: string) {
@@ -199,7 +199,7 @@ function FindPreprocessed(n: string) {
     const nn = PreprocessName(o, e.search)
     if (nn !== o) return nn
   }
-  return LogVT("Armor name didn't need preprocess", o)
+  return LogVT("Armor name didn't need preprocess\n", o)
 }
 
 function GenSkimpyGroupsByName(armors: ArmorData[]) {
@@ -255,7 +255,7 @@ function ProcessMatches(m: ArmorData[], output: RawMap) {
       })
 
     if (!CheckFor(s)) return false
-    LogI(`*** ${m[fIdx].name} is a(n) ${s} variant\n`)
+    LogI(`*** ${m[fIdx].name} is a(n) "${s}" variant.\n`)
 
     MakeChild(m[0], m[fIdx], rel, output)
 
