@@ -1,0 +1,14 @@
+{
+  "[Christine] Zhurong.esp|d6b": {
+    "name": "Zhurong Upper",
+    "next": "[Christine] Zhurong.esp|d6c",
+    "nextN": "Zhurong Upper Slutty",
+    "nextT": "change"
+  },
+  "[Christine] Zhurong.esp|d6c": {
+    "name": "Zhurong Upper Slutty",
+    "prev": "[Christine] Zhurong.esp|d6b",
+    "prevN": "Zhurong Upper",
+    "prevT": "change"
+  }
+}

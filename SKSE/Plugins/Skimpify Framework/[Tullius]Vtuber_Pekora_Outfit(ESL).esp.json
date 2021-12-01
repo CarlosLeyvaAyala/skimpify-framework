@@ -1,0 +1,14 @@
+{
+  "[Tullius]Vtuber_Pekora_Outfit(ESL).esp|d69": {
+    "name": "[Vtuber]Pekora Outfit",
+    "next": "[Tullius]Vtuber_Pekora_Outfit(ESL).esp|d6b",
+    "nextN": "[Vtuber]Pekora Outfit(Naked)",
+    "nextT": "change"
+  },
+  "[Tullius]Vtuber_Pekora_Outfit(ESL).esp|d6b": {
+    "name": "[Vtuber]Pekora Outfit(Naked)",
+    "prev": "[Tullius]Vtuber_Pekora_Outfit(ESL).esp|d69",
+    "prevN": "[Vtuber]Pekora Outfit",
+    "prevT": "change"
+  }
+}

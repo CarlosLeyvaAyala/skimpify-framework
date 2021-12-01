@@ -30,7 +30,7 @@ This framework enables modders to make mods that automatically swap to those var
 
 This framework is the result of an idea that have been floating around my mind for many years: having [wardrobe malfunctions][Wardrobe Malfunction] and broken armors while playing.
 
-But that it wasn't really feasible because of Papyrus' hilarious slowness and sorry clunkiness.
+But that wasn't really feasible because of Papyrus' hilarious slowness and sorry clunkiness.
 It's just now that [Skyrim Platform][] exists that this idea was finally able to come true.
 
   !!!warning
@@ -716,10 +716,10 @@ Once the armor actually gets loaded into memory you can expect changes to be mos
 
 [AutoGen]: #automatically-registering-armors
 [ChangeRels]: #change-relationships
+[ConfigFiles]: #configuration-files
 [DeveloperMode]: #developer-mode
 [JsonCfgFiles]: https://github.com/CarlosLeyvaAyala/skimpify-framework/tree/main/SKSE/Plugins/Skimpify%20Framework
 [KnownIssues]: #known-issues
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [SPHotReload]: https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/features.md#hot-reload
 [Wardrobe Malfunction]: todo
-[ConfigFiles]: #configuration-files
