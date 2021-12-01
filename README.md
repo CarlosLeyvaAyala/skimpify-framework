@@ -3,7 +3,7 @@ Skyrim Platform plugin. Makes it possible to change to skimpier armors and back.
 
 # Overview
 
-We all love armors with skimpy or damaged variants, but there's no other way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
+We all love armors with skimpy or damaged variants, but there's no way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
 
 This framework enables modders to make mods that automatically swap to those variants, so the player can concentrate on what really matters: playing.
 
