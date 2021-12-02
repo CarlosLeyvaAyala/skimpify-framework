@@ -34,7 +34,7 @@
 
 # Overview
 
-We all love armors with skimpy or damaged variants, but there's no other way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
+We all love armors with skimpy or damaged variants, but there's no way to really use them but to go to your items menu and then equip them manually to simulate things happening while playing... until now.
 
 This framework enables modders to make mods that automatically swap to those variants, so the player can concentrate on what really matters: playing.
 
@@ -94,7 +94,7 @@ All this help file is dedicated to guiding you through those steps.
 
 # Warning: heavy reading ahead
 
-What a damn shame is to be warning people that they are required to read, but we are in the 20's, what should I expect?
+What a damn shame is to be warning people that they are required to read, but we are in the 20's; what should I expect?
 
 If you don't like to read, tough luck.
 You will need until someone else wants to do a video on how to use this framework or something.

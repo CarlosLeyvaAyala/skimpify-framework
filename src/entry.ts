@@ -19,7 +19,6 @@ import {
   GetSkimpyData,
   JcChangeK,
   RelType,
-  SetRel,
   SkimpyData,
   ValidateChangeRel,
 } from "skimpify-api"
@@ -35,7 +34,7 @@ import {
   settings,
   storage,
 } from "skyrimPlatform"
-import { LogI, LogV, LogVT } from "./debug"
+import { LogV, LogVT } from "./debug"
 
 const invalid = -1
 
@@ -195,7 +194,6 @@ namespace Load {
         n++
         const data = JMap.getObj(i, armor)
         SaveVariant(a, data, "next")
-        SaveVariant(a, data, "prev")
       })
     })
 
@@ -213,7 +211,7 @@ namespace Load {
     const c = JMap.getStr(data, JcChangeK(rel))
     const cT = ValidateChangeRel(c)
 
-    SetRel(parent, n, rel, cT)
+    AddChangeRel(parent, n, cT)
   }
 
   function StrToArmor(s: string) {

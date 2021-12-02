@@ -60,9 +60,10 @@ export function SaveJson() {
     const a = Armor.from(k)
     if (!a) return
 
-    const curr = FormLib.GetFormEspAndId(a)
-    const p = GetModestData(a)
     const n = GetSkimpyData(a)
+    if (!n.armor) return // No need to write to file an armor with no children
+
+    const curr = FormLib.GetFormEspAndId(a)
 
     AddKey(curr.modName, m)
     AddVal(curr.modName, m, {
@@ -72,9 +73,6 @@ export function SaveJson() {
         next: ArmorUniqueId(n.armor),
         nextN: n.armor?.getName(),
         nextT: n.armor ? n.kind : undefined,
-        prev: ArmorUniqueId(p.armor),
-        prevN: p.armor?.getName(),
-        prevT: p.armor ? p.kind : undefined,
       },
     })
   })
