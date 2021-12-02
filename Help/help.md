@@ -1,3 +1,5 @@
+@import "css/main.min.css"
+
 - [Overview](#overview)
 - [Features](#features)
 - [Usage](#usage)
@@ -17,10 +19,18 @@
   - [Armor identity solving](#armor-identity-solving)
 - [Automatically registering armors](#automatically-registering-armors)
   - [In depth explanation of how it setups relationships](#in-depth-explanation-of-how-it-setups-relationships)
-- [Manual mode](#manual-mode)
+- [Manually registering armors](#manually-registering-armors)
+  - [Clear all relationships](#clear-all-relationships)
+  - [Mark for relationship](#mark-for-relationship)
+  - [Mark as `slip`](#mark-as-slip)
+  - [Mark as `change`](#mark-as-change)
+  - [Mark as `damage`](#mark-as-damage)
+  - [Manually marking relationship chains](#manually-marking-relationship-chains)
 - [Known issues](#known-issues)
   - [It will delete custom armor enchantments](#it-will-delete-custom-armor-enchantments)
   - [There will be some hiccups](#there-will-be-some-hiccups)
+- [This is a Skyrim Platform exclusive](#this-is-a-skyrim-platform-exclusive)
+- [Closing words](#closing-words)
 
 # Overview
 
@@ -78,7 +88,7 @@ These are the basic steps:
 - Use hotkeys to test and confirm everything is as expected.
 - Export your settings to json.
 - Give a quick glance at each of the generated files to see if things are as expected.
-  If they aren't you can manually change those files in your text editor, if you want.
+  If they aren't, you can manually change those files in your text editor, if you want.
 
 All this help file is dedicated to guiding you through those steps.
 
@@ -457,6 +467,8 @@ That's why there are functions for registering armors while in game.
 
 # Automatically registering armors
 
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">E</kbd>
+
 This is the first of the ==hotkey based functions== we will learn about.
 
 This mode ***tries*** to automatically set relationships based on armor names.[^ArmorNames]
@@ -673,9 +685,121 @@ flowchart LR
 
 Yeah... ***as long as armors are named in certain ways, it can automatically create full chains***.
 
-# Manual mode
+# Manually registering armors
 
-Automatic generation may be useful under certain conditions, but this will be your bread and butter.
+With some luck, automatic generation will be your bread and butter, but many times it just won't cut it.
+
+Manual mode was added for those cases when you need more control.
+
+!!!warning
+    All these functions work **only when one piece of armor equipped**. Nothing more, nothing less.
+
+    That's because otherwise, the framework has no way of knowing which armor you want to work with.
+
+## Clear all relationships
+
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">A</kbd>
+
+Clears all the relationships the equipped armor has.
+
+Better used when [automatic mode][AutoGen] creates loops or invalid asociations, like this:
+
+```mermaid
+flowchart LR
+    A[Armor] <-- change --> B[Armor Slutty]
+    B <-- change --> C[Armor Naked]
+    C <-- change --> B
+```
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Armor]
+```
+
+## Mark for relationship
+
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">S</kbd>
+
+Marks the currently equipped armor as the "modest" version in some [_Change Relationship_][ChangeRels].
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Marked as modest] <-- waiting --> B[Waiting]
+```
+
+## Mark as `slip`
+
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">D</kbd>
+
+Marks the currently equipped armor as the "skimpy" version of a previously marked armor.
+_Change Relationship_: `slip`.
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Marked as modest] <-- slip --> B[Marked as slip]
+```
+
+## Mark as `change`
+
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">F</kbd>
+
+Marks the currently equipped armor as the "skimpy" version of a previously marked armor.
+_Change Relationship_: `change`.
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Marked as modest] <-- change --> B[Marked as change]
+```
+
+## Mark as `damage`
+
+<kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">G</kbd>
+
+Marks the currently equipped armor as the "skimpy" version of a previously marked armor.
+_Change Relationship_: `damage`.
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Marked as modest] <-- damage --> B[Marked as damage]
+```
+
+## Manually marking relationship chains
+
+It's quite easy and fast to mark whole chains using only manual mode.
+
+This is an step by step example:
+
+1. Equip armor.
+
+2. Mark as modest <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">S</kbd>. ![](img/manual-mark.jpg)
+
+3. ==Press down==. Equip new armor.
+
+4. Mark as change <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">F</kbd>. ![](img/manual-change.jpg)
+
+5. Mark as modest <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">S</kbd>. ![](img/manual-mark2.jpg)
+
+6. Press down. Equip new armor.
+
+7. Mark as slip <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">D</kbd>. ![](img/manual-slip.jpg)
+
+Output:
+
+```mermaid
+flowchart LR
+    A[Body 1a] <-- change --> B[Body1b]
+    B[Body 1b] <-- slip --> C[Body1c]
+```
 
 # Known issues
 
@@ -703,16 +827,38 @@ But there's a solution to this and I have been using it for some time, by the wa
 
 ![](img/xEdit_02.png)
 
-Sure, it will make impossible to change enchantments for some particular armor and requires a bit of work and thought, but this will give you an actual reason to use many of your installed armor mods.
+Sure, it will make impossible to change enchantments while playing and requires a bit of work and thought, but this will give you an actual reason to use many of your installed armor mods.
 
 ## There will be some hiccups
 
-When changing armors for the first time on your game session or after some time not seeing a variant, there will be a milliseconds freeze while the game loads the model.
+When changing armors for the first time on your game session or after some time not seeing a variant, there will be a few milliseconds freeze while the game loads the model.
 
-Again, there's nothing I can do about this. There's no way I could preload armors and things like that, so things go smooth the first time armors need to be swapped.
+Again, there's nothing I can do about this.
+There's no way I could preload armors and things like that, so things go smooth the first time armors need to be swapped.
 
 Still, it's not that bad.
 Once the armor actually gets loaded into memory you can expect changes to be mostly unnoticeable.
+
+# This is a Skyrim Platform exclusive
+
+This framework was only possible thanks to [Skyrim Platform][] and it is gladly tied to it.
+... you know... the base framework only took me a couple of hours to make; something I doubt any other technology would have allowed me to.
+
+What does this "being tied" stuff mean?
+It means the framework was made to work only for mods using it. That's why right now the API is only available if you are using SP yourself for making your mod.
+
+**It's technically possible to translate the API to Papyrus**, but it's a boring task I won't overtake.
+The API uses many language advantages Typescript has, but Papyrus hasn't.
+
+So, translating the API is a long, boring and (most of all) error prone process.
+
+If there's some volunteer around to overtake this task, I'm willing to give all the help I can and even some ideas on how some things can be done, but I won't take that job.
+
+# Closing words
+
+I hope this document is not too overwhelming and it was of help.
+
+If something isn't clear, you have some suggestion or need some help on using the framework, don't hesitate to contact me.
 
 [AutoGen]: #automatically-registering-armors
 [ChangeRels]: #change-relationships
@@ -723,3 +869,5 @@ Once the armor actually gets loaded into memory you can expect changes to be mos
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [SPHotReload]: https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/features.md#hot-reload
 [Wardrobe Malfunction]: todo
+
+[KeyboardCss]: https://shhdharmen.github.io/keyboard-css/
