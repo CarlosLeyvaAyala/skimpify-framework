@@ -4,11 +4,5 @@
     "next": "[NINI] Deified.esp|809",
     "nextN": "Deified Armor Slutty",
     "nextT": "change"
-  },
-  "[NINI] Deified.esp|809": {
-    "name": "Deified Armor Slutty",
-    "prev": "[NINI] Deified.esp|805",
-    "prevN": "Deified Armor",
-    "prevT": "change"
   }
 }

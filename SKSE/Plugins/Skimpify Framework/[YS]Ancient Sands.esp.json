@@ -4,11 +4,5 @@
     "next": "[YS]Ancient Sands.esp|84a",
     "nextN": "  Ansei [3]: Ancient Sands Top 4",
     "nextT": "change"
-  },
-  "[YS]Ancient Sands.esp|84a": {
-    "name": "  Ansei [3]: Ancient Sands Top 4",
-    "prev": "[YS]Ancient Sands.esp|822",
-    "prevN": "Ancient Sands Top 3",
-    "prevT": "change"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "[Tullius]Gray_Raven_ayla_Outfit(ESL).esp|d69": {
+    "name": "[GrayRAven] Ayla Outfit(Full)",
+    "next": "[Tullius]Gray_Raven_ayla_Outfit(ESL).esp|d6f",
+    "nextN": "[GrayRAven] Ayla outfit(UnderBoob)",
+    "nextT": "change"
+  },
+  "[Tullius]Gray_Raven_ayla_Outfit(ESL).esp|d6f": {
+    "name": "[GrayRAven] Ayla outfit(UnderBoob)",
+    "next": "[Tullius]Gray_Raven_ayla_Outfit(ESL).esp|d71",
+    "nextN": "[GrayRAven] Ayla outfit(Naked)",
+    "nextT": "change"
+  }
+}

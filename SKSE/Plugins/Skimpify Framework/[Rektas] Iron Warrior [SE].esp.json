@@ -22,29 +22,5 @@
     "next": "[Rektas] Iron Warrior [SE].esp|cb5",
     "nextN": "Iron Warrior - Torso (Slutty) 04",
     "nextT": "change"
-  },
-  "[Rektas] Iron Warrior [SE].esp|cb2": {
-    "name": "Iron Warrior - Torso (Slutty) 01",
-    "prev": "[Rektas] Iron Warrior [SE].esp|bed",
-    "prevN": "Iron Warrior - Torso 01",
-    "prevT": "change"
-  },
-  "[Rektas] Iron Warrior [SE].esp|cb3": {
-    "name": "Iron Warrior - Torso (Slutty) 02",
-    "prev": "[Rektas] Iron Warrior [SE].esp|c0a",
-    "prevN": "Iron Warrior - Torso 02",
-    "prevT": "change"
-  },
-  "[Rektas] Iron Warrior [SE].esp|cb4": {
-    "name": "Iron Warrior - Torso (Slutty) 03",
-    "prev": "[Rektas] Iron Warrior [SE].esp|c29",
-    "prevN": "Iron Warrior - Torso 03",
-    "prevT": "change"
-  },
-  "[Rektas] Iron Warrior [SE].esp|cb5": {
-    "name": "Iron Warrior - Torso (Slutty) 04",
-    "prev": "[Rektas] Iron Warrior [SE].esp|c47",
-    "prevN": "Iron Warrior - Torso 04",
-    "prevT": "change"
   }
 }

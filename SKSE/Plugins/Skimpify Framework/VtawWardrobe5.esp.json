@@ -4,11 +4,5 @@
     "next": "VtawWardrobe5.esp|8e6",
     "nextN": "  Nightblade [3]: DoS - Main V2 (Black)",
     "nextT": "change"
-  },
-  "VtawWardrobe5.esp|8e6": {
-    "name": "  Nightblade [3]: DoS - Main V2 (Black)",
-    "prev": "VtawWardrobe5.esp|8e1",
-    "prevN": "  Nightblade [3]: DoS - Main (Black)",
-    "prevT": "change"
   }
 }

@@ -1,21 +1,9 @@
 {
-  "[COCO]Devil Claw_CBBE SE.esp|805": {
-    "name": "[COCO]Devil_claw_waistdiamond3",
-    "prev": "[COCO]Devil Claw_CBBE SE.esp|80d",
-    "prevN": "[COCO]Devil_claw_pantmet3",
-    "prevT": "change"
-  },
   "[COCO]Devil Claw_CBBE SE.esp|80d": {
     "name": "[COCO]Devil_claw_pantmet3",
     "next": "[COCO]Devil Claw_CBBE SE.esp|805",
     "nextN": "[COCO]Devil_claw_waistdiamond3",
     "nextT": "change"
-  },
-  "[COCO]Devil Claw_CBBE SE.esp|819": {
-    "name": "[COCO]Devil_claw_waistdiamond4",
-    "prev": "[COCO]Devil Claw_CBBE SE.esp|821",
-    "prevN": "[COCO]Devil_claw_pantmet4",
-    "prevT": "change"
   },
   "[COCO]Devil Claw_CBBE SE.esp|821": {
     "name": "[COCO]Devil_claw_pantmet4",
@@ -23,23 +11,11 @@
     "nextN": "[COCO]Devil_claw_waistdiamond4",
     "nextT": "change"
   },
-  "[COCO]Devil Claw_CBBE SE.esp|829": {
-    "name": "[COCO]Devil_claw_waistdiamond1",
-    "prev": "[COCO]Devil Claw_CBBE SE.esp|842",
-    "prevN": "[COCO]Devil_claw_pantmet1",
-    "prevT": "change"
-  },
   "[COCO]Devil Claw_CBBE SE.esp|842": {
     "name": "[COCO]Devil_claw_pantmet1",
     "next": "[COCO]Devil Claw_CBBE SE.esp|829",
     "nextN": "[COCO]Devil_claw_waistdiamond1",
     "nextT": "change"
-  },
-  "[COCO]Devil Claw_CBBE SE.esp|84e": {
-    "name": "[COCO]Devil_claw_waistdiamond2",
-    "prev": "[COCO]Devil Claw_CBBE SE.esp|85d",
-    "prevN": "[COCO]Devil_claw_pantmet2",
-    "prevT": "change"
   },
   "[COCO]Devil Claw_CBBE SE.esp|85d": {
     "name": "[COCO]Devil_claw_pantmet2",

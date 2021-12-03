@@ -4,11 +4,5 @@
     "next": "[Tullius]Vtuber_aYAME_iDOL(esl).esp|d6b",
     "nextN": "[Vtuber]Ayame outfit(NakeD)",
     "nextT": "change"
-  },
-  "[Tullius]Vtuber_aYAME_iDOL(esl).esp|d6b": {
-    "name": "[Vtuber]Ayame outfit(NakeD)",
-    "prev": "[Tullius]Vtuber_aYAME_iDOL(esl).esp|d69",
-    "prevN": "[Vtuber]Ayame Outfit",
-    "prevT": "change"
   }
 }

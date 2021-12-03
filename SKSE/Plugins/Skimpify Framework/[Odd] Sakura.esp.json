@@ -11,41 +11,11 @@
     "nextN": "[Odd] Sakura's Dress Uchiha (Topless)",
     "nextT": "change"
   },
-  "[Odd] Sakura.esp|804": {
-    "name": "[Odd] Sakura's Dress (Topless)",
-    "prev": "[Odd] Sakura.esp|d69",
-    "prevN": "[Odd] Sakura's Dress",
-    "prevT": "change"
-  },
-  "[Odd] Sakura.esp|805": {
-    "name": "[Odd] Sakura's Dress Alt (Topless)",
-    "prev": "[Odd] Sakura.esp|800",
-    "prevN": "[Odd] Sakura's Dress Alt",
-    "prevT": "change"
-  },
-  "[Odd] Sakura.esp|81d": {
-    "name": "[Odd] Sakura's Dress Uchiha (Topless)",
-    "prev": "[Odd] Sakura.esp|803",
-    "prevN": "[Odd] Sakura's Dress Uchiha",
-    "prevT": "change"
-  },
   "[Odd] Sakura.esp|85c": {
     "name": "[Odd] Sakura's Dress SMP",
     "next": "[Odd] Sakura.esp|85d",
     "nextN": "[Odd] Sakura's Dress SMP (Topless)",
     "nextT": "change"
-  },
-  "[Odd] Sakura.esp|85d": {
-    "name": "[Odd] Sakura's Dress SMP (Topless)",
-    "prev": "[Odd] Sakura.esp|85c",
-    "prevN": "[Odd] Sakura's Dress SMP",
-    "prevT": "change"
-  },
-  "[Odd] Sakura.esp|85e": {
-    "name": "[Odd] Sakura's Dress Alt SMP (Topless)",
-    "prev": "[Odd] Sakura.esp|85f",
-    "prevN": "[Odd] Sakura's Dress Alt SMP",
-    "prevT": "change"
   },
   "[Odd] Sakura.esp|85f": {
     "name": "[Odd] Sakura's Dress Alt SMP",
@@ -58,12 +28,6 @@
     "next": "[Odd] Sakura.esp|861",
     "nextN": "[Odd] Sakura's Dress Uchiha SMP (Topless)",
     "nextT": "change"
-  },
-  "[Odd] Sakura.esp|861": {
-    "name": "[Odd] Sakura's Dress Uchiha SMP (Topless)",
-    "prev": "[Odd] Sakura.esp|860",
-    "prevN": "  Ninja[1]: Sakura Top Uchiha SMP",
-    "prevT": "change"
   },
   "[Odd] Sakura.esp|d69": {
     "name": "[Odd] Sakura's Dress",

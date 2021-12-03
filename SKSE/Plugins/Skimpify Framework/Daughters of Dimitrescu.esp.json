@@ -1,21 +1,9 @@
 {
-  "Daughters of Dimitrescu.esp|804": {
-    "name": "[OddX] Daughters of Dimitrescu Top Alt",
-    "prev": "Daughters of Dimitrescu.esp|d69",
-    "prevN": "[OddX] Daughters of Dimitrescu Top",
-    "prevT": "change"
-  },
   "Daughters of Dimitrescu.esp|835": {
     "name": "[OddX] Daughters of Dimitrescu Black Top",
     "next": "Daughters of Dimitrescu.esp|836",
     "nextN": "[OddX] Daughters of Dimitrescu Black Top Alt",
     "nextT": "change"
-  },
-  "Daughters of Dimitrescu.esp|836": {
-    "name": "[OddX] Daughters of Dimitrescu Black Top Alt",
-    "prev": "Daughters of Dimitrescu.esp|835",
-    "prevN": "[OddX] Daughters of Dimitrescu Black Top",
-    "prevT": "change"
   },
   "Daughters of Dimitrescu.esp|86b": {
     "name": "[OddX] Daughters of Dimitrescu Top Hoodless",
@@ -28,18 +16,6 @@
     "next": "Daughters of Dimitrescu.esp|86e",
     "nextN": "[OddX] Daughters of Dimitrescu Black Top Alt Hoodless",
     "nextT": "change"
-  },
-  "Daughters of Dimitrescu.esp|86d": {
-    "name": "[OddX] Daughters of Dimitrescu Top Alt Hoodless",
-    "prev": "Daughters of Dimitrescu.esp|86b",
-    "prevN": "[OddX] Daughters of Dimitrescu Top Hoodless",
-    "prevT": "change"
-  },
-  "Daughters of Dimitrescu.esp|86e": {
-    "name": "[OddX] Daughters of Dimitrescu Black Top Alt Hoodless",
-    "prev": "Daughters of Dimitrescu.esp|86c",
-    "prevN": "[OddX] Daughters of Dimitrescu Black Top Hoodless",
-    "prevT": "change"
   },
   "Daughters of Dimitrescu.esp|d69": {
     "name": "[OddX] Daughters of Dimitrescu Top",

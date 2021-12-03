@@ -1,0 +1,14 @@
+{
+  "[NINI] Destroyer [SE].esp|806": {
+    "name": "Destroyer Upper",
+    "next": "[NINI] Destroyer [SE].esp|809",
+    "nextN": "Destroyer Upper Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Destroyer [SE].esp|80a": {
+    "name": "Destroyer Lower",
+    "next": "[NINI] Destroyer [SE].esp|80b",
+    "nextN": "Destroyer Lower Slutty",
+    "nextT": "change"
+  }
+}

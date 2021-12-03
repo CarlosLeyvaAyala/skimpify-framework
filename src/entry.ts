@@ -4,6 +4,7 @@ import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
+import { Export } from "jsonFiles"
 import {
   ActorArg,
   AddChangeRel,
@@ -111,6 +112,7 @@ export function main() {
       OnDiscardArmors(Armors.Discard)
 
       OnSaveJson(SaveJson)
+      // OnSaveJson(Export.AllJson)
       OnLoadJson(Load.Armors)
       OnAutoGen(AutoGenArmors)
     }

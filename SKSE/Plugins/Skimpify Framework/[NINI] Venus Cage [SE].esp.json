@@ -10,17 +10,5 @@
     "next": "[NINI] Venus Cage [SE].esp|80b",
     "nextN": "Venus Cage Lower Slutty",
     "nextT": "change"
-  },
-  "[NINI] Venus Cage [SE].esp|80a": {
-    "name": "Venus Cage Upper Slutty",
-    "prev": "[NINI] Venus Cage [SE].esp|806",
-    "prevN": "Venus Cage Upper",
-    "prevT": "change"
-  },
-  "[NINI] Venus Cage [SE].esp|80b": {
-    "name": "Venus Cage Lower Slutty",
-    "prev": "[NINI] Venus Cage [SE].esp|807",
-    "prevN": "Venus Cage Lower",
-    "prevT": "change"
   }
 }

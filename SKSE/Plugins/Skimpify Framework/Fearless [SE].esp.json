@@ -5,18 +5,6 @@
     "nextN": "Fearless - Suit (Slutty) 01",
     "nextT": "slip"
   },
-  "Fearless [SE].esp|809": {
-    "name": "Fearless - Suit (Slutty) 01",
-    "prev": "Fearless [SE].esp|808",
-    "prevN": "Fearless - Suit 01",
-    "prevT": "slip"
-  },
-  "Fearless [SE].esp|80a": {
-    "name": "Fearless - Suit (Slutty) 02",
-    "prev": "Fearless [SE].esp|de8",
-    "prevN": "Fearless - Suit 02",
-    "prevT": "slip"
-  },
   "Fearless [SE].esp|de8": {
     "name": "Fearless - Suit 02",
     "next": "Fearless [SE].esp|80a",
@@ -27,12 +15,6 @@
     "name": "Fearless - Mask 01",
     "next": "Fearless [SE].esp|ded",
     "nextN": "Fearless - Mask 05",
-    "nextT": "damage"
-  },
-  "Fearless [SE].esp|ded": {
-    "name": "Fearless - Mask 05",
-    "prev": "Fearless [SE].esp|de9",
-    "prevN": "Fearless - Mask 01",
-    "prevT": "damage"
+    "nextT": "change"
   }
 }

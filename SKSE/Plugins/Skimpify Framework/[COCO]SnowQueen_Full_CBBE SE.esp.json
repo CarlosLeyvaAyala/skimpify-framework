@@ -1,21 +1,9 @@
 {
-  "[COCO]SnowQueen_Full_CBBE SE.esp|807": {
-    "name": "[COCO]SnowQueen_bra3",
-    "prev": "[COCO]SnowQueen_Full_CBBE SE.esp|817",
-    "prevN": "[COCO]SnowQueen_brafur3",
-    "prevT": "change"
-  },
   "[COCO]SnowQueen_Full_CBBE SE.esp|817": {
     "name": "[COCO]SnowQueen_brafur3",
     "next": "[COCO]SnowQueen_Full_CBBE SE.esp|807",
     "nextN": "[COCO]SnowQueen_bra3",
     "nextT": "change"
-  },
-  "[COCO]SnowQueen_Full_CBBE SE.esp|81f": {
-    "name": "[COCO]SnowQueen_bra4",
-    "prev": "[COCO]SnowQueen_Full_CBBE SE.esp|82f",
-    "prevN": "[COCO]SnowQueen_brafur4",
-    "prevT": "change"
   },
   "[COCO]SnowQueen_Full_CBBE SE.esp|82f": {
     "name": "[COCO]SnowQueen_brafur4",
@@ -23,23 +11,11 @@
     "nextN": "[COCO]SnowQueen_bra4",
     "nextT": "change"
   },
-  "[COCO]SnowQueen_Full_CBBE SE.esp|839": {
-    "name": "[COCO]SnowQueen_bra1",
-    "prev": "[COCO]SnowQueen_Full_CBBE SE.esp|856",
-    "prevN": "[COCO]SnowQueen_brafur1",
-    "prevT": "change"
-  },
   "[COCO]SnowQueen_Full_CBBE SE.esp|856": {
     "name": "[COCO]SnowQueen_brafur1",
     "next": "[COCO]SnowQueen_Full_CBBE SE.esp|839",
     "nextN": "[COCO]SnowQueen_bra1",
     "nextT": "change"
-  },
-  "[COCO]SnowQueen_Full_CBBE SE.esp|867": {
-    "name": "[COCO]SnowQueen_bra2",
-    "prev": "[COCO]SnowQueen_Full_CBBE SE.esp|877",
-    "prevN": "[COCO]SnowQueen_brafur2",
-    "prevT": "change"
   },
   "[COCO]SnowQueen_Full_CBBE SE.esp|877": {
     "name": "[COCO]SnowQueen_brafur2",

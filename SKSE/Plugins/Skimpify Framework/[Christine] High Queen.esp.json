@@ -10,17 +10,5 @@
     "next": "[Christine] High Queen.esp|81f",
     "nextN": "High Queen Revealing Armor of Platinum",
     "nextT": "change"
-  },
-  "[Christine] High Queen.esp|81e": {
-    "name": "High Queen Revealing Armor of Gold",
-    "prev": "[Christine] High Queen.esp|81c",
-    "prevN": "High Queen Armor of Gold",
-    "prevT": "change"
-  },
-  "[Christine] High Queen.esp|81f": {
-    "name": "High Queen Revealing Armor of Platinum",
-    "prev": "[Christine] High Queen.esp|81d",
-    "prevN": "High Queen Armor of Platinum",
-    "prevT": "change"
   }
 }

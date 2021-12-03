@@ -5,22 +5,10 @@
     "nextN": "Aetheria Top Xtra",
     "nextT": "slip"
   },
-  "[Melodic] Aetheria.esp|803": {
-    "name": "Aetheria Top Xtra",
-    "prev": "[Melodic] Aetheria.esp|802",
-    "prevN": "Aetheria Top",
-    "prevT": "slip"
-  },
   "[Melodic] Aetheria.esp|81b": {
     "name": "Aetheria Top (Bronze)",
     "next": "[Melodic] Aetheria.esp|81c",
     "nextN": "Aetheria Top Xtra  (Bronze)",
     "nextT": "slip"
-  },
-  "[Melodic] Aetheria.esp|81c": {
-    "name": "Aetheria Top Xtra  (Bronze)",
-    "prev": "[Melodic] Aetheria.esp|81b",
-    "prevN": "Aetheria Top (Bronze)",
-    "prevT": "slip"
   }
 }

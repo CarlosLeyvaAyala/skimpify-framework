@@ -5,12 +5,6 @@
     "nextN": "Little Devil Outfit Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|802": {
-    "name": "Little Devil Outfit Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|800",
-    "prevN": "Little Devil Outfit",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|d65": {
     "name": "MLB 0048 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1838",
@@ -27,67 +21,7 @@
     "name": "Blacksmith Strap",
     "next": "[SunJeong] Ninirim Collection.esp|d78",
     "nextN": "Blacksmith Strap Broken",
-    "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|d78": {
-    "name": "Blacksmith Strap Broken",
-    "prev": "[SunJeong] Ninirim Collection.esp|d77",
-    "prevN": "Blacksmith Strap",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|12d4": {
-    "name": "Bless MD 3001 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdc9f",
-    "prevN": "Bless MD 3001 Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1838": {
-    "name": "MLB 0048 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|d65",
-    "prevN": "MLB 0048 Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1839": {
-    "name": "MLB 0048 Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|d71",
-    "prevN": "MLB 0048 Lower",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1d9c": {
-    "name": "Olier Clothes Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|240049",
-    "prevN": "Olier Clothes",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1da6": {
-    "name": "Dalgaebi Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|240077",
-    "prevN": "Dalgaebi Upper",
-    "prevT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|22fc": {
-    "name": "Bless RB 0007 Armor Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|240089",
-    "prevN": "Bless RB 0007 Armor",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2862": {
-    "name": "Orwen Travel Armor Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|24005d",
-    "prevN": "Orwen Travel Armor",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|286f": {
-    "name": "Sister Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdcad",
-    "prevN": "Sister Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|3dfd": {
-    "name": "Karlstein Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|207f8b",
-    "prevN": "Karlstein Upper",
-    "prevT": "change"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|52887": {
     "name": "  Nightblade [3]: Death Lady Upper",
@@ -101,12 +35,6 @@
     "nextN": "  Nightblade [3]: Death Lady Lower No Panty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|6ca36": {
-    "name": "  Nightblade [3]: Death Lady Lower No Panty",
-    "prev": "[SunJeong] Ninirim Collection.esp|52889",
-    "prevN": "  Nightblade [3]: Death Lady Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|6ca3e": {
     "name": "Shining Will Upper",
     "next": "[SunJeong] Ninirim Collection.esp|77c8a",
@@ -119,35 +47,11 @@
     "nextN": "Charles Rene Upper Slutty",
     "nextT": "slip"
   },
-  "[SunJeong] Ninirim Collection.esp|70038": {
-    "name": "Charles Rene Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|6e538",
-    "prevN": "Charles Rene Upper",
-    "prevT": "slip"
-  },
   "[SunJeong] Ninirim Collection.esp|7003d": {
     "name": "Bless MD 0001 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|71072",
     "nextN": "Bless MD 0001 Upper Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|71072": {
-    "name": "Bless MD 0001 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|7003d",
-    "prevN": "Bless MD 0001 Upper",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|71b39": {
-    "name": "  Nightblade [3]: Death Lady Upper No Breast",
-    "prev": "[SunJeong] Ninirim Collection.esp|52887",
-    "prevN": "  Nightblade [3]: Death Lady Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|720a5": {
-    "name": "Moonlight Outfit Slutty No Bra",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdc5d",
-    "prevN": "Moonlight Outfit Slutty",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|720a6": {
     "name": "Moonlight Outfit",
@@ -167,35 +71,11 @@
     "nextN": "Training Cube Shoes Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|730e3": {
-    "name": "Training Cube Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|72b73",
-    "prevN": "Training Cube Upper",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|730e5": {
-    "name": "Training Cube Shoes Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|72b76",
-    "prevN": "Training Cube Shoes",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|77c8a": {
-    "name": "Shining Will Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|6ca3e",
-    "prevN": "Shining Will Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|86e45": {
     "name": "Dragon Rises Armor",
     "next": "[SunJeong] Ninirim Collection.esp|9104f",
     "nextN": "Dragon Rises Armor Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|9104f": {
-    "name": "Dragon Rises Armor Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|86e45",
-    "prevN": "Dragon Rises Armor",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|af66e": {
     "name": "Raven Night Watch Upper",
@@ -203,23 +83,11 @@
     "nextN": "Raven Night Watch Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|af66f": {
-    "name": "Raven Night Watch Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|af66e",
-    "prevN": "Raven Night Watch Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|b4776": {
     "name": "Raven Night Watch Boots",
     "next": "[SunJeong] Ninirim Collection.esp|b4778",
     "nextN": "Raven Night Watch Boots Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|b4778": {
-    "name": "Raven Night Watch Boots Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|b4776",
-    "prevN": "Raven Night Watch Boots",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|cdc8e": {
     "name": "Bless 0001 Upper",
@@ -227,23 +95,11 @@
     "nextN": "Bless 0001 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|d7ea8": {
-    "name": "Bless 0001 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|cdc8e",
-    "prevN": "Bless 0001 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|dcfad": {
     "name": "Asylum Clothes",
     "next": "[SunJeong] Ninirim Collection.esp|e20b0",
     "nextN": "Asylum Clothes Damaged",
-    "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|e20b0": {
-    "name": "Asylum Clothes Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|dcfad",
-    "prevN": "Asylum Clothes",
-    "prevT": "change"
+    "nextT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|e71b7": {
     "name": "Sorceress Bern Upper",
@@ -251,23 +107,11 @@
     "nextN": "Sorceress Bern Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|ec2c0": {
-    "name": "Sorceress Bern Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|e71b7",
-    "prevN": "Sorceress Bern Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|f13d7": {
     "name": "Bless RB 3004 Glove Long",
     "next": "[SunJeong] Ninirim Collection.esp|f13d8",
     "nextN": "Bless RB 3004 Glove Long Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|f13d8": {
-    "name": "Bless RB 3004 Glove Long Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|f13d7",
-    "prevN": "Bless RB 3004 Glove Long",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|f13d9": {
     "name": "Bless RB 3004 Glove Short",
@@ -275,35 +119,17 @@
     "nextN": "Bless RB 3004 Glove Short Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|f13da": {
-    "name": "Bless RB 3004 Glove Short Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|f13d9",
-    "prevN": "Bless RB 3004 Glove Short",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|f13de": {
     "name": "Bless RB 3004 Boots",
     "next": "[SunJeong] Ninirim Collection.esp|f13df",
     "nextN": "Bless RB 3004 Boots Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|f13df": {
-    "name": "Bless RB 3004 Boots Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|f13de",
-    "prevN": "Bless RB 3004 Boots",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|f13e0": {
     "name": "Bless RB 3004 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|f13e1",
     "nextN": "Bless RB 3004 Upper Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|f13e1": {
-    "name": "Bless RB 3004 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|f13e0",
-    "prevN": "Bless RB 3004 Upper",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|fb5fe": {
     "name": "Bless MD 0004 Top",
@@ -327,28 +153,13 @@
     "name": "Red Nose Upper Slutty",
     "next": "[SunJeong] Ninirim Collection.esp|123e40",
     "nextN": "Red Nose Just Bones",
-    "nextT": "change",
-    "prev": "[SunJeong] Ninirim Collection.esp|119c2d",
-    "prevN": "Red Nose Upper",
-    "prevT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|123e40": {
-    "name": "Red Nose Just Bones",
-    "prev": "[SunJeong] Ninirim Collection.esp|11ed3c",
-    "prevN": "Red Nose Upper Slutty",
-    "prevT": "change"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|128f4a": {
     "name": "Bless HV0102 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|12e055",
     "nextN": "Bless HV0102 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|12e055": {
-    "name": "Bless HV0102 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|128f4a",
-    "prevN": "Bless HV0102 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|14c678": {
     "name": "Bless EC 0004 Outfit",
@@ -360,10 +171,7 @@
     "name": "Bless EC 0004 Outfit Slutty",
     "next": "[SunJeong] Ninirim Collection.esp|1fdcb9",
     "nextN": "Bless EC 0004 Outfit Nude",
-    "nextT": "change",
-    "prev": "[SunJeong] Ninirim Collection.esp|14c678",
-    "prevN": "Bless EC 0004 Outfit",
-    "prevT": "change"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|151788": {
     "name": "Bless EC 0004 Panty",
@@ -377,23 +185,11 @@
     "nextN": "Bless MD 3002 Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|15b9a7": {
-    "name": "Bless MD 3002 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|156894",
-    "prevN": "Bless MD 3002 Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|165bb4": {
     "name": "Bless RB 0102 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|165bb5",
     "nextN": "Bless RB 0102 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|165bb5": {
-    "name": "Bless RB 0102 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|165bb4",
-    "prevN": "Bless RB 0102 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|16fdd6": {
     "name": "Hercules Might Upper",
@@ -401,23 +197,11 @@
     "nextN": "Hercules Might Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|179fe6": {
-    "name": "Hercules Might Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|16fdd6",
-    "prevN": "Hercules Might Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|17f0ee": {
     "name": "Bless MD 0102 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|18e3fe",
     "nextN": "Bless MD 0102 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|18e3fe": {
-    "name": "Bless MD 0102 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|17f0ee",
-    "prevN": "Bless MD 0102 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|198609": {
     "name": "Bless EC 0001 Upper",
@@ -431,18 +215,6 @@
     "nextN": "Bless EC 0001 Shoulder Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|19d71e": {
-    "name": "Bless EC 0001 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|198609",
-    "prevN": "Bless EC 0001 Upper",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|19d71f": {
-    "name": "Bless EC 0001 Shoulder Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|19860e",
-    "prevN": "Bless EC 0001 Shoulder",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|1a282a": {
     "name": "Bless HV 0101 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1a793c",
@@ -455,29 +227,11 @@
     "nextN": "Bless HV 0101 Lower Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1a793c": {
-    "name": "Bless HV 0101 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1a282a",
-    "prevN": "Bless HV 0101 Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1a793d": {
-    "name": "Bless HV 0101 Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1a282b",
-    "prevN": "Bless HV 0101 Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1b6c4b": {
     "name": "Bless MD 0204 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1bbd5f",
     "nextN": "Bless MD 0204 Upper Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1bbd5f": {
-    "name": "Bless MD 0204 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1b6c4b",
-    "prevN": "Bless MD 0204 Upper",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|1da395": {
     "name": "Bless HV 2004 Upper",
@@ -497,24 +251,6 @@
     "nextN": "Bless HV 2004 Boots Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1e96aa": {
-    "name": "Bless HV 2004 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1da395",
-    "prevN": "Bless HV 2004 Upper",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1e96ab": {
-    "name": "Bless HV 2004 Lower Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1da396",
-    "prevN": "Bless HV 2004 Lower",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1e96ac": {
-    "name": "Bless HV 2004 Boots Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1da397",
-    "prevN": "Bless HV 2004 Boots",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1ee7be": {
     "name": "Bless MS 0101 Lower",
     "next": "[SunJeong] Ninirim Collection.esp|1eed35",
@@ -526,18 +262,6 @@
     "next": "[SunJeong] Ninirim Collection.esp|1eed34",
     "nextN": "Bless MS 0101 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1eed34": {
-    "name": "Bless MS 0101 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1ee7c0",
-    "prevN": "Bless MS 0101 Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1eed35": {
-    "name": "Bless MS 0101 Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1ee7be",
-    "prevN": "Bless MS 0101 Lower",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1ef29d": {
     "name": "Cristal See-Through Upper",
@@ -551,41 +275,17 @@
     "nextN": "Cristal See-Through Lower Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1ef808": {
-    "name": "Cristal See-Through Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1ef29d",
-    "prevN": "Cristal See-Through Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1ef809": {
-    "name": "Cristal See-Through Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1ef807",
-    "prevN": "Cristal See-Through Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1efd85": {
     "name": "Cat Maid Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f02f7",
     "nextN": "Cat Maid Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1f02f7": {
-    "name": "Cat Maid Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1efd85",
-    "prevN": "Cat Maid Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1f1327": {
     "name": "Bless RB 2001 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f1328",
     "nextN": "Bless RB 2001 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f1328": {
-    "name": "Bless RB 2001 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f1327",
-    "prevN": "Bless RB 2001 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1f1e04": {
     "name": "Summer Casual Outfit",
@@ -597,28 +297,13 @@
     "name": "Summer Casual Outfit Slutty",
     "next": "[SunJeong] Ninirim Collection.esp|1f2e3b",
     "nextN": "Summer Casual Viel",
-    "nextT": "change",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f1e04",
-    "prevN": "Summer Casual Outfit",
-    "prevT": "change"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1f28e0": {
     "name": "Trivene Outfit",
     "next": "[SunJeong] Ninirim Collection.esp|1f33b1",
     "nextN": "Trivene Outfit Slutty",
     "nextT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f2e3b": {
-    "name": "Summer Casual Viel",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f1e05",
-    "prevN": "Summer Casual Outfit Slutty",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f33b1": {
-    "name": "Trivene Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f28e0",
-    "prevN": "Trivene Outfit",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|1f3e7a": {
     "name": "Bless EC 0024 Outfit",
@@ -638,24 +323,6 @@
     "nextN": "Trivene Outfit Slutty No Fur",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1f43db": {
-    "name": "Trivene Outfit Slutty No Fur",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f43da",
-    "prevN": "Trivene Outfit No Fur",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f4946": {
-    "name": "Bless EC 0024 Hairband Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f3e7b",
-    "prevN": "Bless EC 0024 Hairband",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f4947": {
-    "name": "Bless EC 0024 Outfit Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f3e7a",
-    "prevN": "Bless EC 0024 Outfit",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|1f4eb4": {
     "name": "Kitsune Miko Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f542a",
@@ -668,29 +335,11 @@
     "nextN": "Kitsune Miko Lower Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|1f542a": {
-    "name": "Kitsune Miko Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f4eb4",
-    "prevN": "Kitsune Miko Upper",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f542b": {
-    "name": "Kitsune Miko Lower Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f4eb7",
-    "prevN": "Kitsune Miko Lower",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|1f5997": {
     "name": "Bless MD 0013 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f5f09",
     "nextN": "Bless MD 0013 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f5f09": {
-    "name": "Bless MD 0013 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f5997",
-    "prevN": "Bless MD 0013 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1f749d": {
     "name": "Bless MD 0101 Upper",
@@ -698,44 +347,23 @@
     "nextN": "Bless MD 0101 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1f74a1": {
-    "name": "Bless MD 0101 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f749d",
-    "prevN": "Bless MD 0101 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1f7f74": {
     "name": "Damaged Feather Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f84e4",
     "nextN": "Damaged Feather Upper Slutty",
-    "nextT": "change"
+    "nextT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|1f7f77": {
     "name": "Damaged Feather Lower",
     "next": "[SunJeong] Ninirim Collection.esp|1f84e5",
     "nextN": "Damaged Feather Lower Slutty",
-    "nextT": "change"
+    "nextT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|1f84e4": {
     "name": "Damaged Feather Upper Slutty",
     "next": "[SunJeong] Ninirim Collection.esp|1f8a4c",
     "nextN": "Damaged Feather Upper Nude",
-    "nextT": "change",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f7f74",
-    "prevN": "Damaged Feather Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f84e5": {
-    "name": "Damaged Feather Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f7f77",
-    "prevN": "Damaged Feather Lower",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f8a4c": {
-    "name": "Damaged Feather Upper Nude",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f84e4",
-    "prevN": "Damaged Feather Upper Slutty",
-    "prevT": "change"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1f951e": {
     "name": "Cats Lady Upper",
@@ -743,23 +371,11 @@
     "nextN": "Cats Lady Upper Slutty",
     "nextT": "slip"
   },
-  "[SunJeong] Ninirim Collection.esp|1f951f": {
-    "name": "Cats Lady Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f951e",
-    "prevN": "Cats Lady Upper",
-    "prevT": "slip"
-  },
   "[SunJeong] Ninirim Collection.esp|1f9a98": {
     "name": "Kurumi Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1f9a99",
     "nextN": "Kurumi Upper Damaged",
     "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1f9a99": {
-    "name": "Kurumi Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1f9a98",
-    "prevN": "Kurumi Upper",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|1fa012": {
     "name": "Bless HV 0009 Upper",
@@ -767,23 +383,11 @@
     "nextN": "Bless HV 0009 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1fa013": {
-    "name": "Bless HV 0009 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fa012",
-    "prevN": "Bless HV 0009 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1fa014": {
     "name": "Bless HV 0009 Lower",
     "next": "[SunJeong] Ninirim Collection.esp|1fa587",
     "nextN": "Bless HV 0009 Lower Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fa587": {
-    "name": "Bless HV 0009 Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fa014",
-    "prevN": "Bless HV 0009 Lower",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fbb17": {
     "name": "Asker Assassin Upper",
@@ -791,23 +395,11 @@
     "nextN": "Asker Assassin Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1fbb19": {
-    "name": "Asker Assassin Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fbb17",
-    "prevN": "Asker Assassin Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1fcb56": {
     "name": "Dressy Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1fcb57",
     "nextN": "Dressy Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fcb57": {
-    "name": "Dressy Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fcb56",
-    "prevN": "Dressy Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fdb94": {
     "name": "Dino Upper",
@@ -815,56 +407,29 @@
     "nextN": "Dino Upper Slutty",
     "nextT": "slip"
   },
-  "[SunJeong] Ninirim Collection.esp|1fdb95": {
-    "name": "Dino Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdb94",
-    "prevN": "Dino Upper",
-    "prevT": "slip"
-  },
   "[SunJeong] Ninirim Collection.esp|1fdc5d": {
     "name": "Moonlight Outfit Slutty",
     "next": "[SunJeong] Ninirim Collection.esp|720a5",
     "nextN": "Moonlight Outfit Slutty No Bra",
-    "nextT": "change",
-    "prev": "[SunJeong] Ninirim Collection.esp|720a6",
-    "prevN": "Moonlight Outfit",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fdc7c": {
-    "name": "Blacksmith Lower Broken",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdc7d",
-    "prevN": "Blacksmith Lower",
-    "prevT": "damage"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fdc7d": {
     "name": "Blacksmith Lower",
     "next": "[SunJeong] Ninirim Collection.esp|1fdc7c",
     "nextN": "Blacksmith Lower Broken",
-    "nextT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fdc7e": {
-    "name": "Blacksmith Boots Broken",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdc83",
-    "prevN": "Blacksmith Boots",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fdc7f": {
-    "name": "Blacksmith Upper Broken",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fdc82",
-    "prevN": "Blacksmith Upper",
-    "prevT": "damage"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fdc82": {
     "name": "Blacksmith Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1fdc7f",
     "nextN": "Blacksmith Upper Broken",
-    "nextT": "damage"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fdc83": {
     "name": "Blacksmith Boots",
     "next": "[SunJeong] Ninirim Collection.esp|1fdc7e",
     "nextN": "Blacksmith Boots Broken",
-    "nextT": "damage"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1fdc9f": {
     "name": "Bless MD 3001 Upper",
@@ -878,29 +443,11 @@
     "nextN": "Sister Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|1fdcb8": {
-    "name": "Bless EC 0004 Panty Nude",
-    "prev": "[SunJeong] Ninirim Collection.esp|151788",
-    "prevN": "Bless EC 0004 Panty",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fdcb9": {
-    "name": "Bless EC 0004 Outfit Nude",
-    "prev": "[SunJeong] Ninirim Collection.esp|14c679",
-    "prevN": "Bless EC 0004 Outfit Slutty",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|1fe10a": {
     "name": "Bless MD 2009 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1fe10e",
     "nextN": "Bless MD 2009 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1fe10e": {
-    "name": "Bless MD 2009 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1fe10a",
-    "prevN": "Bless MD 2009 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|1febe9": {
     "name": "Bless LT 0003 Upper",
@@ -908,23 +455,11 @@
     "nextN": "Bless LT 0003 Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|1ff15b": {
-    "name": "Bless LT 0003 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|1febe9",
-    "prevN": "Bless LT 0003 Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|1ff6c6": {
     "name": "Scholarly Witch Upper",
     "next": "[SunJeong] Ninirim Collection.esp|1ff6c7",
     "nextN": "Scholarly Witch Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|1ff6c7": {
-    "name": "Scholarly Witch Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|1ff6c6",
-    "prevN": "Scholarly Witch Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|200710": {
     "name": "Neamhain Outfit",
@@ -932,23 +467,11 @@
     "nextN": "Neamhain Outfit Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|200711": {
-    "name": "Neamhain Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|200710",
-    "prevN": "Neamhain Outfit",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|200c86": {
     "name": "Bless MD 2003 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|200c87",
     "nextN": "Bless MD 2003 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|200c87": {
-    "name": "Bless MD 2003 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|200c86",
-    "prevN": "Bless MD 2003 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|2011f8": {
     "name": "Ceara Upper",
@@ -956,23 +479,11 @@
     "nextN": "Ceara Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|201cc9": {
-    "name": "Ceara Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|2011f8",
-    "prevN": "Ceara Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|202233": {
     "name": "Melkia Vania Upper",
     "next": "[SunJeong] Ninirim Collection.esp|202234",
     "nextN": "Melkia Vania Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|202234": {
-    "name": "Melkia Vania Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|202233",
-    "prevN": "Melkia Vania Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|2027ac": {
     "name": "Bless MD 0014 Upper",
@@ -980,23 +491,11 @@
     "nextN": "Bless MD 0014 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|2027ad": {
-    "name": "Bless MD 0014 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2027ac",
-    "prevN": "Bless MD 0014 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|203282": {
     "name": "Victory Upper",
     "next": "[SunJeong] Ninirim Collection.esp|203283",
     "nextN": "Victory Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|203283": {
-    "name": "Victory Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|203282",
-    "prevN": "Victory Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|203d55": {
     "name": "  Merchant: Bless 0002 Upper",
@@ -1010,29 +509,11 @@
     "nextN": "  Merchant: Bless 0002 Lower Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|2042c4": {
-    "name": "  Merchant: Bless 0002 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|203d55",
-    "prevN": "  Merchant: Bless 0002 Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2042c5": {
-    "name": "  Merchant: Bless 0002 Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|203d57",
-    "prevN": "  Merchant: Bless 0002 Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|204834": {
     "name": "Bless 0000 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|204835",
     "nextN": "Bless 0000 Upper Slutty",
     "nextT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|204835": {
-    "name": "Bless 0000 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|204834",
-    "prevN": "Bless 0000 Upper",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|20586f": {
     "name": "Bless RB 2007 Upper",
@@ -1040,23 +521,11 @@
     "nextN": "Bless RB 2007 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|205870": {
-    "name": "Bless RB 2007 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20586f",
-    "prevN": "Bless RB 2007 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|206347": {
     "name": "Bless RB 0013 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|206348",
     "nextN": "Bless RB 0013 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|206348": {
-    "name": "Bless RB 0013 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|206347",
-    "prevN": "Bless RB 0013 Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|2068bd": {
     "name": "Bless RB 0004 Upper",
@@ -1064,47 +533,17 @@
     "nextN": "Bless RB 0004 Upper Damaged",
     "nextT": "damage"
   },
-  "[SunJeong] Ninirim Collection.esp|2068be": {
-    "name": "Bless RB 0004 Upper Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|2068bd",
-    "prevN": "Bless RB 0004 Upper",
-    "prevT": "damage"
-  },
   "[SunJeong] Ninirim Collection.esp|206e31": {
     "name": "Ananta Outfit",
     "next": "[SunJeong] Ninirim Collection.esp|206e32",
     "nextN": "Ananta Outfit Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|206e32": {
-    "name": "Ananta Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|206e31",
-    "prevN": "Ananta Outfit",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|207907": {
     "name": "Succubus Upper",
     "next": "[SunJeong] Ninirim Collection.esp|207908",
     "nextN": "Succubus Upper Slutty",
     "nextT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|207908": {
-    "name": "Succubus Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|207907",
-    "prevN": "Succubus Upper",
-    "prevT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|207ecc": {
-    "name": "Bless MD 0004 Belt Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|105807",
-    "prevN": "Bless MD 0004 Belt",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|207ecd": {
-    "name": "Bless MD 0004 Top Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|fb5fe",
-    "prevN": "Bless MD 0004 Top",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|207f8b": {
     "name": "Karlstein Upper",
@@ -1124,29 +563,11 @@
     "nextN": "Valkyrie Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|2083e6": {
-    "name": "Valkyrie Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2083e4",
-    "prevN": "Valkyrie Lower",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2083e7": {
-    "name": "Valkyrie Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2083e5",
-    "prevN": "Valkyrie Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|20895c": {
     "name": "Bunny Upper",
     "next": "[SunJeong] Ninirim Collection.esp|208ec7",
     "nextN": "Bunny Upper Slutty",
     "nextT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|208ec7": {
-    "name": "Bunny Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20895c",
-    "prevN": "Bunny Upper",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|20943e": {
     "name": "Clown Lower",
@@ -1160,29 +581,11 @@
     "nextN": "Clown Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|209441": {
-    "name": "Clown Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|209440",
-    "prevN": "Clown Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|209442": {
-    "name": "Clown Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20943e",
-    "prevN": "Clown Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|209f18": {
     "name": "Falcon Outfit",
     "next": "[SunJeong] Ninirim Collection.esp|209f1a",
     "nextN": "Falcon Outfit Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|209f1a": {
-    "name": "Falcon Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|209f18",
-    "prevN": "Falcon Outfit",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|20a489": {
     "name": "Starlight Outfit",
@@ -1190,23 +593,11 @@
     "nextN": "Starlight Outfit Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|20a48a": {
-    "name": "Starlight Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20a489",
-    "prevN": "Starlight Outfit",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|20a9f9": {
     "name": "Open Waist Upper",
     "next": "[SunJeong] Ninirim Collection.esp|20a9fc",
     "nextN": "Open Waist Upper Slutty",
     "nextT": "slip"
-  },
-  "[SunJeong] Ninirim Collection.esp|20a9fc": {
-    "name": "Open Waist Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20a9f9",
-    "prevN": "Open Waist Upper",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|20b4d7": {
     "name": "Bless MS 0102 Upper",
@@ -1214,35 +605,11 @@
     "nextN": "Bless MS 0102 Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|20b4d8": {
-    "name": "Bless MS 0102 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20b4d7",
-    "prevN": "Bless MS 0102 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|20bfbf": {
     "name": "Undead Doctor Upper",
     "next": "[SunJeong] Ninirim Collection.esp|20bfc0",
     "nextN": "Undead Doctor Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|20bfc0": {
-    "name": "Undead Doctor Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|20bfbf",
-    "prevN": "Undead Doctor Upper",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|24002c": {
-    "name": "Bless MD0007 Boots Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|240038",
-    "prevN": "Bless MD0007 Boots",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|24002d": {
-    "name": "Bless MD0007 Armor Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|240037",
-    "prevN": "Bless MD0007 Armor",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|240037": {
     "name": "Bless MD0007 Armor",
@@ -1280,23 +647,11 @@
     "nextN": "Bless RB 0007 Armor Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|287303": {
-    "name": "Adler Lower Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|287309",
-    "prevN": "Adler Lower",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|287309": {
     "name": "Adler Lower",
     "next": "[SunJeong] Ninirim Collection.esp|287303",
     "nextN": "Adler Lower Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|28730a": {
-    "name": "Adler Armor Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|287315",
-    "prevN": "Adler Armor",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|287315": {
     "name": "Adler Armor",
@@ -1304,23 +659,11 @@
     "nextN": "Adler Armor Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|28731b": {
-    "name": "Dark Souls Knight Cuirass Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|287325",
-    "prevN": "Dark Souls Knight Cuirass",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|287325": {
     "name": "Dark Souls Knight Cuirass",
     "next": "[SunJeong] Ninirim Collection.esp|28731b",
     "nextN": "Dark Souls Knight Cuirass Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|28732b": {
-    "name": "Bless 0022 Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|28732d",
-    "prevN": "Bless 0022",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|28732d": {
     "name": "Bless 0022",
@@ -1328,35 +671,11 @@
     "nextN": "Bless 0022 Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|28734a": {
-    "name": "Elwing Dress Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|287354",
-    "prevN": "Elwing Dress",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|287354": {
     "name": "Elwing Dress",
     "next": "[SunJeong] Ninirim Collection.esp|28734a",
     "nextN": "Elwing Dress Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|28735b": {
-    "name": "Fire Keeper Mask Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|287372",
-    "prevN": "Fire Keeper Mask",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|28735c": {
-    "name": "Fire Keeper Cloak Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|28736f",
-    "prevN": "Fire Keeper Cloak",
-    "prevT": "damage"
-  },
-  "[SunJeong] Ninirim Collection.esp|28735d": {
-    "name": "Fire Keeper Dress Damaged",
-    "prev": "[SunJeong] Ninirim Collection.esp|287374",
-    "prevN": "Fire Keeper Dress",
-    "prevT": "damage"
   },
   "[SunJeong] Ninirim Collection.esp|28736f": {
     "name": "Fire Keeper Cloak",
@@ -1374,7 +693,7 @@
     "name": "Fire Keeper Dress",
     "next": "[SunJeong] Ninirim Collection.esp|28735d",
     "nextN": "Fire Keeper Dress Damaged",
-    "nextT": "damage"
+    "nextT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|2aabf0": {
     "name": "Cristal See-Through Lower [Black]",
@@ -1382,29 +701,11 @@
     "nextN": "Cristal See-Through Lower Slutty [Black]",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|2aabf1": {
-    "name": "Cristal See-Through Lower Slutty [Black]",
-    "prev": "[SunJeong] Ninirim Collection.esp|2aabf0",
-    "prevN": "Cristal See-Through Lower [Black]",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|2aabf3": {
     "name": "Cristal See-Through Upper [Black]",
     "next": "[SunJeong] Ninirim Collection.esp|2aabf5",
     "nextN": "Cristal See-Through Upper Slutty [Black]",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2aabf5": {
-    "name": "Cristal See-Through Upper Slutty [Black]",
-    "prev": "[SunJeong] Ninirim Collection.esp|2aabf3",
-    "prevN": "Cristal See-Through Upper [Black]",
-    "prevT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2aac85": {
-    "name": "Atanis Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2aac86",
-    "prevN": "Atanis Upper",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|2aac86": {
     "name": "Atanis Upper",
@@ -1412,23 +713,11 @@
     "nextN": "Atanis Upper Slutty",
     "nextT": "slip"
   },
-  "[SunJeong] Ninirim Collection.esp|2aac99": {
-    "name": "2019 Christmas Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2aac9a",
-    "prevN": "2019 Christmas Outfit",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|2aac9a": {
     "name": "2019 Christmas Outfit",
     "next": "[SunJeong] Ninirim Collection.esp|2aac99",
     "nextN": "2019 Christmas Outfit Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2aacaf": {
-    "name": "Scarlet Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2aacb0",
-    "prevN": "Scarlet Upper",
-    "prevT": "change"
   },
   "[SunJeong] Ninirim Collection.esp|2aacb0": {
     "name": "Scarlet Upper",
@@ -1436,23 +725,11 @@
     "nextN": "Scarlet Upper Slutty",
     "nextT": "change"
   },
-  "[SunJeong] Ninirim Collection.esp|2d36d5": {
-    "name": "Bless HV 0103 Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2d36d6",
-    "prevN": "Bless HV 0103 Upper",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|2d36d6": {
     "name": "Bless HV 0103 Upper",
     "next": "[SunJeong] Ninirim Collection.esp|2d36d5",
     "nextN": "Bless HV 0103 Upper Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|2d36ea": {
-    "name": "Zereth Upper Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2d36eb",
-    "prevN": "Zereth Upper",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|2d36eb": {
     "name": "Zereth Upper",
@@ -1460,23 +737,11 @@
     "nextN": "Zereth Upper Slutty",
     "nextT": "slip"
   },
-  "[SunJeong] Ninirim Collection.esp|2f1d8f": {
-    "name": "Honey Bee Outfit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|2f1d93",
-    "prevN": "Honey Bee Outfit",
-    "prevT": "change"
-  },
   "[SunJeong] Ninirim Collection.esp|2f1d93": {
     "name": "Honey Bee Outfit",
     "next": "[SunJeong] Ninirim Collection.esp|2f1d8f",
     "nextN": "Honey Bee Outfit Slutty",
     "nextT": "change"
-  },
-  "[SunJeong] Ninirim Collection.esp|31a843": {
-    "name": "Sexy Knit Slutty",
-    "prev": "[SunJeong] Ninirim Collection.esp|31a848",
-    "prevN": "Sexy Knit",
-    "prevT": "slip"
   },
   "[SunJeong] Ninirim Collection.esp|31a848": {
     "name": "Sexy Knit",

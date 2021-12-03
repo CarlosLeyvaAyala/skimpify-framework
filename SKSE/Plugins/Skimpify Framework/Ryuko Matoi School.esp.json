@@ -1,62 +1,14 @@
 {
   "Ryuko Matoi School.esp|d63": {
-    "name": "Ryuko Matoi School Top",
-    "next": "Ryuko Matoi School.esp|1834",
-    "nextN": "Ryuko Matoi School TopXtra",
-    "nextT": "change"
+    "name": "Ryuko Matoi School Top"
   },
   "Ryuko Matoi School.esp|d66": {
-    "name": "Ryuko Matoi School Armor",
-    "next": "Ryuko Matoi School.esp|1836",
-    "nextN": "Ryuko Matoi School ArmorXtra",
-    "nextT": "change"
+    "name": "Ryuko Matoi School Armor"
   },
   "Ryuko Matoi School.esp|d68": {
-    "name": "Ryuko Matoi School Armor Lower",
-    "next": "Ryuko Matoi School.esp|1838",
-    "nextN": "Ryuko Matoi School Armor LowerXTra",
-    "nextT": "change"
+    "name": "Ryuko Matoi School Armor Lower"
   },
   "Ryuko Matoi School.esp|d6a": {
-    "name": "Ryuko Matoi School Skirt",
-    "next": "Ryuko Matoi School.esp|183a",
-    "nextN": "Ryuko Matoi School SkirtXtra",
-    "nextT": "change"
-  },
-  "Ryuko Matoi School.esp|12d0": {
-    "name": "Ryuko Matoi School Panties",
-    "next": "Ryuko Matoi School.esp|183c",
-    "nextN": "Ryuko Matoi School PantiesXtra",
-    "nextT": "change"
-  },
-  "Ryuko Matoi School.esp|1834": {
-    "name": "Ryuko Matoi School TopXtra",
-    "prev": "Ryuko Matoi School.esp|d63",
-    "prevN": "Ryuko Matoi School Top",
-    "prevT": "change"
-  },
-  "Ryuko Matoi School.esp|1836": {
-    "name": "Ryuko Matoi School ArmorXtra",
-    "prev": "Ryuko Matoi School.esp|d66",
-    "prevN": "Ryuko Matoi School Armor",
-    "prevT": "change"
-  },
-  "Ryuko Matoi School.esp|1838": {
-    "name": "Ryuko Matoi School Armor LowerXTra",
-    "prev": "Ryuko Matoi School.esp|d68",
-    "prevN": "Ryuko Matoi School Armor Lower",
-    "prevT": "change"
-  },
-  "Ryuko Matoi School.esp|183a": {
-    "name": "Ryuko Matoi School SkirtXtra",
-    "prev": "Ryuko Matoi School.esp|d6a",
-    "prevN": "Ryuko Matoi School Skirt",
-    "prevT": "change"
-  },
-  "Ryuko Matoi School.esp|183c": {
-    "name": "Ryuko Matoi School PantiesXtra",
-    "prev": "Ryuko Matoi School.esp|12d0",
-    "prevN": "Ryuko Matoi School Panties",
-    "prevT": "change"
+    "name": "Ryuko Matoi School Skirt"
   }
 }
