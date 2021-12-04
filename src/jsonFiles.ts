@@ -56,6 +56,7 @@ const js = JSON.stringify(bb, undefined, 2)
 
 export namespace Export {
   export function AllJson() {
+    return
     let aa: JsonArmor[] = []
     JFormMapL.ForAllKeys(DbHandle(), (k) => {
       const a = Armor.from(k)
@@ -83,12 +84,56 @@ export namespace Export {
     let endChain = aa.filter((v) => !v.next)
     let parents = aa.filter((v) => v.next)
 
-    endChain.forEach((v) =>
-      printConsole(`${v.id}  ${v.rel} ${v.next ? v.next.name : "no child"}`)
+    parents.forEach((p) => {
+      endChain.forEach((c, i) => {
+        if (c.id !== p.next?.id) return
+        endChain.splice(i, 1)
+        p.next = c
+      })
+    })
+
+    let pars = parents.filter((p) => {
+      for (const c of parents) if (c.id === p.next?.id) return true
+      return false
+    })
+
+    let childs = parents.filter((p) => {
+      for (const c of pars) if (c.id === p.id) return false
+      return true
+    })
+
+    WriteToFile(
+      `${cfgDir}dump/test parents.json`,
+      JSON.stringify(childs, undefined, 2),
+      false,
+      false
+    )
+
+    WriteToFile(
+      `${cfgDir}dump/test childs.json`,
+      JSON.stringify(pars, undefined, 2),
+      false,
+      false
+    )
+
+    pars.forEach((p) => {
+      childs.forEach((c, i) => {
+        if (c.id !== p.next?.id) return
+        printConsole("+++", c.name)
+        childs.splice(i, 1)
+        p.next = c
+      })
+    })
+
+    WriteToFile(
+      `${cfgDir}dump/test pars.json`,
+      JSON.stringify(pars, undefined, 2),
+      false,
+      false
     )
 
     const f = `${cfgDir}dump/test save.json`
-    WriteToFile(f, JSON.stringify(aa, undefined, 2), false, false)
+    WriteToFile(f, JSON.stringify(parents, undefined, 2), false, false)
   }
 }
 

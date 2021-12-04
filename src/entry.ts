@@ -31,6 +31,7 @@ import {
   Game,
   Input,
   on,
+  once,
   printConsole,
   settings,
   storage,
@@ -53,25 +54,26 @@ const kMModest = SK("mmodest")
 const SIni = Misc.PreserveVar<boolean>(MemOnly, kIni)
 const SMModest = Misc.PreserveVar<number>(MemOnly, kMModest)
 
-let allowInit = storage[kIni] as boolean | false
+let allowInit = (storage[kIni] as boolean) || false
 let mModest = storage[kMModest] as number | -1
 
 const n = "skimpify-framework"
 const develop = settings[n]["developerMode"] as boolean
 
 export function main() {
-  // on("loadGame", () => {
-  //   InitPlugin()
-  //   allowInit = SIni(true)
-  // })
+  on("loadGame", () => {
+    InitPlugin()
+    allowInit = SIni(true)
+  })
 
-  // once("update", () => {
-  //   if (allowInit || !WasInitialized()) InitPlugin()
-  // })
+  once("update", () => {
+    if (allowInit || !WasInitialized()) InitPlugin()
+  })
 
   function InitPlugin() {
     Load.Armors()
-    // MarkInitialized()
+    printConsole(`Skimpify Framework: Armors successfully loaded.`)
+    MarkInitialized()
   }
 
   // Alt + key
