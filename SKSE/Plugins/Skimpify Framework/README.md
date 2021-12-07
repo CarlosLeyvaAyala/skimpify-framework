@@ -20,6 +20,12 @@ Here you will definitions made by myself (and hopefully, definitions made by oth
 
 Most of these are for mods I can't really remember where I downloaded them from, so if you find out the framework "isn't working" the most likely culprit is one of these files, since **they are dependant on the version of the mod you are using**.
 
+I know I got most of these armors from these pages, though:
+
+- [Tullius channel][arca.live/tullius]
+- [Rektas Market][rektas]
+- [SunJeong][SunJeong]
+
 Some of these armor setups are a matter of personal opinion (like boots and gauntlets getting damaged in [[COCO] Shadow Assassin [SE].esp][CocoAssassin]), but you are free to setup your own changes if you like, by [redefining how armors are changed](#registering-incompatible-armors).
 
 # When problems arise...
@@ -39,11 +45,8 @@ Inside these files, armors are referred to by using the mod esp file name and it
   "name": "Red Nose Upper Slutty",
   "next": "[SunJeong] Ninirim Collection.esp|123e40",
   "nextN": "Red Nose Just Bones",
-  "nextT": "change",
-  "prev": "[SunJeong] Ninirim Collection.esp|119c2d",
-  "prevN": "Red Nose Upper",
-  "prevT": "slip"
-}
+  "nextT": "change"
+},
 ```
 
 The entry above says:
@@ -51,8 +54,6 @@ The entry above says:
   > _Red Nose Upper Slutty_ belongs to `[SunJeong] Ninirim Collection.esp`, with a relative FormId of `11ed3c`.
   >
   > Its skimpy (`next`) version is bla bla bla... and their _Change Relationship_ (`nexT`) is `change` ([read the manual][] to understand this.)
-  >
-  > Its modest (`prev`) version is bla bla bla...and their _Change Relationship_ is `slip`.
 
 If you follow this structure, you can manually add or modify entries by directly changing a json file contents.
 
@@ -60,9 +61,9 @@ It's sometimes actually faster to manually edit _Change Relationships_ in a text
 
 ## Names are discarded
 
-All name fields (`"name"`, `"nextN"` and `"prevN"`) are there so we humans know which armor an entry refers to when we make manual changes.
+All name fields (`"name"` and `"nextN"`) are there so we humans know which armor an entry refers to when we make manual changes.
 
-The framework doesn't need those and they're discarded, so there's no problem if you use patches that rename your armors (if you carefully look at some files, you may have noticed some of my armors were renamed, in fact).
+The framework doesn't need those and they're discarded, so there's no problem if you use patches that rename your armors (if you carefully look at some files, you may have noticed some of my armors were renamed by me, in fact).
 
 # Incompatibilities
 This framework only cares about esp filenames and FormIDs to determine which armor is which.\
@@ -100,6 +101,9 @@ Big mods that contain a great assortment of variants of armors (which may take u
 Well, I'm exagerating.\
 Registering them was easy, but making sure they worked as expected was the time consuming step.
 
-[read the manual]: ../../../Help/help.pdf
-[Ninirim]: %5BSunJeong%5D%20Ninirim%20Collection.esp.json
+[arca.live/tullius]: https://arca.live/b/tullius?category=%EC%9D%98%EC%83%81
 [CocoAssassin]: %5BCOCO%5D%20Shadow%20Assassin%20%5BSE%5D.esp.json
+[Ninirim]: %5BSunJeong%5D%20Ninirim%20Collection.esp.json
+[read the manual]: ../../../Help/help.pdf
+[rektas]: https://www.rektasmarket.com/
+[SunJeong]: https://www.sunkeumjeong.com/home

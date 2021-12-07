@@ -72,7 +72,6 @@ export function main() {
 
   function InitPlugin() {
     Load.Armors()
-    printConsole(`Skimpify Framework: Armors successfully loaded.`)
     MarkInitialized()
   }
 
@@ -206,6 +205,7 @@ namespace Load {
     ${n} armors were read from ${f} files.`
 
     if (develop) Debug.messageBox(m)
+    printConsole(m)
   }
 
   function SaveVariant(parent: Armor, data: number, rel: RelType) {

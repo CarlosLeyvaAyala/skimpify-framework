@@ -12,9 +12,10 @@
   - [`change`](#change)
   - [`damage`](#damage)
     - [Skip this if you are not a programmer!](#skip-this-if-you-are-not-a-programmer)
-  - [Relationship chains](#relationship-chains)
-    - [A real life example](#a-real-life-example)
-  - [Understanding API calls](#understanding-api-calls)
+- [Relationship chains](#relationship-chains)
+  - [A real life example](#a-real-life-example)
+  - [Invalid chains](#invalid-chains)
+- [Understanding API calls](#understanding-api-calls)
 - [Configuration files](#configuration-files)
   - [Armor identity solving](#armor-identity-solving)
 - [Automatically registering armors](#automatically-registering-armors)
@@ -276,7 +277,7 @@ function MostModest(a: Armor): Armor | null {
 }
 ```
 
-## Relationship chains
+# Relationship chains
 
 Registering an armor can be seen as putting it in a relationship chain with other ones:
 
@@ -312,7 +313,7 @@ flowchart LR
 
 ... but if many armor creators start doing things like this, I'll gladly add that functionality.
 
-### A real life example
+## A real life example
 
 By the way, as you saw in that last example, not all armors in a relationship chain need to have the same _Change Relationship_.
 
@@ -331,8 +332,58 @@ There is no theoretical limit to how long a chain can be. That's all up to armor
 
 ... most of the time it will have only two elements, though.
 
+## Invalid chains
 
-## Understanding API calls
+**LOOPS ARE STRICTLY FORBIDEN**.
+
+**This kind of relationship WILL LEAD TO CTDs**:
+
+```mermaid
+flowchart LR
+    B[Armor] <-- change --> C[Armor Slutty]
+    C <-- change --> B
+```
+
+[Configuration file][JsonCfgFiles] for it:
+
+```json
+"[SunJeong] Ninirim Collection.esp|128f4a": {
+  "name": "Bless HV0102 Upper",
+  "next": "[SunJeong] Ninirim Collection.esp|12e055",
+  "nextN": "Bless HV0102 Upper Slutty",
+  "nextT": "change"
+},
+"[SunJeong] Ninirim Collection.esp|12e055": {
+  "name": "Bless HV0102 Upper Slutty",
+  "next": "[SunJeong] Ninirim Collection.esp|128f4a",
+  "nextN": "Bless HV0102 Upper",
+  "nextT": "change"
+},
+}
+```
+
+This relationship is saying this:
+
+```mermaid
+flowchart LR
+    B[Armor] -- change --> C[Armor Slutty]
+```
+
+And then **it also defines** this:
+
+```mermaid
+flowchart LR
+    B[Armor Slutty] -- change --> C[Armor]
+```
+
+Thus creating a never ending loop.
+
+!!!warning
+    Right now the framework doesn't automatically check if these kind of errors exist, but it will eventually do.
+
+For the time being, make sure to manually [test that loops don't exist][LoopTest] after creating relationships.
+
+# Understanding API calls
 
 As you have seen in most diagrams, they usually go this way:
 
@@ -368,37 +419,20 @@ This defines the middle armor relationships in [the chain we saw above](#a-real-
   "next": "[SunJeong] Ninirim Collection.esp|123e40",
   "nextN": "Red Nose Just Bones",
   "nextT": "change",
-  "prev": "[SunJeong] Ninirim Collection.esp|119c2d",
-  "prevN": "Red Nose Upper",
-  "prevT": "slip"
 }
 ```
-Since we are only defining one armor, this is a rough visual representation of what those lines are saying:
+
+Notice how the framework only needs you to explicitly add what will be the skimpy version for some armor.
+**It's "smart" enough to create the two way relationship between two armors** without you needing to explicitly doing so:
 
 ```mermaid
-sequenceDiagram
-  participant U as Upper
-  participant S as Slutty
-  participant J as Just Bones
-
-  Note over S: 11ed3c
-
-  Note over J: 123e40
-  rect rgb(200, 150, 255)
-  S->>J: change
-  Note over S,J: next
-  end
-
-  Note over U: 119c2d
-  rect rgb(200, 150, 255)
-  S->>U: slip
-  Note over S,U: prev
-  end
+flowchart LR
+    B[Red Nose Upper Slutty] <-- change --> C[Red Nose Just Bones]
 ```
 
 And this is how the whole chain looks like:
 
-```json
+```json {highlight=[1,3,7,9]}
 "[SunJeong] Ninirim Collection.esp|119c2d": {
   "name": "Red Nose Upper",
   "next": "[SunJeong] Ninirim Collection.esp|11ed3c",
@@ -409,17 +443,8 @@ And this is how the whole chain looks like:
   "name": "Red Nose Upper Slutty",
   "next": "[SunJeong] Ninirim Collection.esp|123e40",
   "nextN": "Red Nose Just Bones",
-  "nextT": "change",
-  "prev": "[SunJeong] Ninirim Collection.esp|119c2d",
-  "prevN": "Red Nose Upper",
-  "prevT": "slip"
+  "nextT": "change"
 },
-"[SunJeong] Ninirim Collection.esp|123e40": {
-  "name": "Red Nose Just Bones",
-  "prev": "[SunJeong] Ninirim Collection.esp|11ed3c",
-  "prevN": "Red Nose Upper Slutty",
-  "prevT": "change"
-}
 ```
 
 ```mermaid
@@ -428,9 +453,14 @@ flowchart LR
     B <-- change --> C[Red Nose Just Bones]
 ```
 
+!!!note
+    Inside a configuration file, you only need to to write elements that have a skimpier version.
+
+    There's no need to write armors that have no such a version.
+
 ## Armor identity solving
 
-Had to take them out from the PDF because they looked like shit, but some lines in the json sample above should had been highlighted:
+I had to take them out from the PDF because they looked like shit, but some lines in the json sample above should had been highlighted:
 
 ![](img/json-highlight.png)
 
@@ -447,17 +477,16 @@ flowchart LR
 "esp|formId"
 ```
 
-That's all the framework needs to know for recognizing an armor and that's why if configuration files have different FormIds defined in them than the data your actual game carries, they won't work.
+That's all the framework needs to know for recognizing an armor and that's why **if configuration files have different FormIds defined in them than the data your actual game carries, they won't work**.
 
-Even the `"prevT"` and `"nextT"` lines (which define the _Change Relationship_ between two armors), can be ommited.
-In that case, their relationship will be assumed to be `change`.
+If the `"nextT"` line (which define the _Change Relationship_ between two armors), is ommited or has a wrong value (like `"undefined"`), their relationship will be assumed to be `change`.
 
 !!!info Did you know...?
-    When I first started to write this framework, I originally named them _"Change Types"_. That's why those things were named `prevT(ype)` and `nextT(ype)`.
+    When I first started to write this framework, I originally named them _"Change Types"_. That's why those things were named `nextT(ype)`.
 
-    It was until way later that I settled down to call them _Change Relationships_, but at that point it was too risky to change `"prevT"` and `"nextT"` names to reflect that, since that could be a source of **VERY** hard to track bugs.
+    It was until way later that I settled down to call them _Change Relationships_, but at that point it was too risky to change the `"nextT"` name to reflect that, since that could be a source of **VERY** hard to track bugs.
 
-    So... just remember this when you wonder why those things aren't named `"prevR"` and `"nextR"`.
+    So... just remember this when you wonder why those things aren't named `"nextR"`.
 
 All this info is quite useful if you plan to manually modify json files.
 For example, sometimes it's way easier to use [automatic generation mode][AutoGen], save those files, then use a text editor to change all relationships to `"slip"`.
@@ -483,7 +512,9 @@ To use it:
 ![](img/inventory.jpg)
 
 This mode is quite limited by the fact that armors names don't really follow any kind of covention, so most of the time it will setup relationships as being of type [`change`](#change).
+
 The only single time it will set them up with any other value is if a variant contains the word _"damage"_ or _"damaged"_ (see picture above).
+On those cases, it will add a [`"damage"`](#damage) kind of relationship.
 
 Since you will get a `change` relationship most of the time, you will most probably follow these steps when using this auto function:
 
@@ -495,7 +526,9 @@ Since you will get a `change` relationship most of the time, you will most proba
 By the way...
 
 !!!warning
-    If this function finds that a _Change Relationship_ was already been stablished between two armors, it won't change it.
+    If this function finds that a _Change Relationship_ other than `"change"` was already been stablished between two armors, it won't change it.
+
+That's because it knows any relationship but `change` was manually setup.
 
 ## In depth explanation of how it setups relationships
 
@@ -869,5 +902,5 @@ If something isn't clear, you have some suggestion or need some help on using th
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [SPHotReload]: https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/features.md#hot-reload
 [Wardrobe Malfunction]: todo
-
+[LoopTest]: todo
 [KeyboardCss]: https://shhdharmen.github.io/keyboard-css/
