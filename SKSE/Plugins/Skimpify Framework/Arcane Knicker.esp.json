@@ -1,0 +1,14 @@
+{
+  "Arcane Knicker.esp|d65": {
+    "name": "Arcane Knickers3 White",
+    "next": "Arcane Knicker.esp|d68",
+    "nextN": "Arcane Knickers6 White",
+    "nextT": "change"
+  },
+  "Arcane Knicker.esp|d66": {
+    "name": "Arcane Knickers4 Black",
+    "next": "Arcane Knicker.esp|d67",
+    "nextN": "Arcane Knickers5 Black",
+    "nextT": "change"
+  }
+}

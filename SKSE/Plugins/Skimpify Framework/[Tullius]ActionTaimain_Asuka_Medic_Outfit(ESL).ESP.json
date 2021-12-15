@@ -1,0 +1,20 @@
+{
+  "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|805": {
+    "name": "[ActionTaimain] Asuka MEDIC Suit",
+    "next": "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|829",
+    "nextN": "[ActionTaimain] Asuka Medic Outfit(SeeThrough)",
+    "nextT": "change"
+  },
+  "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|829": {
+    "name": "[ActionTaimain] Asuka Medic Outfit(SeeThrough)",
+    "next": "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|82e",
+    "nextN": "[ActionTaimain] Asuka Medic Naked A",
+    "nextT": "change"
+  },
+  "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|82e": {
+    "name": "[ActionTaimain] Asuka Medic Naked A",
+    "next": "[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP|82f",
+    "nextN": "[ActionTaimain] Asuka Medic Naked B",
+    "nextT": "change"
+  }
+}

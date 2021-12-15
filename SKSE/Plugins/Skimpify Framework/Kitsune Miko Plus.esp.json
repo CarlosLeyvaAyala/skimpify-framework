@@ -1,0 +1,20 @@
+{
+  "Kitsune Miko Plus.esp|800": {
+    "name": "Kitsune Miko Upper",
+    "next": "Kitsune Miko Plus.esp|806",
+    "nextN": "Kitsune Miko Upper Dm",
+    "nextT": "damage"
+  },
+  "Kitsune Miko Plus.esp|803": {
+    "name": "Kitsune Miko Lower",
+    "next": "Kitsune Miko Plus.esp|807",
+    "nextN": "Kitsune Miko Lower Dm",
+    "nextT": "damage"
+  },
+  "Kitsune Miko Plus.esp|810": {
+    "name": "Kitsune Miko Underwear",
+    "next": "Kitsune Miko Plus.esp|812",
+    "nextN": "Kitsune Miko Underwear H",
+    "nextT": "slip"
+  }
+}

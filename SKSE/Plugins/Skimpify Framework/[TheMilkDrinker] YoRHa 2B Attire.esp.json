@@ -1,0 +1,26 @@
+{
+  "[TheMilkDrinker] YoRHa 2B Attire.esp|84d": {
+    "name": "YoRHa 2B Top",
+    "next": "[TheMilkDrinker] YoRHa 2B Attire.esp|84f",
+    "nextN": "YoRHa 2B Top Alt",
+    "nextT": "change"
+  },
+  "[TheMilkDrinker] YoRHa 2B Attire.esp|84e": {
+    "name": "YoRHa 2B Top 2",
+    "next": "[TheMilkDrinker] YoRHa 2B Attire.esp|850",
+    "nextN": "YoRHa 2B Top Alt 2",
+    "nextT": "change"
+  },
+  "[TheMilkDrinker] YoRHa 2B Attire.esp|851": {
+    "name": "YoRHa 2B White Top",
+    "next": "[TheMilkDrinker] YoRHa 2B Attire.esp|853",
+    "nextN": "YoRHa 2B White Top Alt",
+    "nextT": "change"
+  },
+  "[TheMilkDrinker] YoRHa 2B Attire.esp|852": {
+    "name": "YoRHa 2B White Top 2",
+    "next": "[TheMilkDrinker] YoRHa 2B Attire.esp|854",
+    "nextN": "YoRHa 2B White Top Alt 2",
+    "nextT": "change"
+  }
+}

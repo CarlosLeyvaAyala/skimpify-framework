@@ -1,0 +1,80 @@
+{
+  "[COCO] Evelynn Halloween [SE].esp|8d5": {
+    "name": "[COCO]EVEall_panties1",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8ac",
+    "nextN": "[COCO]EVEall_pantiesex1",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|8d9": {
+    "name": "[COCO]EVEall_skirt1",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8c6",
+    "nextN": "[COCO]EVEall_skirtsex1",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|8e3": {
+    "name": "[COCO]EVEall_bra1",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8a2",
+    "nextN": "[COCO]EVEall_brasex1",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|904": {
+    "name": "[COCO]EVEall_panties2",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8f8",
+    "nextN": "[COCO]EVEall_pantiesex2",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|908": {
+    "name": "[COCO]EVEall_skirt2",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8ff",
+    "nextN": "[COCO]EVEall_skirtsex2",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|90c": {
+    "name": "[COCO]EVEall_bra2",
+    "next": "[COCO] Evelynn Halloween [SE].esp|8ee",
+    "nextN": "[COCO]EVEall_brasex2",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|91f": {
+    "name": "[COCO]EVEall_panties3",
+    "next": "[COCO] Evelynn Halloween [SE].esp|919",
+    "nextN": "[COCO]EVEall_pantiesex3",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|93d": {
+    "name": "[COCO]EVEall_panties4",
+    "next": "[COCO] Evelynn Halloween [SE].esp|933",
+    "nextN": "[COCO]EVEall_pantiesex4",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|941": {
+    "name": "[COCO]EVEall_skirt4",
+    "next": "[COCO] Evelynn Halloween [SE].esp|939",
+    "nextN": "[COCO]EVEall_skirtsex4",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|943": {
+    "name": "[COCO]EVEall_bra4",
+    "next": "[COCO] Evelynn Halloween [SE].esp|929",
+    "nextN": "[COCO]EVEall_brasex4",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|95b": {
+    "name": "[COCO]EVEall_panties5",
+    "next": "[COCO] Evelynn Halloween [SE].esp|953",
+    "nextN": "[COCO]EVEall_pantiesex5",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|95f": {
+    "name": "[COCO]EVEall_skirt5",
+    "next": "[COCO] Evelynn Halloween [SE].esp|957",
+    "nextN": "[COCO]EVEall_skirtsex5",
+    "nextT": "slip"
+  },
+  "[COCO] Evelynn Halloween [SE].esp|961": {
+    "name": "[COCO]EVEall_bra5",
+    "next": "[COCO] Evelynn Halloween [SE].esp|94b",
+    "nextN": "[COCO]EVEall_brasex5",
+    "nextT": "slip"
+  }
+}
