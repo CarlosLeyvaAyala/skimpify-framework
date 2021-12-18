@@ -4,7 +4,6 @@ import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
-import { Export } from "jsonFiles"
 import {
   ActorArg,
   AddChangeRel,
@@ -60,6 +59,14 @@ let mModest = storage[kMModest] as number | -1
 const n = "skimpify-framework"
 const develop = settings[n]["developerMode"] as boolean
 
+const hk = "hotkeys"
+const FO = (k: string) => Hotkeys.FromObject(n, hk, k)
+/** Gets a hotkey from settings */
+const HK = (k: string) => Hotkeys.ListenTo(FO(k), develop)
+
+// Player chest MQ201GearContainerNEW "Chest" [CONT:00070479]
+// droppedActivator = player.PlaceAtMe(TrainingWeight)
+// droppedActivator.MoveTo(player, r * Sin(theta), r * Cos(theta), 7.0)
 export function main() {
   on("loadGame", () => {
     InitPlugin()
@@ -75,48 +82,39 @@ export function main() {
     MarkInitialized()
   }
 
-  // Alt + key
-  const OnLoadJson = Hotkeys.ListenTo(DxScanCode.Q, develop)
-  const OnSaveJson = Hotkeys.ListenTo(DxScanCode.W, develop)
-  const OnAutoGen = Hotkeys.ListenTo(DxScanCode.E, develop)
+  const OnLoadJson = HK("loadJson")
+  const OnSaveJson = HK("saveJson")
+  const OnAutoGen = HK("autoGen")
 
-  const OnMarkClear = Hotkeys.ListenTo(DxScanCode.A, develop)
-  const OnMarkModest = Hotkeys.ListenTo(DxScanCode.S, develop)
-  const OnMarkSlip = Hotkeys.ListenTo(DxScanCode.D, develop)
-  const OnMarkChange = Hotkeys.ListenTo(DxScanCode.F, develop)
-  const OnMarkDamage = Hotkeys.ListenTo(DxScanCode.G, develop)
-  const OnDebugEquipped = Hotkeys.ListenTo(DxScanCode.Z, develop)
-  const OnDump = Hotkeys.ListenTo(DxScanCode.X, develop)
+  const OnMarkClear = HK("markClear")
+  const OnMarkModest = HK("markModest")
+  const OnMarkSlip = HK("markSlip")
+  const OnMarkChange = HK("markChange")
+  const OnMarkDamage = HK("markDamage")
+  const OnDebugEquipped = HK("debugEquipped")
 
-  const OnDiscardArmors = Hotkeys.ListenTo(DxScanCode.M, develop)
+  const OnDump = HK("dump")
+  const OnDiscardArmors = HK("deleteAllArmors")
 
-  // Only key
-  const OnAllSkimpy = Hotkeys.ListenTo(DxScanCode.RightArrow, develop)
-  const OnAllModest = Hotkeys.ListenTo(DxScanCode.LeftArrow, develop)
-  const OnUnequipAll = Hotkeys.ListenTo(DxScanCode.DownArrow, develop)
-  const OnUnequipAll2 = Hotkeys.ListenTo(DxScanCode.UpArrow, develop)
+  const OnAllSkimpy = HK("allSkimpy")
+  const OnAllModest = HK("allModest")
+  const OnUnequipAll = HK("unequipAll1")
+  const OnUnequipAll2 = HK("unequipAll2")
 
   on("update", () => {
-    if (
-      develop &&
-      (Input.isKeyPressed(DxScanCode.LeftAlt) ||
-        Input.isKeyPressed(DxScanCode.RightAlt))
-    ) {
-      OnMarkModest(Mark.Modest)
-      OnMarkClear(Mark.Clear)
-      OnMarkSlip(Mark.Slip)
-      OnMarkChange(Mark.Change)
-      OnMarkDamage(Mark.Damage)
-      OnDebugEquipped(Mark.DebugOne)
-      OnDump(Dump)
+    OnLoadJson(Load.Armors)
+    OnSaveJson(SaveJson)
+    OnAutoGen(AutoGenArmors)
 
-      OnDiscardArmors(Armors.Discard)
+    OnMarkModest(Mark.Modest)
+    OnMarkClear(Mark.Clear)
+    OnMarkSlip(Mark.Slip)
+    OnMarkChange(Mark.Change)
+    OnMarkDamage(Mark.Damage)
+    OnDebugEquipped(Mark.DebugOne)
 
-      OnSaveJson(SaveJson)
-      // OnSaveJson(Export.AllJson)
-      OnLoadJson(Load.Armors)
-      OnAutoGen(AutoGenArmors)
-    }
+    OnDump(Dump)
+    OnDiscardArmors(Armors.Discard)
 
     OnAllSkimpy(Armors.AllSkimpy)
     OnAllModest(Armors.AllModest)
@@ -139,7 +137,7 @@ function Dump() {
 }
 
 namespace Armors {
-  /** Uequips all armor on the player. */
+  /** Unequips all armor on the player. */
   export function UnequipAll() {
     const pl = Game.getPlayer() as Actor
     // Don't use unequipAll() because it doesn't discriminate on what it will unequip
@@ -172,6 +170,7 @@ namespace Armors {
     })
   }
 
+  /** Deletes all armors in player inventory. */
   export function Discard() {
     const p = Game.getPlayer() as Actor
     FormLib.ForEachArmorR(p, (a) => {

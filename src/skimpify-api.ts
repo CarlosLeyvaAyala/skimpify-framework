@@ -222,6 +222,9 @@ export const HasSkimpy = (a: ArmorArg) => HasKey(a, "next")
 /** Checks if an armor has any registered variant of itself. */
 export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
 
+/** Checks if an armor has any registered variant of itself. */
+export const IsNotRegistered = (a: ArmorArg) => !HasSkimpy(a) && !HasModest(a)
+
 // ;>========================================================
 // ;>===             RELATIONSHIP FUNCTIONS             ===<;
 // ;>========================================================
