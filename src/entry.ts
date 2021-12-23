@@ -26,9 +26,7 @@ import {
   Actor,
   Armor,
   Debug,
-  DxScanCode,
   Game,
-  Input,
   on,
   once,
   printConsole,
@@ -100,6 +98,7 @@ export function main() {
   const OnAllModest = HK("allModest")
   const OnUnequipAll = HK("unequipAll1")
   const OnUnequipAll2 = HK("unequipAll2")
+  const OnTest = HK("test")
 
   on("update", () => {
     OnLoadJson(Load.Armors)
@@ -120,10 +119,21 @@ export function main() {
     OnAllModest(Armors.AllModest)
     OnUnequipAll(Armors.UnequipAll)
     OnUnequipAll2(Armors.UnequipAll)
+
+    OnTest(PlaceChest)
   })
 
   const i = develop ? " in DEVELOPER MODE" : ""
   printConsole(`Skimpify Framework successfully initialized${i}.`)
+}
+
+function PlaceChest() {
+  printConsole("Place chest")
+  const p = Game.getPlayer() as Actor
+  const c = p.placeAtMe(Game.getFormEx(0x70479), 1, true, false)
+  // Player chest MQ201GearContainerNEW "Chest" [CONT:00070479]
+  // droppedActivator = player.PlaceAtMe(TrainingWeight)
+  // droppedActivator.MoveTo(player, r * Sin(theta), r * Cos(theta), 7.0)
 }
 
 function Dump() {

@@ -1,3 +1,21 @@
 {
-  "developerMode": true
+  "developerMode": false,
+  "hotkeys": {
+    "loadJson": "Alt Q",
+    "saveJson": "Alt W",
+    "autoGen": "Alt E",
+    "markClear": "Alt A",
+    "markModest": "Alt S",
+    "markSlip": "Alt D",
+    "markChange": "Alt F",
+    "markDamage": "Alt G",
+    "debugEquipped": "Alt Z",
+    "dump": "Alt X",
+    "deleteAllArmors": "Ctrl Shift Alt A",
+    "allSkimpy": "RightArrow",
+    "allModest": "LeftArrow",
+    "unequipAll1": "DownArrow",
+    "unequipAll2": "UpArrow",
+    "test": "Ctrl S"
+  }
 }
