@@ -1,7 +1,7 @@
 import { FormLib } from "DmLib"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
-import { Actor, Armor } from "skyrimPlatform"
+import { Actor, Armor, Game, ObjectReference } from "skyrimPlatform"
 
 /***
  *     █████╗ ██████╗ ██╗

@@ -25,13 +25,17 @@ import {
 import {
   Actor,
   Armor,
+  Cell,
   Debug,
   Game,
+  ObjectReference,
   on,
   once,
   printConsole,
   settings,
   storage,
+  TESModPlatform,
+  WorldSpace,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
 
@@ -62,9 +66,6 @@ const FO = (k: string) => Hotkeys.FromObject(n, hk, k)
 /** Gets a hotkey from settings */
 const HK = (k: string) => Hotkeys.ListenTo(FO(k), develop)
 
-// Player chest MQ201GearContainerNEW "Chest" [CONT:00070479]
-// droppedActivator = player.PlaceAtMe(TrainingWeight)
-// droppedActivator.MoveTo(player, r * Sin(theta), r * Cos(theta), 7.0)
 export function main() {
   on("loadGame", () => {
     InitPlugin()
@@ -128,12 +129,7 @@ export function main() {
 }
 
 function PlaceChest() {
-  printConsole("Place chest")
-  const p = Game.getPlayer() as Actor
-  const c = p.placeAtMe(Game.getFormEx(0x70479), 1, true, false)
-  // Player chest MQ201GearContainerNEW "Chest" [CONT:00070479]
-  // droppedActivator = player.PlaceAtMe(TrainingWeight)
-  // droppedActivator.MoveTo(player, r * Sin(theta), r * Cos(theta), 7.0)
+  printConsole("Place chest", FormLib.CreatePersistentChest()?.toString(16))
 }
 
 function Dump() {
