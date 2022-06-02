@@ -1,0 +1,20 @@
+{
+  "TsunTsun Armor Remastered.esp|814": {
+    "name": "TsunTsun Upper Belt [Light]",
+    "next": "TsunTsun Armor Remastered.esp|816",
+    "nextN": "TsunTsun Upper Slipped [Light]",
+    "nextT": "slip"
+  },
+  "TsunTsun Armor Remastered.esp|815": {
+    "name": "TsunTsun Upper Belt [Dark]",
+    "next": "TsunTsun Armor Remastered.esp|817",
+    "nextN": "TsunTsun Upper Slipped [Dark]",
+    "nextT": "slip"
+  },
+  "TsunTsun Armor Remastered.esp|d6c": {
+    "name": "TsunTsun Upper Belt [Original]",
+    "next": "TsunTsun Armor Remastered.esp|81a",
+    "nextN": "TsunTsun Upper Slipped [Original]",
+    "nextT": "slip"
+  }
+}

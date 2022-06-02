@@ -1,0 +1,14 @@
+{
+  "[BAKU]DOAXVV Popping Lover.esp|805": {
+    "name": "Popping Lover Boots Normal",
+    "next": "[BAKU]DOAXVV Popping Lover.esp|80b",
+    "nextN": "Popping Lover Boots Loose",
+    "nextT": "slip"
+  },
+  "[BAKU]DOAXVV Popping Lover.esp|806": {
+    "name": "Popping Lover Body Normal",
+    "next": "[BAKU]DOAXVV Popping Lover.esp|807",
+    "nextN": "Popping Lover Body Loose",
+    "nextT": "slip"
+  }
+}

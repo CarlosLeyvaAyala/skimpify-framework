@@ -1,0 +1,20 @@
+{
+  "[BAKU]DOAXVV Roselite Prism.esp|800": {
+    "name": "Roselite Prism Body Normal",
+    "next": "[BAKU]DOAXVV Roselite Prism.esp|815",
+    "nextN": "Roselite Prism Body Loose",
+    "nextT": "slip"
+  },
+  "[BAKU]DOAXVV Roselite Prism.esp|803": {
+    "name": "Linarite Prism Body Normal",
+    "next": "[BAKU]DOAXVV Roselite Prism.esp|817",
+    "nextN": "Linarite Prism Body Loose",
+    "nextT": "slip"
+  },
+  "[BAKU]DOAXVV Roselite Prism.esp|80c": {
+    "name": "Tellurite Prism Body Normal",
+    "next": "[BAKU]DOAXVV Roselite Prism.esp|819",
+    "nextN": "Tellurite Prism Body Loose",
+    "nextT": "slip"
+  }
+}

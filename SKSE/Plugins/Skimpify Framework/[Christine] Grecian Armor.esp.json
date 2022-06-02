@@ -1,0 +1,14 @@
+{
+  "[Christine] Grecian Armor.esp|d6f": {
+    "name": "Grecian Upper [Athens]",
+    "next": "[Christine] Grecian Armor.esp|d70",
+    "nextN": "Grecian Upper Damaged [Athens]",
+    "nextT": "damage"
+  },
+  "[Christine] Grecian Armor.esp|d75": {
+    "name": "Grecian Upper [Spartan]",
+    "next": "[Christine] Grecian Armor.esp|d76",
+    "nextN": "Grecian Upper Damaged [Spartan]",
+    "nextT": "damage"
+  }
+}

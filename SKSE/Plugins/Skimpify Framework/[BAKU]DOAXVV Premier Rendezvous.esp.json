@@ -1,0 +1,8 @@
+{
+  "[BAKU]DOAXVV Premier Rendezvous.esp|805": {
+    "name": "Premier Rendezvous Body Normal",
+    "next": "[BAKU]DOAXVV Premier Rendezvous.esp|806",
+    "nextN": "Premier Rendezvous Body Loose",
+    "nextT": "slip"
+  }
+}

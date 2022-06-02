@@ -1,0 +1,14 @@
+{
+  "[NINI] Camellia [SE].esp|80a": {
+    "name": "Camellia - Upper",
+    "next": "[NINI] Camellia [SE].esp|80b",
+    "nextN": "Camellia - Upper (Slutty)",
+    "nextT": "change"
+  },
+  "[NINI] Camellia [SE].esp|80c": {
+    "name": "Camellia - Lower",
+    "next": "[NINI] Camellia [SE].esp|80d",
+    "nextN": "Camellia - Lower (Slutty)",
+    "nextT": "change"
+  }
+}

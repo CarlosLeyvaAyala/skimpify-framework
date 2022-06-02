@@ -1,0 +1,98 @@
+{
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|802": {
+    "name": "[Army] Sexy Bodysuit Purple Pink (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|804",
+    "nextN": "[Army] Sexy Bodysuit Purple Pink NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|804": {
+    "name": "[Army] Sexy Bodysuit Purple Pink NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|806",
+    "nextN": "[Army] Sexy Bodysuit Pink Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|816": {
+    "name": "[Army] Sexy Bodysuit White Light Purple (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|818",
+    "nextN": "[Army] Sexy Bodysuit White Light Purple NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|818": {
+    "name": "[Army] Sexy Bodysuit White Light Purple NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|81a",
+    "nextN": "[Army] Sexy Bodysuit Light Purple Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|81e": {
+    "name": "[Army] Sexy Bodysuit Yellow Blue (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|820",
+    "nextN": "[Army] Sexy Bodysuit Yellow Blue NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|820": {
+    "name": "[Army] Sexy Bodysuit Yellow Blue NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|822",
+    "nextN": "[Army] Sexy Bodysuit Yellow Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|826": {
+    "name": "[Army] Sexy Bodysuit White Black (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|828",
+    "nextN": "[Army] Sexy Bodysuit White Black NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|828": {
+    "name": "[Army] Sexy Bodysuit White Black NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|82a",
+    "nextN": "[Army] Sexy Bodysuit White Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|82e": {
+    "name": "[Army] Sexy Bodysuit Blue Light Blue (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|830",
+    "nextN": "[Army] Sexy Bodysuit Blue Light Blue NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|830": {
+    "name": "[Army] Sexy Bodysuit Blue Light Blue NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|832",
+    "nextN": "[Army] Sexy Bodysuit Blue Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|836": {
+    "name": "[Army] Sexy Bodysuit Black Red (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|838",
+    "nextN": "[Army] Sexy Bodysuit Black Red NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|838": {
+    "name": "[Army] Sexy Bodysuit Black Red NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|83a",
+    "nextN": "[Army] Sexy Bodysuit Black Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|83e": {
+    "name": "[Army] Sexy Bodysuit Gold Silver (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|840",
+    "nextN": "[Army] Sexy Bodysuit Gold Silver NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|840": {
+    "name": "[Army] Sexy Bodysuit Gold Silver NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|842",
+    "nextN": "[Army] Sexy Bodysuit Gold Only Body (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|d62": {
+    "name": "[Army] Sexy Bodysuit Original (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|d64",
+    "nextN": "[Army] Sexy Bodysuit Original NoBra (pinkdrawz)",
+    "nextT": "change"
+  },
+  "[Army] Sexy Bodysuit (pinkdrawz).esp|d64": {
+    "name": "[Army] Sexy Bodysuit Original NoBra (pinkdrawz)",
+    "next": "[Army] Sexy Bodysuit (pinkdrawz).esp|d66",
+    "nextN": "[Army] Sexy Bodysuit Original Only Body (pinkdrawz)",
+    "nextT": "change"
+  }
+}

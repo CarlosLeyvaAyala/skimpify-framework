@@ -1,0 +1,14 @@
+{
+  "[NINI] Highleg Dressy.esp|803": {
+    "name": "Highleg Dressy - Outfit A",
+    "next": "[NINI] Highleg Dressy.esp|805",
+    "nextN": "Highleg Dressy - Outfit A (Slutty)",
+    "nextT": "change"
+  },
+  "[NINI] Highleg Dressy.esp|824": {
+    "name": "Highleg Dressy - Outfit B",
+    "next": "[NINI] Highleg Dressy.esp|826",
+    "nextN": "Highleg Dressy - Outfit B (Slutty)",
+    "nextT": "change"
+  }
+}
