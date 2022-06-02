@@ -1,0 +1,14 @@
+{
+  "[Tullius]FF_IX_Garnet outfit(ESL).ESP|805": {
+    "name": "[FFIX] Garnet Outfit",
+    "next": "[Tullius]FF_IX_Garnet outfit(ESL).ESP|827",
+    "nextN": "[FFIX] Garnet Outfit(Naked)",
+    "nextT": "change"
+  },
+  "[Tullius]FF_IX_Garnet outfit(ESL).ESP|828": {
+    "name": "[FFIX] Garnet Outfit Black",
+    "next": "[Tullius]FF_IX_Garnet outfit(ESL).ESP|829",
+    "nextN": "[FFIX] Garnet Outfit Black(Naked)",
+    "nextT": "change"
+  }
+}

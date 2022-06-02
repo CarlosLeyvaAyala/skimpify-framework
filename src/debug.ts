@@ -2,7 +2,7 @@ import { DebugLib } from "DmLib"
 
 const L = DebugLib.Log
 const fs = DebugLib.Log.CreateAll(
-  "Skimpify Framework",
+  "SkimpifyFramework",
   L.Level.info,
   L.ConsoleFmt,
   L.FileFmt

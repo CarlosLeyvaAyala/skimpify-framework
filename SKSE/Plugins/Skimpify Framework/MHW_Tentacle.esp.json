@@ -1,0 +1,14 @@
+{
+  "MHW_Tentacle.esp|809": {
+    "name": "(MHW)Tentacle2_am",
+    "next": "MHW_Tentacle.esp|815",
+    "nextN": "(MHW)Tentacle2_am sexy",
+    "nextT": "change"
+  },
+  "MHW_Tentacle.esp|80f": {
+    "name": "(MHW)Tentacle3_am",
+    "next": "MHW_Tentacle.esp|814",
+    "nextN": "(MHW)Tentacle3_am sexy",
+    "nextT": "change"
+  }
+}

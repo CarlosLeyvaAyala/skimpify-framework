@@ -1,5 +1,5 @@
 {
-  "developerMode": false,
+  "developerMode": true,
   "hotkeys": {
     "loadJson": "Alt Q",
     "saveJson": "Alt W",
@@ -12,10 +12,10 @@
     "debugEquipped": "Alt Z",
     "dump": "Alt X",
     "deleteAllArmors": "Ctrl Shift Alt A",
-    "allSkimpy": "RightArrow",
-    "allModest": "LeftArrow",
-    "unequipAll1": "DownArrow",
-    "unequipAll2": "UpArrow",
+    "allSkimpy": "Ctrl RightArrow",
+    "allModest": "Ctrl LeftArrow",
+    "unequipAll1": "Ctrl DownArrow",
+    "unequipAll2": "Ctrl UpArrow",
     "test": "Ctrl S"
   }
 }
