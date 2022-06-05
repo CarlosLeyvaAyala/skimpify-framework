@@ -30,9 +30,9 @@
     "nextT": "slip"
   },
   "[COCO] Shadow Assassin [SE].esp|929": {
-    "name": "  Ninja[3]: Assassin glove1",
+    "name": "[COCO]Assassin_glove1",
     "next": "[COCO] Shadow Assassin [SE].esp|9d0",
-    "nextN": "  Ninja[3]: Assassin glove1b",
+    "nextN": "[COCO]Assassin_glove1b",
     "nextT": "damage"
   },
   "[COCO] Shadow Assassin [SE].esp|931": {
@@ -42,9 +42,9 @@
     "nextT": "slip"
   },
   "[COCO] Shadow Assassin [SE].esp|933": {
-    "name": "  Ninja[3]: Assassin boots1",
+    "name": "[COCO]Assassin_boots1",
     "next": "[COCO] Shadow Assassin [SE].esp|9d4",
-    "nextN": "  Ninja[3]: Assassin boots1b",
+    "nextN": "[COCO]Assassin_boots1b",
     "nextT": "damage"
   },
   "[COCO] Shadow Assassin [SE].esp|941": {
@@ -138,21 +138,21 @@
     "nextT": "slip"
   },
   "[COCO] Shadow Assassin [SE].esp|9c8": {
-    "name": "  Ninja[3]: Assassin mask1b",
+    "name": "[COCO]Assassin_mask1b",
     "next": "[COCO] Shadow Assassin [SE].esp|9d6",
-    "nextN": "  Ninja[3]: Assassin masksex1b",
+    "nextN": "[COCO]Assassin_masksex1b",
     "nextT": "slip"
   },
   "[COCO] Shadow Assassin [SE].esp|9ca": {
-    "name": "  Ninja[3]: Assassin panti1b",
+    "name": "[COCO]Assassin_panti1b",
     "next": "[COCO] Shadow Assassin [SE].esp|9d8",
-    "nextN": "  Ninja[3]: Assassin pantisex1b",
+    "nextN": "[COCO]Assassin_pantisex1b",
     "nextT": "slip"
   },
   "[COCO] Shadow Assassin [SE].esp|9d2": {
-    "name": "  Ninja[3]: Assassin corset1b",
+    "name": "[COCO]Assassin_corset1b",
     "next": "[COCO] Shadow Assassin [SE].esp|9ce",
-    "nextN": "  Ninja[3]: Assassin corsetsex1b",
+    "nextN": "[COCO]Assassin_corsetsex1b",
     "nextT": "slip"
   }
 }

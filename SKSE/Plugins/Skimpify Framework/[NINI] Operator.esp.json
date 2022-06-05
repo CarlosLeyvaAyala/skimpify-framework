@@ -1,8 +1,8 @@
 {
   "[NINI] Operator.esp|805": {
-    "name": "  Ninja[2]: Operator Outfit",
+    "name": "Operator Outfit",
     "next": "[NINI] Operator.esp|809",
-    "nextN": "  Ninja[2]: Operator Outfit Slutty",
+    "nextN": "Operator Outfit Slutty",
     "nextT": "change"
   }
 }
