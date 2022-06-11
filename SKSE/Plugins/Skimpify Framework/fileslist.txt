@@ -1,0 +1,83 @@
+.gitignore
+Arcane Knicker.esp.json
+Daughters of Dimitrescu.esp.json
+dump
+DX Dark Knight Armor.esp.json
+Fallen Wanderer's.esp.json
+Fearless [SE].esp.json
+fileslist.txt
+Japanese Bathing Suit [SE].esp.json
+Kitsune Miko Plus.esp.json
+League of Skyrim - Akali.esp.json
+list all files.bat
+Maya Tribal Wraps.esp.json
+MHW_Tentacle.esp.json
+Paragon Sparrow Rogue.esp.json
+PeroPeroArmorPackSE.esp.json
+README.md
+Ryuko Matoi School.esp.json
+Sexy Elf Outfit.esp.json
+StalkerMix.esp.json
+Tara [SE].esp.json
+Tina Dream Chaser.esp.json
+TsunTsun Armor Remastered.esp.json
+VAmeliaBandages.esp.json
+VtawWardrobe5.esp.json
+[Army] Sexy Bodysuit (pinkdrawz).esp.json
+[Army]2B Lingerie 2.esp.json
+[BAKU]DOAXVV Luminary Tube Dress.esp.json
+[BAKU]DOAXVV Popping Lover.esp.json
+[BAKU]DOAXVV Premier Rendezvous.esp.json
+[BAKU]DOAXVV Roselite Prism.esp.json
+[Christine] Arathia.esp.json
+[Christine] Chilling Out.esp.json
+[Christine] Eldergleam Queen.esp.json
+[Christine] Farshadow Ranger.esp.json
+[Christine] Grecian Armor.esp.json
+[Christine] High Queen.esp.json
+[Christine] Nord Ascended.esp.json
+[Christine] Quetzali.esp.json
+[Christine] Sun Shangxiang.esp.json
+[Christine] Zhurong.esp.json
+[COCO] Ahri Halloween [SE].esp.json
+[COCO] Ahri Uniforms v2 [SE].esp.json
+[COCO] Evelynn Halloween [SE].esp.json
+[COCO] Pinup Cheongsam [SE].esp.json
+[COCO] Shadow Assassin [SE].esp.json
+[COCO]Deliciously_Bride_Full_CBBE SE.esp.json
+[COCO]Devil Claw_CBBE SE.esp.json
+[COCO]SnowQueen_Full_CBBE SE.esp.json
+[Daymarr] Zelda Warrior.esp.json
+[Gamby]Pola.esp.json
+[Melodic] Aetheria.esp.json
+[Melodic] Dream Armor.esp.json
+[Melodic] Small Distraction.esp.json
+[NINI] Blue Elfin.esp.json
+[NINI] Camellia [SE].esp.json
+[NINI] Deified.esp.json
+[NINI] Demon Ranger.esp.json
+[NINI] Destroyer [SE].esp.json
+[NINI] Egyptian Pharaoh.esp.json
+[NINI] Highleg Dressy.esp.json
+[NINI] Operator.esp.json
+[NINI] Sweet Spot [SE].esp.json
+[NINI] Venus Cage [SE].esp.json
+[NINI] Venus Valkyrie.esp.json
+[Odd] Sakura.esp.json
+[Rektas] Battlestrider [SE].esp.json
+[Rektas] Diversion [SE].esp.json
+[Rektas] Iron Warrior [SE].esp.json
+[Rektas] Mystique 2 [SE].esp.json
+[Rektas] Umbra [SE].esp.json
+[Rektas] Wrap Around Dress [SE].esp.json
+[SunJeong] First Summoner Witch.esp.json
+[SunJeong] Ninirim Collection.esp.json
+[TheMilkDrinker] YoRHa 2B Attire.esp.json
+[Tullius]ActionTaimain_Asuka_Medic_Outfit(ESL).ESP.json
+[Tullius]DOAVXX_BloodyKiss_Set(ESL).esp.json
+[Tullius]FF_IX_Garnet outfit(ESL).ESP.json
+[Tullius]Gray_Raven_ayla_Outfit(ESL).esp.json
+[Tullius]Vtuber_aYAME_iDOL(esl).esp.json
+[Tullius]Vtuber_Pekora_Outfit(ESL).esp.json
+[Xuniana] 2nd Design Contest.esp.json
+[YS]Ancient Sands.esp.json
