@@ -423,8 +423,13 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                  * for an `Actor` each time the `Utility.wait` function is used.
                  *
                  * @param a `Actor` to work on.
-                 * @param time Time to wait.
+                 * @param time Time to wait (seconds).
                  * @param DoSomething What to do when the time has passed.
+                 *
+                 * @remarks
+                 * The Actor `a` is guaranteed to exist at the time `DoSomething` is
+                 * executed. If the function is not executed it means `a` is no longer
+                 * available.
                  */
                 function WaitActor(a, time, DoSomething) {
                     const actor = PreserveActor(a);
@@ -438,6 +443,14 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                     f();
                 }
                 FormLib.WaitActor = WaitActor;
+                function ForEachEquippedSlotMask(a, DoSomething) {
+                    if (!a)
+                        return;
+                    for (let i = 1 /* Head */; i < 2147483648 /* FX01 */; i *= 2) {
+                        DoSomething(i);
+                    }
+                }
+                FormLib.ForEachEquippedSlotMask = ForEachEquippedSlotMask;
                 /** Does something for each `Armor` an `Actor` has equipped.
                  *
                  * @param a Actor to check.
@@ -463,9 +476,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                  * @returns An array with all equipped armors.
                  *
                  * @remarks
-                 * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
-                 * it's not recommended to be used in real production code as long as it has not been
-                 * optimized.
+                 * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+                 * it's recommended to be used with caution in real production code.
                  *
                  * However, it can be safely used sparingly.
                  */
@@ -479,16 +491,11 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                         if (n)
                             all.push(n);
                     });
-                    const u = nonRepeated
-                        ? all.filter((v, idx, A) => {
-                            for (let i = idx + 1; i < A.length; i++) {
-                                if (v.getFormID() === A[i].getFormID())
-                                    return false;
-                            }
-                            return true;
-                        })
-                        : all;
-                    return u;
+                    const GetNonRepeated = () => {
+                        const uIds = [...new Set(all.map((a) => a.getFormID()))];
+                        return uIds.map((id) => skyrimPlatform_1.Armor.from(skyrimPlatform_1.Game.getFormEx(id)));
+                    };
+                    return nonRepeated ? GetNonRepeated() : all;
                 }
                 FormLib.GetEquippedArmors = GetEquippedArmors;
                 /** Iterates over all items belonging to some `ObjectReference`, from last to first.
@@ -691,6 +698,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                                 "Are you using a mod that substantially changes the game?";
                             if (Logger)
                                 Logger(msg);
+                            else
+                                skyrimPlatform_1.printConsole(msg);
                             return null;
                         }
                         frm = skyrimPlatform_1.Game.getFormEx(newChest);
@@ -2207,9 +2216,9 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
     "use strict";
-    var DmLib_2, JDB, JFormDB, skyrimPlatform_2, GetAllSkimpy, GetAllModest, GetSlip, GetChange, GetDamage, HasModest, HasSkimpy, IsRegistered, IsNotRegistered, defaultType, DbHandle, cfgDir, fwKey, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
+    var DmLib_2, JDB, JFormDB, JFormMap, skyrimPlatform_2, SkimpifyFramework, GetAllSkimpy, GetAllModest, HasSlip, GetSlip, HasChange, GetChange, HasDamage, GetDamage, HasModest, IsSkimpy, HasSkimpy, IsModest, IsRegistered, IsNotRegistered, SwapToSlip, SwapToChange, SwapToDamage, defaultType, DbHandle, cfgDir, fwKey, chestPath, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
     var __moduleName = context_11 && context_11.id;
     // ;>========================================================
     // ;>===                ARMOR FUNCTIONS                 ===<;
@@ -2271,6 +2280,37 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         return { armor: GetSkimpy(a), kind: GetSkimpyType(a) };
     }
     exports_11("GetSkimpyData", GetSkimpyData);
+    /** Returns the most modest version of an armor.
+     * @param  {Armor} a Armor to check.
+     * @param  {boolean} getBroken Return the most modest version even if the current one is broken? Default = `false`.
+     * @returns Armor
+     */
+    function GetMostModest(a, getBroken = false) {
+        const p = GetModestData(a);
+        if (!p.armor)
+            return null;
+        if (p.kind === "damage" /* damage */ && !getBroken)
+            return null;
+        const pp = GetMostModest(p.armor);
+        return pp ? pp : p.armor;
+    }
+    exports_11("GetMostModest", GetMostModest);
+    function RestoreMostModest(act, skimpyArmor) {
+        if (!act || !skimpyArmor)
+            return false;
+        const to = GetMostModest(skimpyArmor);
+        if (!to)
+            return false;
+        GoModest(act, skimpyArmor, to);
+        return true;
+    }
+    exports_11("RestoreMostModest", RestoreMostModest);
+    function RestoreAllMostModest(act) {
+        DmLib_2.FormLib.ForEachEquippedArmor(act, (a) => {
+            RestoreMostModest(act, a);
+        });
+    }
+    exports_11("RestoreAllMostModest", RestoreAllMostModest);
     // ;>========================================================
     // ;>===             RELATIONSHIP FUNCTIONS             ===<;
     // ;>========================================================
@@ -2340,9 +2380,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
      * other versions.
      *
      * @remarks
-     * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
-     * it's not recommended to be used in real production code as long as it has not been
-     * optimized.
+     * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+     * it's recommended to be used with caution in real production code.
      *
      * However, it can be safely used sparingly.
      *
@@ -2359,6 +2398,65 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         return { current: c, next: n };
     }
     exports_11("GetAll", GetAll);
+    /** Gets a global chest for storing armors from an `Actor`.
+     * @remarks
+     * To avoid bloat, this function returns `null` on non-unique actors so
+     * they never get a chest.
+     */
+    function GetChest(a) {
+        var _a;
+        if (!((_a = a.getLeveledActorBase()) === null || _a === void 0 ? void 0 : _a.isUnique()))
+            return null;
+        /** Gets the handle to the chests database */
+        const GetChestDbHandle = () => {
+            const r = JDB.solveObj(chestPath);
+            return r !== 0 ? r : JFormMap.object();
+        };
+        /** Saves the chest database by handle */
+        const SaveChestDbHandle = (h) => {
+            JDB.solveObjSetter(chestPath, h, true);
+        };
+        const h = GetChestDbHandle();
+        const Getter = () => {
+            return JFormMap.getForm(h, a);
+        };
+        const Setter = (frm) => {
+            JFormMap.setForm(h, a, frm);
+            SaveChestDbHandle(h);
+        };
+        const Logger = (msg) => skyrimPlatform_2.printConsole(`***Error on Skimpify Framework***: ${msg}`);
+        return skyrimPlatform_2.ObjectReference.from(DmLib_2.FormLib.GetPersistentChest(Getter, Setter, Logger));
+    }
+    /** Swaps an armor on an actor. This function preserves the original armor
+     * (tempering, enchantments...) by storing it in a special global chest.
+     */
+    function GoSkimpy(a, from, to) {
+        const chest = GetChest(a);
+        // Remove all possible lingering armors to avoid bugs because of duplicate items.
+        if (chest)
+            chest.removeItem(from, chest.getItemCount(from), true, null);
+        a.removeItem(from, 1, true, chest);
+        a.equipItem(to, false, true);
+    }
+    /** Swaps an skimpy armor for its modest version that was saved on a global chest. */
+    function GoModest(a, from, to) {
+        const chest = GetChest(a);
+        // Skimpy armor is discarded because tempering and enchantments from original
+        // can't be transferred, anyway.
+        a.removeItem(from, 1, true, null);
+        if (chest)
+            chest.removeItem(to, 1, true, a);
+        a.equipItem(to, false, true);
+    }
+    function SwapToSkimpy(act, a, f) {
+        if (!act || !a)
+            return false;
+        const to = f(a);
+        if (!to)
+            return false;
+        GoSkimpy(act, a, to);
+        return true;
+    }
     return {
         setters: [
             function (DmLib_2_1) {
@@ -2370,18 +2468,43 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             function (JFormDB_1) {
                 JFormDB = JFormDB_1;
             },
+            function (JFormMap_2) {
+                JFormMap = JFormMap_2;
+            },
             function (skyrimPlatform_2_1) {
                 skyrimPlatform_2 = skyrimPlatform_2_1;
             }
         ],
         execute: function () {
+            /**
+             *     █████╗ ██████╗ ██╗
+             *    ██╔══██╗██╔══██╗██║
+             *    ███████║██████╔╝██║
+             *    ██╔══██║██╔═══╝ ██║
+             *    ██║  ██║██║     ██║
+             *    ╚═╝  ╚═╝╚═╝     ╚═╝
+             *
+             *  Public functions, constants and types.
+             *  Use them as you please.
+             *
+             *  This file should be inside "Data\Platform\Modules".
+             */
+            (function (SkimpifyFramework) {
+                /** Function to check if the player installed this framework.
+                 * @example
+                 *  if(SkimpifyFramework.IsInstalled()){
+                 *    // Do all your magic
+                 *  }
+                 */
+                SkimpifyFramework.IsInstalled = () => DbHandle() !== 0;
+            })(SkimpifyFramework || (SkimpifyFramework = {}));
+            exports_11("SkimpifyFramework", SkimpifyFramework);
             /** @experimental From all equipped armors, returns all the ones that have
              * skimpier versions.
              *
              * @remarks
-             * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
-             * it's not recommended to be used in real production code as long as it has not been
-             * optimized.
+             * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+             * it's recommended to be used with caution in real production code.
              *
              * However, it can be safely used sparingly.
              *
@@ -2394,9 +2517,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * more modest versions.
              *
              * @remarks
-             * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
-             * it's not recommended to be used in real production code as long as it has not been
-             * optimized.
+             * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+             * it's recommended to be used with caution in real production code.
              *
              * However, it can be safely used sparingly.
              *
@@ -2405,18 +2527,30 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * array with those versions.
              */
             exports_11("GetAllModest", GetAllModest = (a) => GetAll(a, GetModestData, GetSkimpyData));
+            /** Does this armor have a slip version?
+             * @param  {ArmorArg} a Armor to check.
+             */
+            exports_11("HasSlip", HasSlip = (a) => GetSkimpyType(a) === "slip" /* slip */);
             /** If the skimpy version of an `Armor` is a `slip`, returns it.
              *
              * @param a Armor to check.
              * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a `slip`.
              */
             exports_11("GetSlip", GetSlip = (a) => NextByType(a, "slip" /* slip */));
+            /** Does this armor have a changed version?
+             * @param  {ArmorArg} a Armor to check.
+             */
+            exports_11("HasChange", HasChange = (a) => GetSkimpyType(a) === "change" /* change */);
             /** If the skimpy version of an `Armor` is a `change`, returns it.
              *
              * @param a Armor to check.
              * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
              */
             exports_11("GetChange", GetChange = (a) => NextByType(a, "change" /* change */));
+            /** Does this armor have a damaged version?
+             * @param  {ArmorArg} a Armor to check.
+             */
+            exports_11("HasDamage", HasDamage = (a) => GetSkimpyType(a) === "damage" /* damage */);
             /** If the skimpy version of an `Armor` is a `damage`, returns it.
              *
              * @param a Armor to check.
@@ -2425,19 +2559,68 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             exports_11("GetDamage", GetDamage = (a) => NextByType(a, "damage" /* damage */));
             /** Checks if an armor has a registered modest version of itself. */
             exports_11("HasModest", HasModest = (a) => HasKey(a, "prev"));
+            /** Checks if an armor is a registered skimpy version of another. */
+            exports_11("IsSkimpy", IsSkimpy = HasModest);
             /** Checks if an armor has a registered skimpy version of itself. */
             exports_11("HasSkimpy", HasSkimpy = (a) => HasKey(a, "next"));
+            /** Checks if an armor is a registered modest version of another. */
+            exports_11("IsModest", IsModest = HasSkimpy);
             /** Checks if an armor has any registered variant of itself. */
             exports_11("IsRegistered", IsRegistered = (a) => HasSkimpy(a) || HasModest(a));
             /** Checks if an armor has any registered variant of itself. */
             exports_11("IsNotRegistered", IsNotRegistered = (a) => !HasSkimpy(a) && !HasModest(a));
+            /** Swaps an equipped armor from an `Actor` to its slip version. Returns wether
+             * the operation could be done or not.
+             *
+             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+             *
+             * @param  {ActorArg} act `Actor` to work on.
+             * @param  {ArmorArg} modestArmor Armor to swap from.
+             *
+             * @remarks
+             * If the actor is unique, this preserves the modest version of the armor on a special
+             * chest, so tempering and enchantments are not lost.\
+             * On non unique actors, their original armors will simply be discarded.
+             */
+            exports_11("SwapToSlip", SwapToSlip = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetSlip));
+            /** Swaps an equipped armor from an `Actor` to its changed version. Returns wether
+             * the operation could be done or not.
+             *
+             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+             *
+             * @param  {ActorArg} act `Actor` to work on.
+             * @param  {ArmorArg} modestArmor Armor to swap from.
+             *
+             * @remarks
+             * If the actor is unique, this preserves the modest version of the armor on a special
+             * chest, so tempering and enchantments are not lost.\
+             * On non unique actors, their original armors will simply be discarded.
+             */
+            exports_11("SwapToChange", SwapToChange = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetChange));
+            /** Swaps an equipped armor from an `Actor` to its damaged version. Returns wether
+             * the operation could be done or not.
+             *
+             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+             *
+             * @param  {ActorArg} act `Actor` to work on.
+             * @param  {ArmorArg} modestArmor Armor to swap from.
+             *
+             * @remarks
+             * If the actor is unique, this preserves the modest version of the armor on a special
+             * chest, so tempering and enchantments are not lost.\
+             * On non unique actors, their original armors will simply be discarded.
+             */
+            exports_11("SwapToDamage", SwapToDamage = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetDamage));
             /** Default type to assume what an armor version is when it has no associated/valid type. */
             exports_11("defaultType", defaultType = "change" /* change */);
             /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
             exports_11("DbHandle", DbHandle = () => JDB.solveObj(fwKey));
+            /** Dir where armor configuration files are located. */
             exports_11("cfgDir", cfgDir = "data/SKSE/Plugins/Skimpify Framework/");
             /** Key used to save values added by this framework. */
             fwKey = ".Skimpify-Framework";
+            /** Key to find chests. */
+            chestPath = `${fwKey}.globalChests`;
             /** Key used to save armors. */
             ArmorK = (k) => `${fwKey}.${k}`;
             /** Key used to save armor change relationships. */
@@ -2845,7 +3028,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
 });
 System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_14, context_14) {
     "use strict";
-    var DmLib_4, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_4, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, hk, FO, HK, Armors, Load, Mark;
+    var DmLib_4, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_4, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, hk, FO, HK, Player, Armors, Load, Mark;
     var __moduleName = context_14 && context_14.id;
     function main() {
         skyrimPlatform_4.on("loadGame", () => {
@@ -2899,11 +3082,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
     }
     exports_14("main", main);
     function RunTest() {
-        const A = DmLib_4.FormLib.GetEquippedArmors(DmLib_4.FormLib.Player(), false);
-        A.forEach((a) => skyrimPlatform_4.printConsole(a.getName()));
+        // const p = FormLib.Player()
+        // SwapToSlip(p, Armor.from(p.getWornForm(SlotMask.Body)))
+        // FormLib.WaitActor(p, 4, (a) => {
+        //   RestoreMostModest(a, Armor.from(a.getWornForm(SlotMask.Body)))
+        // })
+        Player.Reveal();
     }
     function Dump() {
-        skimpify_api_2.ClearDB();
+        // ClearDB()
         const f = `${skimpify_api_2.cfgDir}dump/dump.json`;
         JValue.writeToFile(skimpify_api_2.DbHandle(), f);
         JDB.writeToFile(`${skimpify_api_2.cfgDir}dump/dump all.json`);
@@ -2956,10 +3143,44 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             mModest = skyrimPlatform_4.storage[kMModest];
             n = "skimpify-framework";
             develop = skyrimPlatform_4.settings[n]["developerMode"];
-            hk = "hotkeys";
+            hk = "devHotkeys";
             FO = (k) => DmLib_4.Hotkeys.FromObject(n, hk, k);
             /** Gets a hotkey from settings */
             HK = (k) => DmLib_4.Hotkeys.ListenTo(FO(k), develop);
+            /**Functions made for playing */
+            (function (Player) {
+                const SkimpyAt = (a) => {
+                    if (skimpify_api_2.HasSlip(a))
+                        return "slip" /* slip */;
+                    if (skimpify_api_2.HasChange(a))
+                        return "change" /* change */;
+                    return undefined;
+                };
+                const TrySkimpify = (slot) => {
+                    const p = DmLib_4.FormLib.Player();
+                    const a = skyrimPlatform_4.Armor.from(p.getWornForm(slot));
+                    const t = SkimpyAt(a);
+                    if (!t)
+                        return false;
+                    if (t === "slip" /* slip */)
+                        skimpify_api_2.SwapToSlip(p, a);
+                    if (t === "change" /* change */)
+                        skimpify_api_2.SwapToChange(p, a);
+                    // Armor.swa
+                };
+                /** Makes the player use revealing clothes. Gives preference to torso, then boots, skirts...*/
+                function Reveal() {
+                    if (TrySkimpify(4 /* Body */))
+                        return;
+                    if (TrySkimpify(524288 /* PelvisPrimary */))
+                        return;
+                    if (TrySkimpify(4194304 /* PelvisSecondary */))
+                        return;
+                    DmLib_4.FormLib.ForEachEquippedSlotMask(DmLib_4.FormLib.Player(), (slot) => TrySkimpify(slot));
+                    // const all = FormLib.GetEquippedArmors(p)
+                }
+                Player.Reveal = Reveal;
+            })(Player || (Player = {}));
             (function (Armors) {
                 /** Unequips all armor on the player. */
                 function UnequipAll() {
@@ -2972,7 +3193,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                 }
                 Armors.UnequipAll = UnequipAll;
                 /** Swap an armor on an actor. */
-                const SwapArmor = (act, from, to) => {
+                Armors.SwapArmor = (act, from, to) => {
                     act.unequipItem(from, false, true);
                     act.equipItem(to, false, true);
                 };
@@ -2985,9 +3206,9 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     const pl = skyrimPlatform_4.Game.getPlayer();
                     const aa = f(pl);
                     aa.current.forEach((a, i) => {
-                        SwapArmor(pl, a.armor, aa.next[i].armor);
-                        //@ts-ignore
-                        skyrimPlatform_4.Debug.notification(a.kind);
+                        Armors.SwapArmor(pl, a.armor, aa.next[i].armor);
+                        if (a.kind)
+                            skyrimPlatform_4.Debug.notification(a.kind);
                     });
                 }
                 /** Deletes all armors in player inventory. */

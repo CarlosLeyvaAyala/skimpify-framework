@@ -1,6 +1,10 @@
 {
+  "playerHotkeys":{
+    "reveal": "Ctrl RightArrow",
+    "cover": "Ctrl LeftArrow"
+  },
   "developerMode": false,
-  "hotkeys": {
+  "devHotkeys": {
     "loadJson": "Alt Q",
     "saveJson": "Alt W",
     "autoGen": "Alt E",

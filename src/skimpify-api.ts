@@ -1,7 +1,14 @@
 import { FormLib } from "DmLib"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
-import { Actor, Armor } from "skyrimPlatform"
+import * as JFormMap from "JContainers/JFormMap"
+import {
+  Actor,
+  Armor,
+  Form,
+  ObjectReference,
+  printConsole,
+} from "skyrimPlatform"
 
 /**
  *     █████╗ ██████╗ ██╗
@@ -16,6 +23,16 @@ import { Actor, Armor } from "skyrimPlatform"
  *
  *  This file should be inside "Data\Platform\Modules".
  */
+
+export namespace SkimpifyFramework {
+  /** Function to check if the player installed this framework.
+   * @example
+   *  if(SkimpifyFramework.IsInstalled()){
+   *    // Do all your magic
+   *  }
+   */
+  export const IsInstalled = () => DbHandle() !== 0
+}
 
 //  ;>========================================================
 //  ;>===                  DEFINITIONS                   ===<;
@@ -210,6 +227,11 @@ export function GetMostModest(
   return pp ? pp : p.armor
 }
 
+/** Does this armor have a slip version?
+ * @param  {ArmorArg} a Armor to check.
+ */
+export const HasSlip = (a: ArmorArg) => GetSkimpyType(a) === ChangeRel.slip
+
 /** If the skimpy version of an `Armor` is a `slip`, returns it.
  *
  * @param a Armor to check.
@@ -217,12 +239,22 @@ export function GetMostModest(
  */
 export const GetSlip = (a: ArmorArg) => NextByType(a, ChangeRel.slip)
 
+/** Does this armor have a changed version?
+ * @param  {ArmorArg} a Armor to check.
+ */
+export const HasChange = (a: ArmorArg) => GetSkimpyType(a) === ChangeRel.change
+
 /** If the skimpy version of an `Armor` is a `change`, returns it.
  *
  * @param a Armor to check.
  * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
  */
 export const GetChange = (a: ArmorArg) => NextByType(a, ChangeRel.change)
+
+/** Does this armor have a damaged version?
+ * @param  {ArmorArg} a Armor to check.
+ */
+export const HasDamage = (a: ArmorArg) => GetSkimpyType(a) === ChangeRel.damage
 
 /** If the skimpy version of an `Armor` is a `damage`, returns it.
  *
@@ -248,6 +280,68 @@ export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
 
 /** Checks if an armor has any registered variant of itself. */
 export const IsNotRegistered = (a: ArmorArg) => !HasSkimpy(a) && !HasModest(a)
+
+/** Swaps an equipped armor from an `Actor` to its slip version. Returns wether
+ * the operation could be done or not.
+ *
+ * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+ *
+ * @param  {ActorArg} act `Actor` to work on.
+ * @param  {ArmorArg} modestArmor Armor to swap from.
+ *
+ * @remarks
+ * If the actor is unique, this preserves the modest version of the armor on a special
+ * chest, so tempering and enchantments are not lost.\
+ * On non unique actors, their original armors will simply be discarded.
+ */
+export const SwapToSlip = (act: ActorArg, modestArmor: ArmorArg) =>
+  SwapToSkimpy(act, modestArmor, GetSlip)
+
+/** Swaps an equipped armor from an `Actor` to its changed version. Returns wether
+ * the operation could be done or not.
+ *
+ * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+ *
+ * @param  {ActorArg} act `Actor` to work on.
+ * @param  {ArmorArg} modestArmor Armor to swap from.
+ *
+ * @remarks
+ * If the actor is unique, this preserves the modest version of the armor on a special
+ * chest, so tempering and enchantments are not lost.\
+ * On non unique actors, their original armors will simply be discarded.
+ */
+export const SwapToChange = (act: ActorArg, modestArmor: ArmorArg) =>
+  SwapToSkimpy(act, modestArmor, GetChange)
+
+/** Swaps an equipped armor from an `Actor` to its damaged version. Returns wether
+ * the operation could be done or not.
+ *
+ * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
+ *
+ * @param  {ActorArg} act `Actor` to work on.
+ * @param  {ArmorArg} modestArmor Armor to swap from.
+ *
+ * @remarks
+ * If the actor is unique, this preserves the modest version of the armor on a special
+ * chest, so tempering and enchantments are not lost.\
+ * On non unique actors, their original armors will simply be discarded.
+ */
+export const SwapToDamage = (act: ActorArg, modestArmor: ArmorArg) =>
+  SwapToSkimpy(act, modestArmor, GetDamage)
+
+export function RestoreMostModest(act: ActorArg, skimpyArmor: ArmorArg) {
+  if (!act || !skimpyArmor) return false
+  const to = GetMostModest(skimpyArmor)
+  if (!to) return false
+  GoModest(act, skimpyArmor, to)
+  return true
+}
+
+export function RestoreAllMostModest(act: Actor) {
+  FormLib.ForEachEquippedArmor(act, (a) => {
+    RestoreMostModest(act, a)
+  })
+}
 
 // ;>========================================================
 // ;>===             RELATIONSHIP FUNCTIONS             ===<;
@@ -311,10 +405,13 @@ export const defaultType = ChangeRel.change
 /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
 export const DbHandle = () => JDB.solveObj(fwKey)
 
+/** Dir where armor configuration files are located. */
 export const cfgDir = "data/SKSE/Plugins/Skimpify Framework/"
 
 /** Key used to save values added by this framework. */
 const fwKey = ".Skimpify-Framework"
+/** Key to find chests. */
+const chestPath = `${fwKey}.globalChests`
 
 /** Key used to save armors. */
 const ArmorK = (k: RelType) => `${fwKey}.${k}`
@@ -404,3 +501,68 @@ export const ValidateChangeRel = (rel: string) =>
     : rel.toLowerCase() === ChangeRel.damage
     ? ChangeRel.damage
     : defaultType
+
+/** Gets a global chest for storing armors from an `Actor`.
+ * @remarks
+ * To avoid bloat, this function returns `null` on non-unique actors so
+ * they never get a chest.
+ */
+function GetChest(a: Actor) {
+  if (!a.getLeveledActorBase()?.isUnique()) return null
+
+  /** Gets the handle to the chests database */
+  const GetChestDbHandle = () => {
+    const r = JDB.solveObj(chestPath)
+    return r !== 0 ? r : JFormMap.object()
+  }
+  /** Saves the chest database by handle */
+  const SaveChestDbHandle = (h: number) => {
+    JDB.solveObjSetter(chestPath, h, true)
+  }
+
+  const h = GetChestDbHandle()
+  const Getter = () => {
+    return JFormMap.getForm(h, a)
+  }
+  const Setter = (frm: Form | null) => {
+    JFormMap.setForm(h, a, frm)
+    SaveChestDbHandle(h)
+  }
+  const Logger = (msg: string) =>
+    printConsole(`***Error on Skimpify Framework***: ${msg}`)
+
+  return ObjectReference.from(
+    FormLib.GetPersistentChest(Getter, Setter, Logger)
+  )
+}
+
+/** Swaps an armor on an actor. This function preserves the original armor
+ * (tempering, enchantments...) by storing it in a special global chest.
+ */
+function GoSkimpy(a: Actor, from: Armor, to: Armor) {
+  const chest = GetChest(a)
+
+  // Remove all possible lingering armors to avoid bugs because of duplicate items.
+  if (chest) chest.removeItem(from, chest.getItemCount(from), true, null)
+
+  a.removeItem(from, 1, true, chest)
+  a.equipItem(to, false, true)
+}
+
+/** Swaps an skimpy armor for its modest version that was saved on a global chest. */
+function GoModest(a: Actor, from: Armor, to: Armor) {
+  const chest = GetChest(a)
+  // Skimpy armor is discarded because tempering and enchantments from original
+  // can't be transferred, anyway.
+  a.removeItem(from, 1, true, null)
+  if (chest) chest.removeItem(to, 1, true, a)
+  a.equipItem(to, false, true)
+}
+
+function SwapToSkimpy(act: ActorArg, a: ArmorArg, f: SkimpyFunc) {
+  if (!act || !a) return false
+  const to = f(a)
+  if (!to) return false
+  GoSkimpy(act, a, to)
+  return true
+}

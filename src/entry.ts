@@ -10,16 +10,20 @@ import {
   cfgDir,
   ChangeRel,
   ClearChangeRel,
-  ClearDB,
   DbHandle,
   EquippedData,
   GetAllModest,
   GetAllSkimpy,
   GetModestData,
   GetSkimpyData,
+  HasChange,
+  HasSlip,
   JcChangeK,
   RelType,
+  RestoreMostModest,
   SkimpyData,
+  SwapToChange,
+  SwapToSlip,
   ValidateChangeRel,
 } from "skimpify-api"
 import {
@@ -31,6 +35,7 @@ import {
   once,
   printConsole,
   settings,
+  SlotMask,
   storage,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
@@ -57,7 +62,7 @@ let mModest = storage[kMModest] as number | -1
 const n = "skimpify-framework"
 const develop = settings[n]["developerMode"] as boolean
 
-const hk = "hotkeys"
+const hk = "devHotkeys"
 const FO = (k: string) => Hotkeys.FromObject(n, hk, k)
 /** Gets a hotkey from settings */
 const HK = (k: string) => Hotkeys.ListenTo(FO(k), develop)
@@ -125,23 +130,51 @@ export function main() {
 }
 
 function RunTest() {
-  printConsole("************************")
-  const A = FormLib.GetEquippedArmors(FormLib.Player(), false)
-  A.forEach((a) => printConsole(a.getName()))
-  printConsole("|||||||||||")
-  const B = FormLib.GetEquippedArmors(FormLib.Player())
-  B.forEach((a) => printConsole(a.getName()))
-  printConsole("************************")
+  // const p = FormLib.Player()
+  // SwapToSlip(p, Armor.from(p.getWornForm(SlotMask.Body)))
+  // FormLib.WaitActor(p, 4, (a) => {
+  //   RestoreMostModest(a, Armor.from(a.getWornForm(SlotMask.Body)))
+  // })
+  Player.Reveal()
 }
 
 function Dump() {
-  ClearDB()
+  // ClearDB()
 
   const f = `${cfgDir}dump/dump.json`
   JValue.writeToFile(DbHandle(), f)
   JDB.writeToFile(`${cfgDir}dump/dump all.json`)
 
   Debug.messageBox(`File was dumped to ${f}`)
+}
+
+/**Functions made for playing */
+namespace Player {
+  const SkimpyAt = (a: Armor | null) => {
+    if (HasSlip(a)) return ChangeRel.slip
+    if (HasChange(a)) return ChangeRel.change
+
+    return undefined
+  }
+  const TrySkimpify = (slot: SlotMask) => {
+    const p = FormLib.Player()
+    const a = Armor.from(p.getWornForm(slot))
+    const t = SkimpyAt(a)
+    if (!t) return false
+    if (t === ChangeRel.slip) SwapToSlip(p, a)
+    if (t === ChangeRel.change) SwapToChange(p, a)
+    // Armor.swa
+  }
+  /** Makes the player use revealing clothes. Gives preference to torso, then boots, skirts...*/
+  export function Reveal() {
+    if (TrySkimpify(SlotMask.Body)) return
+    if (TrySkimpify(SlotMask.PelvisPrimary)) return
+    if (TrySkimpify(SlotMask.PelvisSecondary)) return
+    FormLib.ForEachEquippedSlotMask(FormLib.Player(), (slot) =>
+      TrySkimpify(slot)
+    )
+    // const all = FormLib.GetEquippedArmors(p)
+  }
 }
 
 namespace Armors {
@@ -156,7 +189,7 @@ namespace Armors {
   }
 
   /** Swap an armor on an actor. */
-  const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
+  export const SwapArmor = (act: Actor, from: Armor, to: Armor) => {
     act.unequipItem(from, false, true)
     act.equipItem(to, false, true)
   }
@@ -173,8 +206,7 @@ namespace Armors {
 
     aa.current.forEach((a, i) => {
       SwapArmor(pl, a.armor as Armor, aa.next[i].armor as Armor)
-      //@ts-ignore
-      Debug.notification(a.kind)
+      if (a.kind) Debug.notification(a.kind)
     })
   }
 
