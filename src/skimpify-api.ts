@@ -164,9 +164,8 @@ export function GetSkimpyData(a: ArmorArg): SkimpyData {
  * skimpier versions.
  *
  * @remarks
- * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
- * it's not recommended to be used in real production code as long as it has not been
- * optimized.
+ * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+ * it's recommended to be used with caution in real production code.
  *
  * However, it can be safely used sparingly.
  *
@@ -181,9 +180,8 @@ export const GetAllSkimpy = (a: ActorArg) =>
  * more modest versions.
  *
  * @remarks
- * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
- * it's not recommended to be used in real production code as long as it has not been
- * optimized.
+ * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+ * it's recommended to be used with caution in real production code.
  *
  * However, it can be safely used sparingly.
  *
@@ -236,8 +234,14 @@ export const GetDamage = (a: ArmorArg) => NextByType(a, ChangeRel.damage)
 /** Checks if an armor has a registered modest version of itself. */
 export const HasModest = (a: ArmorArg) => HasKey(a, "prev")
 
+/** Checks if an armor is a registered skimpy version of another. */
+export const IsSkimpy = HasModest
+
 /** Checks if an armor has a registered skimpy version of itself. */
 export const HasSkimpy = (a: ArmorArg) => HasKey(a, "next")
+
+/** Checks if an armor is a registered modest version of another. */
+export const IsModest = HasSkimpy
 
 /** Checks if an armor has any registered variant of itself. */
 export const IsRegistered = (a: ArmorArg) => HasSkimpy(a) || HasModest(a)
@@ -367,9 +371,8 @@ export const SetRel = (
  * other versions.
  *
  * @remarks
- * ***WARNING***. This function is quite slow (not to Papyrus levels, of course) and
- * it's not recommended to be used in real production code as long as it has not been
- * optimized.
+ * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
+ * it's recommended to be used with caution in real production code.
  *
  * However, it can be safely used sparingly.
  *

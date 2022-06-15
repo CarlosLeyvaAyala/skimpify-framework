@@ -13,12 +13,10 @@ import {
   ClearDB,
   DbHandle,
   EquippedData,
-  GetAll,
   GetAllModest,
   GetAllSkimpy,
   GetModestData,
   GetSkimpyData,
-  GetSkimpyType,
   JcChangeK,
   RelType,
   SkimpyData,
@@ -127,8 +125,13 @@ export function main() {
 }
 
 function RunTest() {
+  printConsole("************************")
   const A = FormLib.GetEquippedArmors(FormLib.Player(), false)
   A.forEach((a) => printConsole(a.getName()))
+  printConsole("|||||||||||")
+  const B = FormLib.GetEquippedArmors(FormLib.Player())
+  B.forEach((a) => printConsole(a.getName()))
+  printConsole("************************")
 }
 
 function Dump() {
