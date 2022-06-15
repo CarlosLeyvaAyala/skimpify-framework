@@ -13,10 +13,12 @@ import {
   ClearDB,
   DbHandle,
   EquippedData,
+  GetAll,
   GetAllModest,
   GetAllSkimpy,
   GetModestData,
   GetSkimpyData,
+  GetSkimpyType,
   JcChangeK,
   RelType,
   SkimpyData,
@@ -25,17 +27,13 @@ import {
 import {
   Actor,
   Armor,
-  Cell,
   Debug,
   Game,
-  ObjectReference,
   on,
   once,
   printConsole,
   settings,
   storage,
-  TESModPlatform,
-  WorldSpace,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
 
@@ -121,15 +119,16 @@ export function main() {
     OnUnequipAll(Armors.UnequipAll)
     OnUnequipAll2(Armors.UnequipAll)
 
-    OnTest(PlaceChest)
+    OnTest(RunTest)
   })
 
   const i = develop ? " in DEVELOPER MODE" : ""
   printConsole(`Skimpify Framework successfully initialized${i}.`)
 }
 
-function PlaceChest() {
-  printConsole("Place chest", FormLib.CreatePersistentChest()?.toString(16))
+function RunTest() {
+  const A = FormLib.GetEquippedArmors(FormLib.Player(), false)
+  A.forEach((a) => printConsole(a.getName()))
 }
 
 function Dump() {

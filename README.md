@@ -1,4 +1,5 @@
 # Skimpify Framework
+
 Skyrim Platform plugin. Makes it possible to change to skimpier armors and back.
 
 # Overview
@@ -12,9 +13,31 @@ This framework is the result of an idea that have been floating around my mind f
 But that wasn't really feasible because of Papyrus' hilarious slowness and sorry clunkiness.
 It's just now that [Skyrim Platform][] exists that this idea was finally able to come true.
 
-# Usage
+# Requirements
 
-Put `skimpify-framework.js` in the `Data\Platform\Plugins` folder.
+- [Skyrim Platform][]
+- [JContainers SE][]
+
+# Usage for both modders and users
+
+Put `skimpify-framework.js` and its settings file in the `Data\Platform\Plugins` folder.
+
+You can find both [here][Compiled]. This framework is functional, but has not had an official release yet.
+
+You most likely came here because some other mod uses this framework to work or has some kind of integration with it.
+
+If you are a mod user, you only really care about installing the framework and some [armor definitions][ArmorDefs].\
+Those are the only files you need to install to make your already installed mod to work.
+
+If you are a mod user who wants to add new armor definitions to your game, [read the help file here][Help] (if so, it would be nice if you share them with all of us here).
+
+You also need some mod that actually uses this framework.\
+Here's a list of known mods:
+
+- [Wardrobe Malfunction][]
+- [Easy Containers][] (has hotkeys that makes easier dealing when registering armors for this framework)
+
+# Usage for modders
 
 `skimpify-api.ts` goes next to `skyrimPlatform.ts`, in the `Data\Platform\Modules` folder.
 
@@ -34,6 +57,10 @@ Right now there's not a list of API functions and what they do, but they all are
 **You should also [read the documentation][Help]** so you can understand what this framework is capable of and how to use it.
 
 
+[ArmorDefs]: https://github.com/CarlosLeyvaAyala/skimpify-framework/tree/main/SKSE/Plugins/Skimpify%20Framework
+[Compiled]: Platform/Plugins
+[Easy Containers]: https://github.com/CarlosLeyvaAyala/Easy-Containers
+[Help]: Help/help.pdf
+[JContainers SE]: https://www.nexusmods.com/skyrimspecialedition/mods/16495
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [Wardrobe Malfunction]: https://github.com/CarlosLeyvaAyala/wardrobe-malfunction
-[Help]: Help/help.pdf

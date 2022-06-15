@@ -23,7 +23,7 @@
       ]
     },
     "outFile": "F:/Skyrim SE/MO2/overwrite/Platform/Plugins/skimpify-framework.js",
-    "baseUrl": "F:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Data\\Platform\\Modules"
+    "baseUrl": "."
   },
   "include": [
     "./*.ts"

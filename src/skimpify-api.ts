@@ -1,9 +1,9 @@
 import { FormLib } from "DmLib"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
-import { Actor, Armor, Game, ObjectReference } from "skyrimPlatform"
+import { Actor, Armor } from "skyrimPlatform"
 
-/***
+/**
  *     █████╗ ██████╗ ██╗
  *    ██╔══██╗██╔══██╗██║
  *    ███████║██████╔╝██║
@@ -13,6 +13,8 @@ import { Actor, Armor, Game, ObjectReference } from "skyrimPlatform"
  *
  *  Public functions, constants and types.
  *  Use them as you please.
+ *
+ *  This file should be inside "Data\Platform\Modules".
  */
 
 //  ;>========================================================
@@ -85,12 +87,12 @@ export interface EquippedData {
 /** Shortcut to `Armor | null | undefined`, because it gets tedious to write it
  * over and over.
  */
-export type ArmorArg = Armor | null | undefined
+export type ArmorArg = Armor | null
 
 /** Shortcut to `Actor | null | undefined`, because it gets tedious to write it
  * over and over.
  */
-export type ActorArg = Actor | null | undefined
+export type ActorArg = Actor | null
 
 /** A function that takes an `Armor` and returns some of its {@link SkimpyData}. */
 export type SkimpyFunc = (a: ArmorArg) => Armor | null
@@ -191,6 +193,24 @@ export const GetAllSkimpy = (a: ActorArg) =>
  */
 export const GetAllModest = (a: ActorArg) =>
   GetAll(a, GetModestData, GetSkimpyData)
+
+/** Returns the most modest version of an armor.
+ * @param  {Armor} a Armor to check.
+ * @param  {boolean} getBroken Return the most modest version even if the current one is broken? Default = `false`.
+ * @returns Armor
+ */
+export function GetMostModest(
+  a: Armor,
+  getBroken: boolean = false
+): Armor | null {
+  const p = GetModestData(a)
+
+  if (!p.armor) return null
+  if (p.kind === ChangeRel.damage && !getBroken) return null
+
+  const pp = GetMostModest(p.armor)
+  return pp ? pp : p.armor
+}
 
 /** If the skimpy version of an `Armor` is a `slip`, returns it.
  *
