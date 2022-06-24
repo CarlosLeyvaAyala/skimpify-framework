@@ -1,3 +1,5 @@
+import { getPersistentChest } from "DmLib/Form/persistentChest"
+import { isActorTypeNPC } from "DmLib/Actor/isActorTypeNPC"
 import { FormLib } from "DmLib"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
@@ -6,6 +8,8 @@ import {
   Actor,
   Armor,
   Form,
+  Game,
+  Keyword,
   ObjectReference,
   printConsole,
 } from "skyrimPlatform"
@@ -343,6 +347,18 @@ export function RestoreAllMostModest(act: Actor) {
   })
 }
 
+/** Tells wether an `Actor` can even equip armors.\
+ * Use this to check if your mod should try to change armors on an `Actor`.
+ * @param  {Actor} act Actor to check.
+ *
+ * @remarks
+ * It currently works by checking if the Actor's Race has the `ActorTypeNPC`
+ * keyword.
+ *
+ * Checking for this will inmediatly discard animals and creatures in most cases.
+ */
+export const CanUseArmor = (act: ActorArg) => isActorTypeNPC(act)
+
 // ;>========================================================
 // ;>===             RELATIONSHIP FUNCTIONS             ===<;
 // ;>========================================================
@@ -531,9 +547,7 @@ function GetChest(a: Actor) {
   const Logger = (msg: string) =>
     printConsole(`***Error on Skimpify Framework***: ${msg}`)
 
-  return ObjectReference.from(
-    FormLib.GetPersistentChest(Getter, Setter, Logger)
-  )
+  return ObjectReference.from(getPersistentChest(Getter, Setter, Logger))
 }
 
 /** Swaps an armor on an actor. This function preserves the original armor

@@ -170,9 +170,7 @@ namespace Player {
     if (TrySkimpify(SlotMask.Body)) return
     if (TrySkimpify(SlotMask.PelvisPrimary)) return
     if (TrySkimpify(SlotMask.PelvisSecondary)) return
-    FormLib.ForEachEquippedSlotMask(FormLib.Player(), (slot) =>
-      TrySkimpify(slot)
-    )
+    FormLib.ForEachSlotMask(FormLib.Player(), (slot) => TrySkimpify(slot))
     // const all = FormLib.GetEquippedArmors(p)
   }
 }
