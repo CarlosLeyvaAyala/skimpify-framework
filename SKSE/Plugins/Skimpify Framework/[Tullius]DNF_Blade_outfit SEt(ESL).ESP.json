@@ -1,0 +1,8 @@
+{
+  "[Tullius]DNF_Blade_outfit SEt(ESL).ESP|805": {
+    "name": "[Tullius] Dnf Blade Outfit",
+    "next": "[Tullius]DNF_Blade_outfit SEt(ESL).ESP|82f",
+    "nextN": "[Tullius] Dnf Blade Outfit Naked",
+    "nextT": "change"
+  }
+}
