@@ -390,72 +390,59 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             exports_2("Combinators", Combinators);
             /** Functions related to `Forms`. */
             (function (FormLib) {
-                /** Player FormId. */
-                FormLib.playerId = 0x14;
-                /** Gets the player as an `Actor`.
-                 *
-                 * @remarks
-                 * `Game.getPlayer()` is guaranteed to get an `Actor` in Skyrim Platform, so it's
-                 * ok to do `Game.getPlayer() as Actor`.
-                 *
-                 * This function is intended to be used as a callback when you are defining functions that
-                 * need the player, but
-                 * {@link https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/native.md#native-functions game functions are not available}
-                 * when defining them.
+                /** Returns what type of item a `Form` is.
+                 * @param  {Form|null} item Form to check.
                  */
-                FormLib.Player = () => skyrimPlatform_1.Game.getPlayer();
-                function PreserveForm(frm) {
-                    if (!frm)
-                        return () => null;
-                    const id = frm.getFormID();
-                    return () => skyrimPlatform_1.Game.getFormEx(id);
+                function GetItemType(item) {
+                    if (!item)
+                        return 0 /* None */;
+                    if (skyrimPlatform_1.Weapon.from(item))
+                        return 1 /* Weapon */;
+                    if (skyrimPlatform_1.Ammo.from(item))
+                        return 2 /* Ammo */;
+                    if (skyrimPlatform_1.Armor.from(item))
+                        return 3 /* Armor */;
+                    const asP = skyrimPlatform_1.Potion.from(item);
+                    if (asP) {
+                        if (asP.isPoison())
+                            return 5 /* Poison */;
+                        if (asP.isFood())
+                            return 7 /* Food */;
+                        return 4 /* Potion */;
+                    }
+                    if (skyrimPlatform_1.Ingredient.from(item))
+                        return 8 /* Ingredient */;
+                    if (skyrimPlatform_1.Book.from(item))
+                        return 9 /* Book */;
+                    if (skyrimPlatform_1.Key.from(item))
+                        return 10 /* Key */;
+                    if (skyrimPlatform_1.SoulGem.from(item))
+                        return 12 /* SoulGem */;
+                    if (skyrimPlatform_1.MiscObject.from(item))
+                        return 11 /* Misc */;
+                    return 0 /* None */;
                 }
-                FormLib.PreserveForm = PreserveForm;
-                function PreserveActor(a) {
-                    const f = PreserveForm(a);
-                    return () => skyrimPlatform_1.Actor.from(f());
-                }
-                FormLib.PreserveActor = PreserveActor;
-                /** Does something to an `Actor` after some time has passed.
-                 *
-                 * @remarks
-                 * This was made to hide the tediousness of having to retrieve and check
-                 * for an `Actor` each time the `Utility.wait` function is used.
-                 *
-                 * @param a `Actor` to work on.
-                 * @param time Time to wait (seconds).
-                 * @param DoSomething What to do when the time has passed.
-                 *
-                 * @remarks
-                 * The Actor `a` is guaranteed to exist at the time `DoSomething` is
-                 * executed. If the function is not executed it means `a` is no longer
-                 * available.
+                FormLib.GetItemType = GetItemType;
+                /** Tries to do something on an `Actor` on each slot mask.
+                 * @param  {Actor|null} a Actor to work on.
+                 * @param  {(slot:number)=>void} DoSomething What to do on each slot mask.
                  */
-                function WaitActor(a, time, DoSomething) {
-                    const actor = PreserveActor(a);
-                    const f = async () => {
-                        await skyrimPlatform_1.Utility.wait(time);
-                        const act = actor();
-                        if (!act)
-                            return;
-                        DoSomething(act);
-                    };
-                    f();
-                }
-                FormLib.WaitActor = WaitActor;
-                function ForEachEquippedSlotMask(a, DoSomething) {
+                function ForEachSlotMask(a, DoSomething) {
                     if (!a)
                         return;
                     for (let i = 1 /* Head */; i < 2147483648 /* FX01 */; i *= 2) {
                         DoSomething(i);
                     }
                 }
-                FormLib.ForEachEquippedSlotMask = ForEachEquippedSlotMask;
+                FormLib.ForEachSlotMask = ForEachSlotMask;
                 /** Does something for each `Armor` an `Actor` has equipped.
                  *
                  * @param a Actor to check.
                  * @param DoSomething What to do when an equipped armor is found.
                  */
+                // * Notice how this function doesn't use ForEachEquippedSlotMask.
+                // * That's because this function is used quite a lot in real time
+                // * and it's better to help it be faster, even if it's only one bit.
                 function ForEachEquippedArmor(a, DoSomething) {
                     if (!a)
                         return;
@@ -498,19 +485,6 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                     return nonRepeated ? GetNonRepeated() : all;
                 }
                 FormLib.GetEquippedArmors = GetEquippedArmors;
-                /** Iterates over all items belonging to some `ObjectReference`, from last to first.
-                 *
-                 * @param o - The object reference to iterate over.
-                 * @param f - Function applied to each item.
-                 */
-                function ForEachItemR(o, f) {
-                    let i = o.getNumItems();
-                    while (i > 0) {
-                        i--;
-                        f(o.getNthForm(i));
-                    }
-                }
-                FormLib.ForEachItemR = ForEachItemR;
                 /** Iterates over all keywords belonging to some `Form`, from last to first.
                  *
                  * @param o - The form to iterate over.
@@ -545,20 +519,6 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                     }
                 }
                 FormLib.ForEachOutfitItemR = ForEachOutfitItemR;
-                /** Iterates over all armors belonging to some `ObjectReference`, from last to first.
-                 *
-                 * @param o - The object reference to iterate over.
-                 * @param f - Function applied to each armor.
-                 */
-                function ForEachArmorR(o, f) {
-                    ForEachItemR(o, (i) => {
-                        const a = skyrimPlatform_1.Armor.from(i);
-                        if (!a)
-                            return;
-                        f(a);
-                    });
-                }
-                FormLib.ForEachArmorR = ForEachArmorR;
                 /** Iterates over all forms of `formType` in some `cell`.
                  *
                  * @param cell Cell to search forms for.
@@ -579,13 +539,11 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 FormLib.ForEachFormInCell = ForEachFormInCell;
                 /** Gets the esp a form belongs to.
                  *
-                 * @remarks
-                 * This code was adapted from `GetFormIdentifier` in FileUtils.cpp
-                 * in SKEE64 (RaceMenu dll); line 177.
-                 *
                  * @param form Form to get the esp from.
                  * @returns Name and type of the esp file he form belongs to.
                  */
+                // * This code was adapted from `GetFormIdentifier` in FileUtils.cpp
+                // * in SKEE64 (RaceMenu dll); line 177.
                 function GetFormEsp(form) {
                     const nil = { name: "", type: 2 /* unknown */ };
                     if (!form)
@@ -628,6 +586,14 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                     return { modName: esp.name, type: esp.type, fixedFormId: id };
                 }
                 FormLib.GetFormEspAndId = GetFormEspAndId;
+                /** Returns a string in the `PluginName|0xHexFormID` format.
+                 * @param  {string} espName
+                 * @param  {number} fixedFormId
+                 *
+                 * @remarks
+                 * This is used by default by {@link GetFormUniqueId}.
+                 */
+                FormLib.DefaultUIdFmt = (espName, fixedFormId) => `${espName}|0x${fixedFormId.toString(16)}`;
                 /** Returns a string that can be used as an unique `Form` identifier.
                  *
                  * @param form The `Form` to generate data for.
@@ -636,78 +602,16 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                  *
                  * @example
                  * const b = Game.getFormEx(0x03003012)
-                 * const uId = GetFormUniqueId(b, (e, i) => `${e}|0x${i.toString(16)}`) // => "Hearthfires.esm|0x3012"
+                 * const uId = GetFormUniqueId(b) // => "Hearthfires.esm|0x3012"
+                 * const uId2 = GetFormUniqueId(b, (e, i) => `${e}|0x${i.toString(16)}`) // => "Hearthfires.esm|0x3012"
                  */
-                function GetFormUniqueId(form, format) {
+                function GetFormUniqueId(form, format = FormLib.DefaultUIdFmt) {
                     if (!form)
                         return "Undefined form";
                     const d = GetFormEspAndId(form);
                     return format(d.modName, d.fixedFormId, d.type);
                 }
                 FormLib.GetFormUniqueId = GetFormUniqueId;
-                /** Creates a persistent chest hidden somewhere in Tamriel.
-                 *
-                 * @remarks
-                 * This chest can be used as a permanent storage that never resets.
-                 *
-                 * Because of the way things are created in Skyrim, we need to get an object reference first.
-                 *
-                 * @returns The FormId of the recently created chest. `null` if no chest could be created.
-                 */
-                function CreatePersistentChest() {
-                    // Spawn chest at player's location
-                    const p = skyrimPlatform_1.Game.getPlayer();
-                    const c = p.placeAtMe(skyrimPlatform_1.Game.getFormEx(0x70479), 1, true, false);
-                    if (!c)
-                        return null;
-                    // Move the chest to Tamriel
-                    const world = skyrimPlatform_1.WorldSpace.from(skyrimPlatform_1.Game.getFormEx(0x3c));
-                    skyrimPlatform_1.TESModPlatform.moveRefrToPosition(c, null, world, 0, 0, -10000, 0, 0, 0);
-                    return c.getFormID();
-                }
-                FormLib.CreatePersistentChest = CreatePersistentChest;
-                /** Tries to get a persistent chest defined in some place and creates a new
-                 * one if it doesn't exist.
-                 *
-                 * @param  {()=>Form|null|undefined} Getter Function that gets an already existing chest.
-                 * @param  {(frm:Form|null|undefined)=>void} Setter Function that saves a newly created chest.
-                 * @param  {(msg:string)=>void} Logger? Function to log an error if a new chest couldn't be created.
-                 *
-                 * @example
-                 *   // This uses a JContainers database to know what chest is being created
-                 *   const path = "some.JContainers.path"
-                 *   const h = GetSomeJContainersHandle(path)
-                 *   const someForm = Game.getFormEx(0x14)
-                 *
-                 *   const Getter = () => {
-                 *     return JFormMap.getForm(h, someForm)
-                 *   }
-                 *   const Setter = (frm: Form | null | undefined) => {
-                 *     JFormMap.setForm(h, someForm, frm)
-                 *     SaveSomeJContainersHandle(h, path)
-                 *   }
-                 *
-                 *   const chest = FormLib.GetPersistentChest(Getter, Setter, printConsole)
-                 */
-                function GetPersistentChest(Getter, Setter, Logger) {
-                    let frm = Getter();
-                    if (!frm) {
-                        const newChest = FormLib.CreatePersistentChest();
-                        if (!newChest) {
-                            const msg = "Could not create a persistent chest in Tamriel. " +
-                                "Are you using a mod that substantially changes the game?";
-                            if (Logger)
-                                Logger(msg);
-                            else
-                                skyrimPlatform_1.printConsole(msg);
-                            return null;
-                        }
-                        frm = skyrimPlatform_1.Game.getFormEx(newChest);
-                        Setter(frm);
-                    }
-                    return frm;
-                }
-                FormLib.GetPersistentChest = GetPersistentChest;
                 /** Returns wether an `ObjectReference` is an alchemy lab.
                  * @param  {ObjectReference} furniture The furniture to check.
                  *
@@ -1572,10 +1476,153 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib"], function (exports_3, context_3) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/player", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_3, context_3) {
+    "use strict";
+    var skyrimPlatform_2, playerId, Player;
+    var __moduleName = context_3 && context_3.id;
+    /**
+     * Is an object the player?
+     * @param a Object to be tested.
+     * @returns Wether the object is the player.
+     */
+    function isPlayer(a) {
+        if (!a)
+            return false;
+        return a.getFormID() === playerId;
+    }
+    exports_3("isPlayer", isPlayer);
+    return {
+        setters: [
+            function (skyrimPlatform_2_1) {
+                skyrimPlatform_2 = skyrimPlatform_2_1;
+            }
+        ],
+        execute: function () {
+            /** Player FormId. */
+            exports_3("playerId", playerId = 0x14);
+            /** Gets the player as an `Actor`.
+             *
+             * @remarks
+             * This function is intended to be used as a callback when you are defining functions that
+             * need the player, but
+             * {@link https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/native.md#native-functions game functions are not available}
+             * when defining them.
+             *
+             * @privateRemarks
+             * `Game.getPlayer()` is guaranteed to get an `Actor` in Skyrim Platform, so it's
+             * ok to do `Game.getPlayer() as Actor`.
+             */
+            exports_3("Player", Player = () => skyrimPlatform_2.Game.getPlayer());
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachItem", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_4, context_4) {
+    "use strict";
+    var skyrimPlatform_3;
+    var __moduleName = context_4 && context_4.id;
+    /**
+     * Iterates over all items belonging to some `ObjectReference`, from last to first.
+     * @internal
+     *
+     * @param o - The object reference to iterate over.
+     * @param f - Function applied to each item.
+     *
+     * @remarks
+     * Better use {@link forEachItem }.\
+     * That function sends a `Form`, not a `Form | null`, so you are guaranteed to
+     * have a form at the point that function gets executed.
+     */
+    function forEachItemR(o, f) {
+        let i = o.getNumItems();
+        while (i > 0) {
+            i--;
+            f(o.getNthForm(i));
+        }
+    }
+    exports_4("forEachItemR", forEachItemR);
+    /**
+     * Iterates over all items belonging to some `ObjectReference`, from last to first.
+     *
+     * @param o - The object reference to iterate over.
+     * @param f - Function applied to each item.
+     */
+    function forEachItem(o, f) {
+        forEachItemR(o, (item) => {
+            if (!item)
+                return;
+            f(item);
+        });
+    }
+    exports_4("forEachItem", forEachItem);
+    /**
+     * Iterates over all items belonging to some `ObjectReference`, from last to first. Waits
+     * some time before each operation.
+     *
+     * @param o - The object reference to iterate over.
+     * @param wait - Time (seconds) to wait.
+     * @param f - Function applied to each item.
+     */
+    function forEachItemW(o, wait, f) {
+        const A = async () => {
+            let i = o.getNumItems();
+            while (i > 0) {
+                i--;
+                const item = o.getNthForm(i);
+                if (!item)
+                    return;
+                f(item);
+                skyrimPlatform_3.Utility.wait(wait);
+            }
+        };
+        A();
+    }
+    exports_4("forEachItemW", forEachItemW);
+    return {
+        setters: [
+            function (skyrimPlatform_3_1) {
+                skyrimPlatform_3 = skyrimPlatform_3_1;
+            }
+        ],
+        execute: function () {
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachItem"], function (exports_5, context_5) {
+    "use strict";
+    var skyrimPlatform_4, forEachItem_1;
+    var __moduleName = context_5 && context_5.id;
+    /**
+     * Iterates over all armors belonging to some `ObjectReference`, from last to first.
+     *
+     * @param o - The object reference to iterate over.
+     * @param f - Function applied to each armor.
+     */
+    function forEachArmorR(o, f) {
+        forEachItem_1.forEachItem(o, (i) => {
+            const a = skyrimPlatform_4.Armor.from(i);
+            if (!a)
+                return;
+            f(a);
+        });
+    }
+    exports_5("forEachArmorR", forEachArmorR);
+    return {
+        setters: [
+            function (skyrimPlatform_4_1) {
+                skyrimPlatform_4 = skyrimPlatform_4_1;
+            },
+            function (forEachItem_1_1) {
+                forEachItem_1 = forEachItem_1_1;
+            }
+        ],
+        execute: function () {
+        }
+    };
+});
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib"], function (exports_6, context_6) {
     "use strict";
     var DmLib_1, L, fs, LogN, LogNT, LogI, LogIT, LogV, LogVT;
-    var __moduleName = context_3 && context_3.id;
+    var __moduleName = context_6 && context_6.id;
     return {
         setters: [
             function (DmLib_1_1) {
@@ -1586,37 +1633,36 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", ["SteamLi
             L = DmLib_1.DebugLib.Log;
             fs = DmLib_1.DebugLib.Log.CreateAll("SkimpifyFramework", L.Level.info, L.ConsoleFmt, L.FileFmt);
             /** Log at `none` level. Basically, ignore logging settings, except when using special modes. */
-            exports_3("LogN", LogN = fs.None);
+            exports_6("LogN", LogN = fs.None);
             /** Log at `none` level and return value. */
-            exports_3("LogNT", LogNT = fs.TapN);
-            exports_3("LogI", LogI = fs.Info);
-            exports_3("LogIT", LogIT = fs.TapI);
+            exports_6("LogNT", LogNT = fs.TapN);
+            exports_6("LogI", LogI = fs.Info);
+            exports_6("LogIT", LogIT = fs.TapI);
             /** Log at verbose level. */
-            exports_3("LogV", LogV = fs.Verbose);
+            exports_6("LogV", LogV = fs.Verbose);
             /** Log at verbose level and return value. */
-            exports_3("LogVT", LogVT = fs.TapV);
+            exports_6("LogVT", LogVT = fs.TapV);
         }
     };
 });
 /*
+==============================================
+Typescript definitions for v4.2.2
+==============================================
+
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_4, context_4) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_7, context_7) {
     "use strict";
     var sp, sn, object, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm, hasKey, valueType, allKeys, allKeysPArray, allValues, removeKey, count, clear, addPairs, nextKey, getNthKey;
-    var __moduleName = context_4 && context_4.id;
+    var __moduleName = context_7 && context_7.id;
     return {
         setters: [
             function (sp_1) {
@@ -1625,81 +1671,94 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             /** Associative key-value container.
-                Inherits JValue functionality */
+            *     Inherits JValue functionality
+            */
             sn = sp.JMap;
-            /** creates new container object. returns container's identifier (unique integer number). */
-            exports_4("object", object = () => sn.object());
-            /** Returns the value associated with the @key. If not, returns @default value */
-            exports_4("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
-            exports_4("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
-            exports_4("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
-            exports_4("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
-            exports_4("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
-            /** Inserts @key: @value pair. Replaces existing pair with the same @key */
-            exports_4("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
-            exports_4("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
-            exports_4("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
-            exports_4("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
-            exports_4("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
-            /** Returns true, if the container has @key: value pair */
-            exports_4("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
+            /** creates new container object. returns container's identifier (unique integer number).
+            */
+            exports_7("object", object = () => sn.object());
+            /** Returns the value associated with the @key. If not, returns @default value
+            */
+            exports_7("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
+            exports_7("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
+            exports_7("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
+            exports_7("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
+            exports_7("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
+            /** Inserts @key: @value pair. Replaces existing pair with the same @key
+            */
+            exports_7("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
+            exports_7("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
+            exports_7("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
+            exports_7("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
+            exports_7("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
+            /** Returns true, if the container has @key: value pair
+            */
+            exports_7("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
             /** Returns type of the value associated with the @key.
-                0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string */
-            exports_4("valueType", valueType = (object, key) => sn.valueType(object, key));
-            /** Returns a new array containing all keys */
-            exports_4("allKeys", allKeys = (object) => sn.allKeys(object));
-            exports_4("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
-            /** Returns a new array containing all values */
-            exports_4("allValues", allValues = (object) => sn.allValues(object));
-            /** Removes the pair from the container where the key equals to the @key */
-            exports_4("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
-            /** Returns count of pairs in the conainer */
-            exports_4("count", count = (object) => sn.count(object));
-            /** Removes all pairs from the container */
-            exports_4("clear", clear = (object) => sn.clear(object));
-            /** Inserts key-value pairs from the source container */
-            exports_4("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
+            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
+            */
+            exports_7("valueType", valueType = (object, key) => sn.valueType(object, key));
+            /** Returns a new array containing all keys
+            */
+            exports_7("allKeys", allKeys = (object) => sn.allKeys(object));
+            exports_7("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
+            /** Returns a new array containing all values
+            */
+            exports_7("allValues", allValues = (object) => sn.allValues(object));
+            /** Removes the pair from the container where the key equals to the @key
+            */
+            exports_7("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
+            /** Returns count of pairs in the conainer
+            */
+            exports_7("count", count = (object) => sn.count(object));
+            /** Removes all pairs from the container
+            */
+            exports_7("clear", clear = (object) => sn.clear(object));
+            /** Inserts key-value pairs from the source container
+            */
+            exports_7("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
             /** Simplifies iteration over container's contents.
-                Accepts the @previousKey, returns the next key.
-                If @previousKey == @endKey the function returns the first key.
-                The function always returns so-called 'valid' keys (the ones != @endKey).
-                The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
-                In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
-                it's ok to omit the @endKey.
-                
-                Usage:
-                
-                    string key = JMap.nextKey(map, previousKey="", endKey="")
-                    while key != ""
-                      <retrieve values here>
-                      key = JMap.nextKey(map, key, endKey="")
-                    endwhile */
-            exports_4("nextKey", nextKey = (object, previousKey = "", endKey = "") => sn.nextKey(object, previousKey, endKey));
+            *     Accepts the @previousKey, returns the next key.
+            *     If @previousKey == @endKey the function returns the first key.
+            *     The function always returns so-called 'valid' keys (the ones != @endKey).
+            *     The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
+            *     In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
+            *     it's ok to omit the @endKey.
+            *
+            *     Usage:
+            *
+            *         string key = JMap.nextKey(map, previousKey="", endKey="")
+            *         while key != ""
+            *           <retrieve values here>
+            *           key = JMap.nextKey(map, key, endKey="")
+            *         endwhile
+            */
+            exports_7("nextKey", nextKey = (object, previousKey = "", endKey = "") => sn.nextKey(object, previousKey, endKey));
             /** Retrieves N-th key. negative index accesses items from the end of container counting backwards.
-                Worst complexity is O(n/2) */
-            exports_4("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
+            *     Worst complexity is O(n/2)
+            */
+            exports_7("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
         }
     };
 });
 /*
+==============================================
+Typescript definitions for v4.2.2
+==============================================
+
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_5, context_5) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_8, context_8) {
     "use strict";
     var sp, sn, object, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm, hasKey, valueType, allKeys, allKeysPArray, allValues, removeKey, count, clear, addPairs, nextKey, getNthKey;
-    var __moduleName = context_5 && context_5.id;
+    var __moduleName = context_8 && context_8.id;
     return {
         setters: [
             function (sp_2) {
@@ -1708,81 +1767,94 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             /** Associative key-value container.
-                Inherits JValue functionality */
+            *     Inherits JValue functionality
+            */
             sn = sp.JFormMap;
-            /** creates new container object. returns container's identifier (unique integer number). */
-            exports_5("object", object = () => sn.object());
-            /** Returns the value associated with the @key. If not, returns @default value */
-            exports_5("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
-            exports_5("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
-            exports_5("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
-            exports_5("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
-            exports_5("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
-            /** Inserts @key: @value pair. Replaces existing pair with the same @key */
-            exports_5("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
-            exports_5("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
-            exports_5("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
-            exports_5("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
-            exports_5("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
-            /** Returns true, if the container has @key: value pair */
-            exports_5("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
+            /** creates new container object. returns container's identifier (unique integer number).
+            */
+            exports_8("object", object = () => sn.object());
+            /** Returns the value associated with the @key. If not, returns @default value
+            */
+            exports_8("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
+            exports_8("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
+            exports_8("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
+            exports_8("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
+            exports_8("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
+            /** Inserts @key: @value pair. Replaces existing pair with the same @key
+            */
+            exports_8("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
+            exports_8("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
+            exports_8("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
+            exports_8("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
+            exports_8("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
+            /** Returns true, if the container has @key: value pair
+            */
+            exports_8("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
             /** Returns type of the value associated with the @key.
-                0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string */
-            exports_5("valueType", valueType = (object, key) => sn.valueType(object, key));
-            /** Returns a new array containing all keys */
-            exports_5("allKeys", allKeys = (object) => sn.allKeys(object));
-            exports_5("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
-            /** Returns a new array containing all values */
-            exports_5("allValues", allValues = (object) => sn.allValues(object));
-            /** Removes the pair from the container where the key equals to the @key */
-            exports_5("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
-            /** Returns count of pairs in the conainer */
-            exports_5("count", count = (object) => sn.count(object));
-            /** Removes all pairs from the container */
-            exports_5("clear", clear = (object) => sn.clear(object));
-            /** Inserts key-value pairs from the source container */
-            exports_5("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
+            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
+            */
+            exports_8("valueType", valueType = (object, key) => sn.valueType(object, key));
+            /** Returns a new array containing all keys
+            */
+            exports_8("allKeys", allKeys = (object) => sn.allKeys(object));
+            exports_8("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
+            /** Returns a new array containing all values
+            */
+            exports_8("allValues", allValues = (object) => sn.allValues(object));
+            /** Removes the pair from the container where the key equals to the @key
+            */
+            exports_8("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
+            /** Returns count of pairs in the conainer
+            */
+            exports_8("count", count = (object) => sn.count(object));
+            /** Removes all pairs from the container
+            */
+            exports_8("clear", clear = (object) => sn.clear(object));
+            /** Inserts key-value pairs from the source container
+            */
+            exports_8("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
             /** Simplifies iteration over container's contents.
-                Accepts the @previousKey, returns the next key.
-                If @previousKey == @endKey the function returns the first key.
-                The function always returns so-called 'valid' keys (the ones != @endKey).
-                The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
-                In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
-                it's ok to omit the @endKey.
-                
-                Usage:
-                
-                    string key = JMap.nextKey(map, previousKey="", endKey="")
-                    while key != ""
-                      <retrieve values here>
-                      key = JMap.nextKey(map, key, endKey="")
-                    endwhile */
-            exports_5("nextKey", nextKey = (object, previousKey = null, endKey = null) => sn.nextKey(object, previousKey, endKey));
+            *     Accepts the @previousKey, returns the next key.
+            *     If @previousKey == @endKey the function returns the first key.
+            *     The function always returns so-called 'valid' keys (the ones != @endKey).
+            *     The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
+            *     In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
+            *     it's ok to omit the @endKey.
+            *
+            *     Usage:
+            *
+            *         string key = JMap.nextKey(map, previousKey="", endKey="")
+            *         while key != ""
+            *           <retrieve values here>
+            *           key = JMap.nextKey(map, key, endKey="")
+            *         endwhile
+            */
+            exports_8("nextKey", nextKey = (object, previousKey = null, endKey = null) => sn.nextKey(object, previousKey, endKey));
             /** Retrieves N-th key. negative index accesses items from the end of container counting backwards.
-                Worst complexity is O(n/2) */
-            exports_5("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
+            *     Worst complexity is O(n/2)
+            */
+            exports_8("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
         }
     };
 });
 /*
+==============================================
+Typescript definitions for v4.2.2
+==============================================
+
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_6, context_6) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_9, context_9) {
     "use strict";
     var sp, sn, object, objectWithSize, objectWithInts, objectWithStrings, objectWithFloats, objectWithBooleans, objectWithForms, subArray, addFromArray, addFromFormList, getInt, getFlt, getStr, getObj, getForm, asIntArray, asFloatArray, asStringArray, asFormArray, findInt, findFlt, findStr, findObj, findForm, countInteger, countFloat, countString, countObject, countForm, setInt, setFlt, setStr, setObj, setForm, addInt, addFlt, addStr, addObj, addForm, count, clear, eraseIndex, eraseRange, eraseInteger, eraseFloat, eraseString, eraseObject, eraseForm, valueType, swapItems, sort, unique, reverse, writeToIntegerPArray, writeToFloatPArray, writeToFormPArray, writeToStringPArray;
-    var __moduleName = context_6 && context_6.id;
+    var __moduleName = context_9 && context_9.id;
     return {
         setters: [
             function (sp_3) {
@@ -1791,109 +1863,132 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             /** Ordered collection of values (value is float, integer, string, form or another container).
-                Inherits JValue functionality */
+            *     Inherits JValue functionality
+            */
             sn = sp.JArray;
-            /** creates new container object. returns container's identifier (unique integer number). */
-            exports_6("object", object = () => sn.object());
-            /** Creates a new array of given size, filled with empty (None) items */
-            exports_6("objectWithSize", objectWithSize = (size) => sn.objectWithSize(size));
+            /** creates new container object. returns container's identifier (unique integer number).
+            */
+            exports_9("object", object = () => sn.object());
+            /** Creates a new array of given size, filled with empty (None) items
+            */
+            exports_9("objectWithSize", objectWithSize = (size) => sn.objectWithSize(size));
             /** Creates a new array that contains given values
-                objectWithBooleans converts booleans into integers */
-            exports_6("objectWithInts", objectWithInts = (values) => sn.objectWithInts(values));
-            exports_6("objectWithStrings", objectWithStrings = (values) => sn.objectWithStrings(values));
-            exports_6("objectWithFloats", objectWithFloats = (values) => sn.objectWithFloats(values));
-            exports_6("objectWithBooleans", objectWithBooleans = (values) => sn.objectWithBooleans(values));
-            exports_6("objectWithForms", objectWithForms = (values) => sn.objectWithForms(values));
-            /** Creates a new array containing all the values from the source array in range [startIndex, endIndex) */
-            exports_6("subArray", subArray = (object, startIndex, endIndex) => sn.subArray(object, startIndex, endIndex));
+            *     objectWithBooleans converts booleans into integers
+            */
+            exports_9("objectWithInts", objectWithInts = (values) => sn.objectWithInts(values));
+            exports_9("objectWithStrings", objectWithStrings = (values) => sn.objectWithStrings(values));
+            exports_9("objectWithFloats", objectWithFloats = (values) => sn.objectWithFloats(values));
+            exports_9("objectWithBooleans", objectWithBooleans = (values) => sn.objectWithBooleans(values));
+            exports_9("objectWithForms", objectWithForms = (values) => sn.objectWithForms(values));
+            /** Creates a new array containing all the values from the source array in range [startIndex, endIndex)
+            */
+            exports_9("subArray", subArray = (object, startIndex, endIndex) => sn.subArray(object, startIndex, endIndex));
             /** Inserts the values from the source array into this array. If insertAtIndex is -1 (default behaviour) it appends to the end.
-                negative index accesses items from the end of container counting backwards. */
-            exports_6("addFromArray", addFromArray = (object, source, insertAtIndex = -1) => sn.addFromArray(object, source, insertAtIndex));
-            exports_6("addFromFormList", addFromFormList = (object, source, insertAtIndex = -1) => sn.addFromFormList(object, source, insertAtIndex));
+            *     negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("addFromArray", addFromArray = (object, source, insertAtIndex = -1) => sn.addFromArray(object, source, insertAtIndex));
+            exports_9("addFromFormList", addFromFormList = (object, source, insertAtIndex = -1) => sn.addFromFormList(object, source, insertAtIndex));
             /** Returns the item at the index of the array.
-                negative index accesses items from the end of container counting backwards. */
-            exports_6("getInt", getInt = (object, index, defaultVal = 0) => sn.getInt(object, index, defaultVal));
-            exports_6("getFlt", getFlt = (object, index, defaultVal = 0.0) => sn.getFlt(object, index, defaultVal));
-            exports_6("getStr", getStr = (object, index, defaultVal = "") => sn.getStr(object, index, defaultVal));
-            exports_6("getObj", getObj = (object, index, defaultVal = 0) => sn.getObj(object, index, defaultVal));
-            exports_6("getForm", getForm = (object, index, defaultVal = null) => sn.getForm(object, index, defaultVal));
+            *     negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("getInt", getInt = (object, index, defaultVal = 0) => sn.getInt(object, index, defaultVal));
+            exports_9("getFlt", getFlt = (object, index, defaultVal = 0.0) => sn.getFlt(object, index, defaultVal));
+            exports_9("getStr", getStr = (object, index, defaultVal = "") => sn.getStr(object, index, defaultVal));
+            exports_9("getObj", getObj = (object, index, defaultVal = 0) => sn.getObj(object, index, defaultVal));
+            exports_9("getForm", getForm = (object, index, defaultVal = null) => sn.getForm(object, index, defaultVal));
             /** Copy all items to new native Papyrus array of dynamic size.
-                Items not matching the requested type will have default
-                values as the ones from the getInt/Flt/Str/Form functions. */
-            exports_6("asIntArray", asIntArray = (object) => sn.asIntArray(object));
-            exports_6("asFloatArray", asFloatArray = (object) => sn.asFloatArray(object));
-            exports_6("asStringArray", asStringArray = (object) => sn.asStringArray(object));
-            exports_6("asFormArray", asFormArray = (object) => sn.asFormArray(object));
+            *     Items not matching the requested type will have default
+            *     values as the ones from the getInt/Flt/Str/Form functions.
+            */
+            exports_9("asIntArray", asIntArray = (object) => sn.asIntArray(object));
+            exports_9("asFloatArray", asFloatArray = (object) => sn.asFloatArray(object));
+            exports_9("asStringArray", asStringArray = (object) => sn.asStringArray(object));
+            exports_9("asFormArray", asFormArray = (object) => sn.asFormArray(object));
             /** Returns the index of the first found value/container that equals to given the value/container (default behaviour if searchStartIndex is 0).
-                If nothing was found it returns -1.
-                @searchStartIndex - index of the array where to start search
-                negative index accesses items from the end of container counting backwards. */
-            exports_6("findInt", findInt = (object, value, searchStartIndex = 0) => sn.findInt(object, value, searchStartIndex));
-            exports_6("findFlt", findFlt = (object, value, searchStartIndex = 0) => sn.findFlt(object, value, searchStartIndex));
-            exports_6("findStr", findStr = (object, value, searchStartIndex = 0) => sn.findStr(object, value, searchStartIndex));
-            exports_6("findObj", findObj = (object, container, searchStartIndex = 0) => sn.findObj(object, container, searchStartIndex));
-            exports_6("findForm", findForm = (object, value, searchStartIndex = 0) => sn.findForm(object, value, searchStartIndex));
-            /** Returns the number of times given value was found in a JArray. */
-            exports_6("countInteger", countInteger = (object, value) => sn.countInteger(object, value));
-            exports_6("countFloat", countFloat = (object, value) => sn.countFloat(object, value));
-            exports_6("countString", countString = (object, value) => sn.countString(object, value));
-            exports_6("countObject", countObject = (object, container) => sn.countObject(object, container));
-            exports_6("countForm", countForm = (object, value) => sn.countForm(object, value));
+            *     If nothing was found it returns -1.
+            *     @searchStartIndex - index of the array where to start search
+            *     negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("findInt", findInt = (object, value, searchStartIndex = 0) => sn.findInt(object, value, searchStartIndex));
+            exports_9("findFlt", findFlt = (object, value, searchStartIndex = 0) => sn.findFlt(object, value, searchStartIndex));
+            exports_9("findStr", findStr = (object, value, searchStartIndex = 0) => sn.findStr(object, value, searchStartIndex));
+            exports_9("findObj", findObj = (object, container, searchStartIndex = 0) => sn.findObj(object, container, searchStartIndex));
+            exports_9("findForm", findForm = (object, value, searchStartIndex = 0) => sn.findForm(object, value, searchStartIndex));
+            /** Returns the number of times given value was found in a JArray.
+            */
+            exports_9("countInteger", countInteger = (object, value) => sn.countInteger(object, value));
+            exports_9("countFloat", countFloat = (object, value) => sn.countFloat(object, value));
+            exports_9("countString", countString = (object, value) => sn.countString(object, value));
+            exports_9("countObject", countObject = (object, container) => sn.countObject(object, container));
+            exports_9("countForm", countForm = (object, value) => sn.countForm(object, value));
             /** Replaces existing value at the @index of the array with the new @value.
-                negative index accesses items from the end of container counting backwards. */
-            exports_6("setInt", setInt = (object, index, value) => sn.setInt(object, index, value));
-            exports_6("setFlt", setFlt = (object, index, value) => sn.setFlt(object, index, value));
-            exports_6("setStr", setStr = (object, index, value) => sn.setStr(object, index, value));
-            exports_6("setObj", setObj = (object, index, container) => sn.setObj(object, index, container));
-            exports_6("setForm", setForm = (object, index, value) => sn.setForm(object, index, value));
+            *     negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("setInt", setInt = (object, index, value) => sn.setInt(object, index, value));
+            exports_9("setFlt", setFlt = (object, index, value) => sn.setFlt(object, index, value));
+            exports_9("setStr", setStr = (object, index, value) => sn.setStr(object, index, value));
+            exports_9("setObj", setObj = (object, index, container) => sn.setObj(object, index, container));
+            exports_9("setForm", setForm = (object, index, value) => sn.setForm(object, index, value));
             /** Appends the @value/@container to the end of the array.
-                If @addToIndex >= 0 it inserts value at given index. negative index accesses items from the end of container counting backwards. */
-            exports_6("addInt", addInt = (object, value, addToIndex = -1) => sn.addInt(object, value, addToIndex));
-            exports_6("addFlt", addFlt = (object, value, addToIndex = -1) => sn.addFlt(object, value, addToIndex));
-            exports_6("addStr", addStr = (object, value, addToIndex = -1) => sn.addStr(object, value, addToIndex));
-            exports_6("addObj", addObj = (object, container, addToIndex = -1) => sn.addObj(object, container, addToIndex));
-            exports_6("addForm", addForm = (object, value, addToIndex = -1) => sn.addForm(object, value, addToIndex));
-            /** Returns count of the items in the array */
-            exports_6("count", count = (object) => sn.count(object));
-            /** Removes all the items from the array */
-            exports_6("clear", clear = (object) => sn.clear(object));
-            /** Erases the item at the index. negative index accesses items from the end of container counting backwards. */
-            exports_6("eraseIndex", eraseIndex = (object, index) => sn.eraseIndex(object, index));
+            *     If @addToIndex >= 0 it inserts value at given index. negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("addInt", addInt = (object, value, addToIndex = -1) => sn.addInt(object, value, addToIndex));
+            exports_9("addFlt", addFlt = (object, value, addToIndex = -1) => sn.addFlt(object, value, addToIndex));
+            exports_9("addStr", addStr = (object, value, addToIndex = -1) => sn.addStr(object, value, addToIndex));
+            exports_9("addObj", addObj = (object, container, addToIndex = -1) => sn.addObj(object, container, addToIndex));
+            exports_9("addForm", addForm = (object, value, addToIndex = -1) => sn.addForm(object, value, addToIndex));
+            /** Returns count of the items in the array
+            */
+            exports_9("count", count = (object) => sn.count(object));
+            /** Removes all the items from the array
+            */
+            exports_9("clear", clear = (object) => sn.clear(object));
+            /** Erases the item at the index. negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("eraseIndex", eraseIndex = (object, index) => sn.eraseIndex(object, index));
             /** Erases [first, last] index range of the items. negative index accesses items from the end of container counting backwards.
-                For ex. with [1,-1] range it will erase everything except the first item */
-            exports_6("eraseRange", eraseRange = (object, first, last) => sn.eraseRange(object, first, last));
-            /** Erase all elements of given value. Returns the number of erased elements. */
-            exports_6("eraseInteger", eraseInteger = (object, value) => sn.eraseInteger(object, value));
-            exports_6("eraseFloat", eraseFloat = (object, value) => sn.eraseFloat(object, value));
-            exports_6("eraseString", eraseString = (object, value) => sn.eraseString(object, value));
-            exports_6("eraseObject", eraseObject = (object, container) => sn.eraseObject(object, container));
-            exports_6("eraseForm", eraseForm = (object, value) => sn.eraseForm(object, value));
+            *     For ex. with [1,-1] range it will erase everything except the first item
+            */
+            exports_9("eraseRange", eraseRange = (object, first, last) => sn.eraseRange(object, first, last));
+            /** Erase all elements of given value. Returns the number of erased elements.
+            */
+            exports_9("eraseInteger", eraseInteger = (object, value) => sn.eraseInteger(object, value));
+            exports_9("eraseFloat", eraseFloat = (object, value) => sn.eraseFloat(object, value));
+            exports_9("eraseString", eraseString = (object, value) => sn.eraseString(object, value));
+            exports_9("eraseObject", eraseObject = (object, container) => sn.eraseObject(object, container));
+            exports_9("eraseForm", eraseForm = (object, value) => sn.eraseForm(object, value));
             /** Returns type of the value at the @index. negative index accesses items from the end of container counting backwards.
-                0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string */
-            exports_6("valueType", valueType = (object, index) => sn.valueType(object, index));
-            /** Exchanges the items at @index1 and @index2. negative index accesses items from the end of container counting backwards. */
-            exports_6("swapItems", swapItems = (object, index1, index2) => sn.swapItems(object, index1, index2));
-            /** Sorts the items into ascending order (none < int < float < form < object < string). Returns the array itself */
-            exports_6("sort", sort = (object) => sn.sort(object));
-            /** Sorts the items, removes duplicates. Returns array itself. You can treat it as JSet now */
-            exports_6("unique", unique = (object) => sn.unique(object));
-            /** Reverse the order of elements. Returns the array itself. */
-            exports_6("reverse", reverse = (object) => sn.reverse(object));
+            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
+            */
+            exports_9("valueType", valueType = (object, index) => sn.valueType(object, index));
+            /** Exchanges the items at @index1 and @index2. negative index accesses items from the end of container counting backwards.
+            */
+            exports_9("swapItems", swapItems = (object, index1, index2) => sn.swapItems(object, index1, index2));
+            /** Sorts the items into ascending order (none < int < float < form < object < string). Returns the array itself
+            */
+            exports_9("sort", sort = (object) => sn.sort(object));
+            /** Sorts the items, removes duplicates. Returns array itself. You can treat it as JSet now
+            */
+            exports_9("unique", unique = (object) => sn.unique(object));
+            /** Reverse the order of elements. Returns the array itself.
+            */
+            exports_9("reverse", reverse = (object) => sn.reverse(object));
             /** Writes the array's items into the @targetArray array starting at @destIndex
-                 @writeAtIdx -    [-1, 0] - writes all the items in reverse order
-                   [0, -1] - writes all the items in straight order
-                   [1, 3] - writes 3 items in straight order */
-            exports_6("writeToIntegerPArray", writeToIntegerPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0) => sn.writeToIntegerPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_6("writeToFloatPArray", writeToFloatPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0.0) => sn.writeToFloatPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_6("writeToFormPArray", writeToFormPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = null) => sn.writeToFormPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_6("writeToStringPArray", writeToStringPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = "") => sn.writeToStringPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            *      @writeAtIdx -    [-1, 0] - writes all the items in reverse order
+            *        [0, -1] - writes all the items in straight order
+            *        [1, 3] - writes 3 items in straight order
+            */
+            exports_9("writeToIntegerPArray", writeToIntegerPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0) => sn.writeToIntegerPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_9("writeToFloatPArray", writeToFloatPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0.0) => sn.writeToFloatPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_9("writeToFormPArray", writeToFormPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = null) => sn.writeToFormPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_9("writeToStringPArray", writeToStringPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = "") => sn.writeToStringPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray"], function (exports_7, context_7) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray"], function (exports_10, context_10) {
     "use strict";
     var JMap, JFormMap, JArray, JMapL, JFormMapL, JArrayL;
-    var __moduleName = context_7 && context_7.id;
+    var __moduleName = context_10 && context_10.id;
     return {
         setters: [
             function (JMap_1) {
@@ -1942,7 +2037,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JMapL.FilterForms = FilterForms;
             })(JMapL || (JMapL = {}));
-            exports_7("JMapL", JMapL);
+            exports_10("JMapL", JMapL);
             (function (JFormMapL) {
                 /** Iterates over all JFormMap keys and executes a function `f` for each key.
                  *
@@ -1967,7 +2062,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JFormMapL.ForAllKeys = ForAllKeys;
             })(JFormMapL || (JFormMapL = {}));
-            exports_7("JFormMapL", JFormMapL);
+            exports_10("JFormMapL", JFormMapL);
             (function (JArrayL) {
                 function ForAllItems(o, f) {
                     if (o === 0)
@@ -1980,36 +2075,33 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JArrayL.ForAllItems = ForAllItems;
             })(JArrayL || (JArrayL = {}));
-            exports_7("JArrayL", JArrayL);
+            exports_10("JArrayL", JArrayL);
         }
     };
 });
 /*
-Manual fixing notes:
-  - All deprecated functions were manually removed.
-
 ==============================================
-Typescript definitions for v3.9
+Typescript definitions for v4.3
 ==============================================
 
+Functions deleted because they need manual translation and are already deprecated:
+    - GetNodeRotation
+    - ExecuteBat
+    - ScanCellActors
+
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_8, context_8) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
     "use strict";
     var sp, sn, ScanCellObjects, ScanCellNPCs, ScanCellNPCsByFaction, ToggleFreeCamera, SetFreeCameraSpeed, SetFreeCameraState, FilesInFolder, FoldersInFolder, FileExists, ReadFromFile, WriteToFile, PrintConsole, GetRaceEditorID, GetActorRaceEditorID, SetMenus;
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_11 && context_11.id;
     return {
         setters: [
             function (sp_4) {
@@ -2018,77 +2110,218 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             sn = sp.MiscUtil;
-            /** Cell scanning functions */
-            // Scans the current cell of the given CenterOn for an object of the given form type ID within radius and returns an array for all that
-            // and (optionally) also has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
-            // search distance from around CenterOn, 0.0 will search entire cell the object is in.
-            // NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
-            exports_8("ScanCellObjects", ScanCellObjects = (formType, CenterOn, radius = 0.0, HasKeyword = null) => sn.ScanCellObjects(formType, CenterOn, radius, HasKeyword));
-            // Scans the current cell of the given CenterOn for an actor within the given radius and returns an array for all actors that are
-            // currently alive and (optionally) has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
-            // search distance from around CenterOn, 0.0 will search entire cell the object is in.
-            // NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
-            exports_8("ScanCellNPCs", ScanCellNPCs = (CenterOn, radius = 0.0, HasKeyword = null, IgnoreDead = true) => sn.ScanCellNPCs(CenterOn, radius, HasKeyword, IgnoreDead));
-            // Same as ScanCellNPCs(), however it filters the return by a given faction and (optionally) their rank in that faction.
-            exports_8("ScanCellNPCsByFaction", ScanCellNPCsByFaction = (FindFaction, CenterOn, radius = 0.0, minRank = 0, maxRank = 127, IgnoreDead = true) => sn.ScanCellNPCsByFaction(FindFaction, CenterOn, radius, minRank, maxRank, IgnoreDead));
-            /** Camera functions - NOT CURRENT WORKING IN SKYRIM SPECIAL EDITION */
-            // Toggle freefly camera.
-            exports_8("ToggleFreeCamera", ToggleFreeCamera = (stopTime = false) => sn.ToggleFreeCamera(stopTime));
-            // Set freefly cam speed.
-            exports_8("SetFreeCameraSpeed", SetFreeCameraSpeed = (speed) => sn.SetFreeCameraSpeed(speed));
-            // Set current freefly cam state & set the speed if enabling
-            exports_8("SetFreeCameraState", SetFreeCameraState = (enable, speed = 10.0) => sn.SetFreeCameraState(enable, speed));
-            /** File related functions */
-            // Get an array of files in a given parent directory that have the given extension.
-            // directory is relative to the root Skyrim folder (where skyrim.exe is) and is non-recursive.
-            // directory = "." to get all files in root Skyrim folder
-            // directory = "data/meshes" to get all files in the <root>/data/meshes folder
-            // extension = ".nif" to get all .nif mesh files.
-            // (default) extension="*" to get all files
-            exports_8("FilesInFolder", FilesInFolder = (directory, extension = "*") => sn.FilesInFolder(directory, extension));
-            // Get an array of folders in a given parent directory
-            // Same rules and examples as above FilesInFolder apply to the directory rule here.
-            exports_8("FoldersInFolder", FoldersInFolder = (directory) => sn.FoldersInFolder(directory));
-            // Check if a given file exists relative to root Skyrim directory. Example: FileExists("data/meshes/example.nif")
-            exports_8("FileExists", FileExists = (fileName) => sn.FileExists(fileName));
-            // Read string from file. Do not read large files!
-            exports_8("ReadFromFile", ReadFromFile = (fileName) => sn.ReadFromFile(fileName));
-            // Write string to file.
-            exports_8("WriteToFile", WriteToFile = (fileName, text, append = true, timestamp = false) => sn.WriteToFile(fileName, text, append, timestamp));
-            /** Misc */
-            // Print text to console.
-            exports_8("PrintConsole", PrintConsole = (text) => sn.PrintConsole(text));
-            // Get race's editor ID.
-            exports_8("GetRaceEditorID", GetRaceEditorID = (raceForm) => sn.GetRaceEditorID(raceForm));
-            // Get race's editor ID.
-            exports_8("GetActorRaceEditorID", GetActorRaceEditorID = (actorRef) => sn.GetActorRaceEditorID(actorRef));
-            // Set HUD on / off - NOT CURRENT WORKING IN SKYRIM SPECIAL EDITION
-            exports_8("SetMenus", SetMenus = (enabled) => sn.SetMenus(enabled));
+            /** Cell scanning functions
+            */
+            /** Scans the current cell of the given CenterOn for an object of the given form type ID within radius and returns an array for all that
+            * and (optionally) also has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
+            * search distance from around CenterOn, 0.0 will search entire cell the object is in.
+            * NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
+            */
+            exports_11("ScanCellObjects", ScanCellObjects = (formType, CenterOn, radius = 0.0, HasKeyword = null) => sn.ScanCellObjects(formType, CenterOn, radius, HasKeyword));
+            /** Scans the current cell of the given CenterOn for an actor within the given radius and returns an array for all actors that are
+            * currently alive and (optionally) has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
+            * search distance from around CenterOn, 0.0 will search entire cell the object is in.
+            * NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
+            */
+            exports_11("ScanCellNPCs", ScanCellNPCs = (CenterOn, radius = 0.0, HasKeyword = null, IgnoreDead = true) => sn.ScanCellNPCs(CenterOn, radius, HasKeyword, IgnoreDead));
+            /** Same as ScanCellNPCs(), however it filters the return by a given faction and (optionally) their rank in that faction.
+             */
+            exports_11("ScanCellNPCsByFaction", ScanCellNPCsByFaction = (FindFaction, CenterOn, radius = 0.0, minRank = 0, maxRank = 127, IgnoreDead = true) => sn.ScanCellNPCsByFaction(FindFaction, CenterOn, radius, minRank, maxRank, IgnoreDead));
+            /** Camera functions
+            */
+            /** Toggle freefly camera.
+             */
+            exports_11("ToggleFreeCamera", ToggleFreeCamera = (stopTime = false) => sn.ToggleFreeCamera(stopTime));
+            /** Set freefly cam speed.
+             */
+            exports_11("SetFreeCameraSpeed", SetFreeCameraSpeed = (speed) => sn.SetFreeCameraSpeed(speed));
+            /** Set current freefly cam state & set the speed if enabling
+             */
+            exports_11("SetFreeCameraState", SetFreeCameraState = (enable, speed = 10.0) => sn.SetFreeCameraState(enable, speed));
+            /** File related functions
+            */
+            /** Get an array of files in a given parent directory that have the given extension.
+            * directory is relative to the root Skyrim folder (where skyrim.exe is) and is non-recursive.
+            * directory = "." to get all files in root Skyrim folder
+            * directory = "data/meshes" to get all files in the <root>/data/meshes folder
+            * extension = ".nif" to get all .nif mesh files.
+            * (default) extension="*" to get all files
+            */
+            exports_11("FilesInFolder", FilesInFolder = (directory, extension = "*") => sn.FilesInFolder(directory, extension));
+            /** Get an array of folders in a given parent directory
+            * Same rules and examples as above FilesInFolder apply to the directory rule here.
+            */
+            exports_11("FoldersInFolder", FoldersInFolder = (directory) => sn.FoldersInFolder(directory));
+            /** Check if a given file exists relative to root Skyrim directory. Example: FileExists("data/meshes/example.nif")
+             */
+            exports_11("FileExists", FileExists = (fileName) => sn.FileExists(fileName));
+            /** Read string from file. Do not read large files!
+             */
+            exports_11("ReadFromFile", ReadFromFile = (fileName) => sn.ReadFromFile(fileName));
+            /** Write string to file.
+             */
+            exports_11("WriteToFile", WriteToFile = (fileName, text, append = true, timestamp = false) => sn.WriteToFile(fileName, text, append, timestamp));
+            /** Misc
+            */
+            /** Print text to console.
+             */
+            exports_11("PrintConsole", PrintConsole = (text) => sn.PrintConsole(text));
+            /** Get race's editor ID.
+             */
+            exports_11("GetRaceEditorID", GetRaceEditorID = (raceForm) => sn.GetRaceEditorID(raceForm));
+            /** Get race's editor ID.
+             */
+            exports_11("GetActorRaceEditorID", GetActorRaceEditorID = (actorRef) => sn.GetActorRaceEditorID(actorRef));
+            /** Set HUD on / off - NOT CURRENT WORKING IN SKYRIM SPECIAL EDITION
+             */
+            exports_11("SetMenus", SetMenus = (enabled) => sn.SetMenus(enabled));
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/persistentChest", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_12, context_12) {
+    "use strict";
+    var skyrimPlatform_5;
+    var __moduleName = context_12 && context_12.id;
+    /**
+     * Creates a persistent chest hidden somewhere in Tamriel.
+     *
+     * @returns The FormId of the recently created chest. `null` if no chest could be created.
+     *
+     * @remarks
+     * This chest can be used as a permanent storage that never resets.
+     *
+     * This function expects the "Tamriel" map to exist. The most likely case is that
+     * map exists, since it's the map were all cities are located.
+     *
+     * @privateRemarks
+     * Because of the way things are created in Skyrim, we first need to spawn the chest
+     * at the player's location.
+     */
+    function createPersistentChest() {
+        // Spawn chest at player's location
+        const p = skyrimPlatform_5.Game.getPlayer();
+        const c = p.placeAtMe(skyrimPlatform_5.Game.getFormEx(0x70479), 1, true, false);
+        if (!c)
+            return null;
+        // Move the chest to Tamriel
+        const world = skyrimPlatform_5.WorldSpace.from(skyrimPlatform_5.Game.getFormEx(0x3c));
+        skyrimPlatform_5.TESModPlatform.moveRefrToPosition(c, null, world, 0, 0, -10000, 0, 0, 0);
+        return c.getFormID();
+    }
+    exports_12("createPersistentChest", createPersistentChest);
+    /**
+     * Tries to get a persistent chest defined in some place and creates a new
+     * one if it doesn't exist.
+     *
+     * @param Getter - Function that gets an already existing chest.
+     * @param Setter - Function that saves a newly created chest.
+     * @param Logger - Function to log an error if a new chest couldn't be created.
+     *
+     * @remarks
+     * This function assumes you want to somehow store and retrieve the chest from
+     * some database (most probably, using JContainers or PapyrusUtil).
+     *
+     * This has to be done this way, since at the moment of creating this function,
+     * Skyrim Platform has no means to read and write values directly to the SKSE co-save.
+     *
+     * @example
+     * ```
+     * // This uses a JContainers database to know what chest is being created
+     * const path = "some.JContainers.path"
+     * const h = GetSomeJContainersHandle(path)
+     * const someForm = Game.getFormEx(0x14)
+     *
+     * const Getter = () => {
+     *   return JFormMap.getForm(h, someForm)
+     * }
+     * const Setter = (frm: Form | null) => {
+     *   JFormMap.setForm(h, someForm, frm)
+     *   SaveSomeJContainersHandle(h, path)
+     * }
+     *
+     * const chest = getPersistentChest(Getter, Setter, printConsole)
+     * ```
+     */
+    function getPersistentChest(Getter, Setter, Logger) {
+        let frm = Getter();
+        if (!frm) {
+            const newChest = createPersistentChest();
+            if (!newChest) {
+                const msg = "Could not create a persistent chest in Tamriel. " +
+                    "Are you using a mod that substantially changes the game?";
+                if (Logger)
+                    Logger(msg);
+                else
+                    skyrimPlatform_5.printConsole(msg);
+                return null;
+            }
+            frm = skyrimPlatform_5.Game.getFormEx(newChest);
+            Setter(frm);
+        }
+        return frm;
+    }
+    exports_12("getPersistentChest", getPersistentChest);
+    return {
+        setters: [
+            function (skyrimPlatform_5_1) {
+                skyrimPlatform_5 = skyrimPlatform_5_1;
+            }
+        ],
+        execute: function () {
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/isActorTypeNPC", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_13, context_13) {
+    "use strict";
+    var skyrimPlatform_6;
+    var __moduleName = context_13 && context_13.id;
+    /**
+     * Returns wether an `Actor` `Race` has the `ActorTypeNPC` `Keyword`.
+     *
+     * @remarks
+     * This function is useful to check if an `Actor` is a _humanoid_ type of
+     * character. Most of these character types are sentient, playable, use the
+     * installed body modifier (CBBE, UNP, etc), are not creatures...
+     *
+     * @param a `Actor` to check.
+     * @returns Wether the `Actor` has the `Keyword`.
+     */
+    function isActorTypeNPC(a) {
+        var _a;
+        if (!a)
+            return false;
+        const ActorTypeNPC = skyrimPlatform_6.Keyword.from(skyrimPlatform_6.Game.getFormFromFile(0x13794, "Skyrim.esm"));
+        return ((_a = a.getRace()) === null || _a === void 0 ? void 0 : _a.hasKeyword(ActorTypeNPC)) || false;
+    }
+    exports_13("isActorTypeNPC", isActorTypeNPC);
+    return {
+        setters: [
+            function (skyrimPlatform_6_1) {
+                skyrimPlatform_6 = skyrimPlatform_6_1;
+            }
+        ],
+        execute: function () {
         }
     };
 });
 /*
-Manual fixing notes:
-    - Added boolean functions, which are wrappers of `int` ones.
+==============================================
+Typescript definitions for v4.2.2
+==============================================
 
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_9, context_9) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_14, context_14) {
     "use strict";
-    var sp, sn, solveFlt, solveInt, solveBool, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveBoolSetter, solveStrSetter, solveObjSetter, solveFormSetter, setObj, hasPath, allKeys, allValues, writeToFile, root;
-    var __moduleName = context_9 && context_9.id;
+    var sp, sn, solveFlt, solveInt, solveStr, solveBool, solveObj, solveForm, solveFltSetter, solveIntSetter, solveBoolSetter, solveStrSetter, solveObjSetter, solveFormSetter, setObj, hasPath, allKeys, allValues, writeToFile, root;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [
             function (sp_5) {
@@ -2097,72 +2330,77 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             /** Global entry point to store mod information. Main intent - replace global variables
-                Manages keys and values associations (like JMap) */
+            *     Manages keys and values associations (like JMap)
+            */
             sn = sp.JDB;
             /** Attempts to retrieve the value associated with the @path.
-                For ex. the following information associated with 'frosfall' key:
-            
-                "frostfall" : {
-                    "exposureRate" : 0.5,
-                    "arrayC" : ["stringValue", 1.5, 10, 1.14]
-                }
-            
-                then JDB.solveFlt(".frostfall.exposureRate") will return 0.5 and
-                JDB.solveObj(".frostfall.arrayC") will return the array containing ["stringValue", 1.5, 10, 1.14] values */
-            exports_9("solveFlt", solveFlt = (path, defaultVal = 0.0) => sn.solveFlt(path, defaultVal));
-            exports_9("solveInt", solveInt = (path, defaultVal = 0) => sn.solveInt(path, defaultVal));
-            exports_9("solveBool", solveBool = (path, defaultVal = false) => sn.solveInt(path, defaultVal ? 1 : 0) === 1);
-            exports_9("solveStr", solveStr = (path, defaultVal = "") => sn.solveStr(path, defaultVal));
-            exports_9("solveObj", solveObj = (path, defaultVal = 0) => sn.solveObj(path, defaultVal));
-            exports_9("solveForm", solveForm = (path, defaultVal = null) => sn.solveForm(path, defaultVal));
+            *     For ex. the following information associated with 'frosfall' key:
+            *
+            *     "frostfall" : {
+            *         "exposureRate" : 0.5,
+            *         "arrayC" : ["stringValue", 1.5, 10, 1.14]
+            *     }
+            *
+            *     then JDB.solveFlt(".frostfall.exposureRate") will return 0.5 and
+            *     JDB.solveObj(".frostfall.arrayC") will return the array containing ["stringValue", 1.5, 10, 1.14] values
+            */
+            exports_14("solveFlt", solveFlt = (path, defaultVal = 0.0) => sn.solveFlt(path, defaultVal));
+            exports_14("solveInt", solveInt = (path, defaultVal = 0) => sn.solveInt(path, defaultVal));
+            exports_14("solveStr", solveStr = (path, defaultVal = "") => sn.solveStr(path, defaultVal));
+            exports_14("solveBool", solveBool = (path, defaultVal = false) => sn.solveInt(path, defaultVal ? 1 : 0) === 1);
+            exports_14("solveObj", solveObj = (path, defaultVal = 0) => sn.solveObj(path, defaultVal));
+            exports_14("solveForm", solveForm = (path, defaultVal = null) => sn.solveForm(path, defaultVal));
             /** Attempts to assign the @value. Returns false if no such path.
-                If 'createMissingKeys=true' it creates any missing path elements: JDB.solveIntSetter(".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure */
-            exports_9("solveFltSetter", solveFltSetter = (path, value, createMissingKeys = false) => sn.solveFltSetter(path, value, createMissingKeys));
-            exports_9("solveIntSetter", solveIntSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value, createMissingKeys));
-            exports_9("solveBoolSetter", solveBoolSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value ? 1 : 0, createMissingKeys));
-            exports_9("solveStrSetter", solveStrSetter = (path, value, createMissingKeys = false) => sn.solveStrSetter(path, value, createMissingKeys));
-            exports_9("solveObjSetter", solveObjSetter = (path, value, createMissingKeys = false) => sn.solveObjSetter(path, value, createMissingKeys));
-            exports_9("solveFormSetter", solveFormSetter = (path, value, createMissingKeys = false) => sn.solveFormSetter(path, value, createMissingKeys));
+            *     If 'createMissingKeys=true' it creates any missing path elements: JDB.solveIntSetter(".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure
+            */
+            exports_14("solveFltSetter", solveFltSetter = (path, value, createMissingKeys = false) => sn.solveFltSetter(path, value, createMissingKeys));
+            exports_14("solveIntSetter", solveIntSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value, createMissingKeys));
+            exports_14("solveBoolSetter", solveBoolSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value ? 1 : 0, createMissingKeys));
+            exports_14("solveStrSetter", solveStrSetter = (path, value, createMissingKeys = false) => sn.solveStrSetter(path, value, createMissingKeys));
+            exports_14("solveObjSetter", solveObjSetter = (path, value, createMissingKeys = false) => sn.solveObjSetter(path, value, createMissingKeys));
+            exports_14("solveFormSetter", solveFormSetter = (path, value, createMissingKeys = false) => sn.solveFormSetter(path, value, createMissingKeys));
             /** Associates(and replaces previous association) container object with a string key.
-                destroys association if object is zero
-                for ex. JDB.setObj("frostfall", frostFallInformation) will associate 'frostall' key and frostFallInformation so you can access it later */
-            exports_9("setObj", setObj = (key, object) => sn.setObj(key, object));
-            /** Returns true, if JDB capable resolve given @path, i.e. if it able to execute solve* or solver*Setter functions successfully */
-            exports_9("hasPath", hasPath = (path) => sn.hasPath(path));
-            /** returns new array containing all JDB keys */
-            exports_9("allKeys", allKeys = () => sn.allKeys());
-            /** returns new array containing all containers associated with JDB */
-            exports_9("allValues", allValues = () => sn.allValues());
-            /** writes storage data into JSON file at given path */
-            exports_9("writeToFile", writeToFile = (path) => sn.writeToFile(path));
+            *     destroys association if object is zero
+            *     for ex. JDB.setObj("frostfall", frostFallInformation) will associate 'frostall' key and frostFallInformation so you can access it later
+            */
+            exports_14("setObj", setObj = (key, object) => sn.setObj(key, object));
+            /** Returns true, if JDB capable resolve given @path, i.e. if it able to execute solve* or solver*Setter functions successfully
+            */
+            exports_14("hasPath", hasPath = (path) => sn.hasPath(path));
+            /** returns new array containing all JDB keys
+            */
+            exports_14("allKeys", allKeys = () => sn.allKeys());
+            /** returns new array containing all containers associated with JDB
+            */
+            exports_14("allValues", allValues = () => sn.allValues());
+            /** writes storage data into JSON file at given path
+            */
+            exports_14("writeToFile", writeToFile = (path) => sn.writeToFile(path));
             /** Returns underlying JDB's container - an instance of JMap.
-                The object being owned (retained) internally, so you don't have to (but can) retain or release it. */
-            exports_9("root", root = () => sn.root());
+            *     The object being owned (retained) internally, so you don't have to (but can) retain or release it.
+            */
+            exports_14("root", root = () => sn.root());
         }
     };
 });
 /*
-Manual fixing notes:
-    - Added boolean functions, which are wrappers of `int` ones.
+==============================================
+Typescript definitions for v4.2.2
+==============================================
 
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_10, context_10) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_15, context_15) {
     "use strict";
-    var sp, sn, setEntry, makeEntry, findEntry, solveFlt, solveInt, solveBool, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveBoolSetter, solveStrSetter, solveObjSetter, solveFormSetter, hasPath, allKeys, allValues, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm;
-    var __moduleName = context_10 && context_10.id;
+    var sp, sn, setEntry, makeEntry, findEntry, solveFlt, solveInt, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveStrSetter, solveObjSetter, solveFormSetter, hasPath, allKeys, allValues, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (sp_6) {
@@ -2170,56 +2408,65 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Manages form related information (entry). */
+            /** Manages form related information (entry).
+            */
             sn = sp.JFormDB;
-            /** associates given form key and entry (container). set entry to zero to destroy association */
-            exports_10("setEntry", setEntry = (storageName, fKey, entry) => sn.setEntry(storageName, fKey, entry));
-            /** returns (or creates new if not found) JMap entry for given storage and form */
-            exports_10("makeEntry", makeEntry = (storageName, fKey) => sn.makeEntry(storageName, fKey));
-            /** search for entry for given storage and form */
-            exports_10("findEntry", findEntry = (storageName, fKey) => sn.findEntry(storageName, fKey));
-            /** attempts to get value associated with path. */
-            exports_10("solveFlt", solveFlt = (fKey, path, defaultVal = 0.0) => sn.solveFlt(fKey, path, defaultVal));
-            exports_10("solveInt", solveInt = (fKey, path, defaultVal = 0) => sn.solveInt(fKey, path, defaultVal));
-            exports_10("solveBool", solveBool = (fKey, path, defaultVal = false) => sn.solveInt(fKey, path, defaultVal ? 1 : 0) === 1);
-            exports_10("solveStr", solveStr = (fKey, path, defaultVal = "") => sn.solveStr(fKey, path, defaultVal));
-            exports_10("solveObj", solveObj = (fKey, path, defaultVal = 0) => sn.solveObj(fKey, path, defaultVal));
-            exports_10("solveForm", solveForm = (fKey, path, defaultVal = null) => sn.solveForm(fKey, path, defaultVal));
+            /** associates given form key and entry (container). set entry to zero to destroy association
+            */
+            exports_15("setEntry", setEntry = (storageName, fKey, entry) => sn.setEntry(storageName, fKey, entry));
+            /** returns (or creates new if not found) JMap entry for given storage and form
+            */
+            exports_15("makeEntry", makeEntry = (storageName, fKey) => sn.makeEntry(storageName, fKey));
+            /** search for entry for given storage and form
+            */
+            exports_15("findEntry", findEntry = (storageName, fKey) => sn.findEntry(storageName, fKey));
+            /** attempts to get value associated with path.
+            */
+            exports_15("solveFlt", solveFlt = (fKey, path, defaultVal = 0.0) => sn.solveFlt(fKey, path, defaultVal));
+            exports_15("solveInt", solveInt = (fKey, path, defaultVal = 0) => sn.solveInt(fKey, path, defaultVal));
+            exports_15("solveStr", solveStr = (fKey, path, defaultVal = "") => sn.solveStr(fKey, path, defaultVal));
+            exports_15("solveObj", solveObj = (fKey, path, defaultVal = 0) => sn.solveObj(fKey, path, defaultVal));
+            exports_15("solveForm", solveForm = (fKey, path, defaultVal = null) => sn.solveForm(fKey, path, defaultVal));
             /** Attempts to assign value. Returns false if no such path
-                With 'createMissingKeys=true' it creates any missing path elements: JFormDB.solveIntSetter(formKey, ".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure */
-            exports_10("solveFltSetter", solveFltSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFltSetter(fKey, path, value, createMissingKeys));
-            exports_10("solveIntSetter", solveIntSetter = (fKey, path, value, createMissingKeys = false) => sn.solveIntSetter(fKey, path, value, createMissingKeys));
-            exports_10("solveBoolSetter", solveBoolSetter = (fKey, path, value, createMissingKeys = false) => sn.solveIntSetter(fKey, path, value ? 1 : 0, createMissingKeys));
-            exports_10("solveStrSetter", solveStrSetter = (fKey, path, value, createMissingKeys = false) => sn.solveStrSetter(fKey, path, value, createMissingKeys));
-            exports_10("solveObjSetter", solveObjSetter = (fKey, path, value, createMissingKeys = false) => sn.solveObjSetter(fKey, path, value, createMissingKeys));
-            exports_10("solveFormSetter", solveFormSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFormSetter(fKey, path, value, createMissingKeys));
-            /** returns true, if capable resolve given path, e.g. it able to execute solve* or solver*Setter functions successfully */
-            exports_10("hasPath", hasPath = (fKey, path) => sn.hasPath(fKey, path));
+            *     With 'createMissingKeys=true' it creates any missing path elements: JFormDB.solveIntSetter(formKey, ".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure
+            */
+            exports_15("solveFltSetter", solveFltSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFltSetter(fKey, path, value, createMissingKeys));
+            exports_15("solveIntSetter", solveIntSetter = (fKey, path, value, createMissingKeys = false) => sn.solveIntSetter(fKey, path, value, createMissingKeys));
+            exports_15("solveStrSetter", solveStrSetter = (fKey, path, value, createMissingKeys = false) => sn.solveStrSetter(fKey, path, value, createMissingKeys));
+            exports_15("solveObjSetter", solveObjSetter = (fKey, path, value, createMissingKeys = false) => sn.solveObjSetter(fKey, path, value, createMissingKeys));
+            exports_15("solveFormSetter", solveFormSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFormSetter(fKey, path, value, createMissingKeys));
+            /** returns true, if capable resolve given path, e.g. it able to execute solve* or solver*Setter functions successfully
+            */
+            exports_15("hasPath", hasPath = (fKey, path) => sn.hasPath(fKey, path));
             /** JMap-like interface functions:
-            
-                returns new array containing all keys */
-            exports_10("allKeys", allKeys = (fKey, key) => sn.allKeys(fKey, key));
-            /** returns new array containing all values */
-            exports_10("allValues", allValues = (fKey, key) => sn.allValues(fKey, key));
-            /** returns value associated with key */
-            exports_10("getInt", getInt = (fKey, key) => sn.getInt(fKey, key));
-            exports_10("getFlt", getFlt = (fKey, key) => sn.getFlt(fKey, key));
-            exports_10("getStr", getStr = (fKey, key) => sn.getStr(fKey, key));
-            exports_10("getObj", getObj = (fKey, key) => sn.getObj(fKey, key));
-            exports_10("getForm", getForm = (fKey, key) => sn.getForm(fKey, key));
-            /** creates key-value association. replaces existing value if any */
-            exports_10("setInt", setInt = (fKey, key, value) => sn.setInt(fKey, key, value));
-            exports_10("setFlt", setFlt = (fKey, key, value) => sn.setFlt(fKey, key, value));
-            exports_10("setStr", setStr = (fKey, key, value) => sn.setStr(fKey, key, value));
-            exports_10("setObj", setObj = (fKey, key, container) => sn.setObj(fKey, key, container));
-            exports_10("setForm", setForm = (fKey, key, value) => sn.setForm(fKey, key, value));
+            *
+            *     returns new array containing all keys
+            */
+            exports_15("allKeys", allKeys = (fKey, key) => sn.allKeys(fKey, key));
+            /** returns new array containing all values
+            */
+            exports_15("allValues", allValues = (fKey, key) => sn.allValues(fKey, key));
+            /** returns value associated with key
+            */
+            exports_15("getInt", getInt = (fKey, key) => sn.getInt(fKey, key));
+            exports_15("getFlt", getFlt = (fKey, key) => sn.getFlt(fKey, key));
+            exports_15("getStr", getStr = (fKey, key) => sn.getStr(fKey, key));
+            exports_15("getObj", getObj = (fKey, key) => sn.getObj(fKey, key));
+            exports_15("getForm", getForm = (fKey, key) => sn.getForm(fKey, key));
+            /** creates key-value association. replaces existing value if any
+            */
+            exports_15("setInt", setInt = (fKey, key, value) => sn.setInt(fKey, key, value));
+            exports_15("setFlt", setFlt = (fKey, key, value) => sn.setFlt(fKey, key, value));
+            exports_15("setStr", setStr = (fKey, key, value) => sn.setStr(fKey, key, value));
+            exports_15("setObj", setObj = (fKey, key, container) => sn.setObj(fKey, key, container));
+            exports_15("setForm", setForm = (fKey, key, value) => sn.setForm(fKey, key, value));
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/persistentChest", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/isActorTypeNPC", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_16, context_16) {
     "use strict";
-    var DmLib_2, JDB, JFormDB, JFormMap, skyrimPlatform_2, SkimpifyFramework, GetAllSkimpy, GetAllModest, HasSlip, GetSlip, HasChange, GetChange, HasDamage, GetDamage, HasModest, IsSkimpy, HasSkimpy, IsModest, IsRegistered, IsNotRegistered, SwapToSlip, SwapToChange, SwapToDamage, defaultType, DbHandle, cfgDir, fwKey, chestPath, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
-    var __moduleName = context_11 && context_11.id;
+    var persistentChest_1, isActorTypeNPC_1, DmLib_2, JDB, JFormDB, JFormMap, skyrimPlatform_7, SkimpifyFramework, GetAllSkimpy, GetAllModest, HasSlip, GetSlip, HasChange, GetChange, HasDamage, GetDamage, HasModest, IsSkimpy, HasSkimpy, IsModest, IsRegistered, IsNotRegistered, SwapToSlip, SwapToChange, SwapToDamage, CanUseArmor, defaultType, DbHandle, cfgDir, fwKey, chestPath, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
+    var __moduleName = context_16 && context_16.id;
     // ;>========================================================
     // ;>===                ARMOR FUNCTIONS                 ===<;
     // ;>========================================================
@@ -2231,7 +2478,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetModest(a) {
         return GetArmor(a, "prev");
     }
-    exports_11("GetModest", GetModest);
+    exports_16("GetModest", GetModest);
     /** Returns the closest _skimpy version_ of an `Armor`.
      *
      * @param a Armor to get the skimpy version from.
@@ -2240,7 +2487,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetSkimpy(a) {
         return GetArmor(a, "next");
     }
-    exports_11("GetSkimpy", GetSkimpy);
+    exports_16("GetSkimpy", GetSkimpy);
     /** Returns what kind of change an `Armor` has with its modest version.
      *
      * @param a `Armor` to see how it changes.
@@ -2249,7 +2496,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetModestType(a) {
         return GetChangeType(a, "prev");
     }
-    exports_11("GetModestType", GetModestType);
+    exports_16("GetModestType", GetModestType);
     /** Returns what kind of change an `Armor` has with its skimpier version.
      *
      * @param a `Armor` to see how it changes.
@@ -2258,7 +2505,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetSkimpyType(a) {
         return GetChangeType(a, "next");
     }
-    exports_11("GetSkimpyType", GetSkimpyType);
+    exports_16("GetSkimpyType", GetSkimpyType);
     /** Gets the {@link SkimpyData} for the modest version of an `Armor`.
      *
      * @param a The `Armor` to get the modest version from.
@@ -2269,7 +2516,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetModestData(a) {
         return { armor: GetModest(a), kind: GetModestType(a) };
     }
-    exports_11("GetModestData", GetModestData);
+    exports_16("GetModestData", GetModestData);
     /** Gets the {@link SkimpyData} for the skimpy version of an `Armor`.
      *
      * @param a The `Armor` to get the skimpy version from.
@@ -2279,7 +2526,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     function GetSkimpyData(a) {
         return { armor: GetSkimpy(a), kind: GetSkimpyType(a) };
     }
-    exports_11("GetSkimpyData", GetSkimpyData);
+    exports_16("GetSkimpyData", GetSkimpyData);
     /** Returns the most modest version of an armor.
      * @param  {Armor} a Armor to check.
      * @param  {boolean} getBroken Return the most modest version even if the current one is broken? Default = `false`.
@@ -2294,7 +2541,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         const pp = GetMostModest(p.armor);
         return pp ? pp : p.armor;
     }
-    exports_11("GetMostModest", GetMostModest);
+    exports_16("GetMostModest", GetMostModest);
     function RestoreMostModest(act, skimpyArmor) {
         if (!act || !skimpyArmor)
             return false;
@@ -2304,13 +2551,13 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         GoModest(act, skimpyArmor, to);
         return true;
     }
-    exports_11("RestoreMostModest", RestoreMostModest);
+    exports_16("RestoreMostModest", RestoreMostModest);
     function RestoreAllMostModest(act) {
         DmLib_2.FormLib.ForEachEquippedArmor(act, (a) => {
             RestoreMostModest(act, a);
         });
     }
-    exports_11("RestoreAllMostModest", RestoreAllMostModest);
+    exports_16("RestoreAllMostModest", RestoreAllMostModest);
     // ;>========================================================
     // ;>===             RELATIONSHIP FUNCTIONS             ===<;
     // ;>========================================================
@@ -2327,7 +2574,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         SetRel(modest, skimpy, "next", change);
         SetRel(skimpy, modest, "prev", change);
     }
-    exports_11("AddChangeRel", AddChangeRel);
+    exports_16("AddChangeRel", AddChangeRel);
     /** Clears all _Change Relationships_ of some armor.
      *
      * @param a Armor to clear relationship to.
@@ -2342,7 +2589,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         C(GetModest(a), a);
         C(a, GetSkimpy(a));
     }
-    exports_11("ClearChangeRel", ClearChangeRel);
+    exports_16("ClearChangeRel", ClearChangeRel);
     /** Gets an Armor given an internal key.
      * This isn't meant to be used by final users.
      *
@@ -2356,7 +2603,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         const r = JFormDB.solveForm(a, ArmorK(key));
         if (!r)
             return null;
-        return skyrimPlatform_2.Armor.from(r);
+        return skyrimPlatform_7.Armor.from(r);
     }
     function GetChangeType(a, key) {
         if (!a)
@@ -2397,7 +2644,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         const c = n.map((v) => Curr(v.armor));
         return { current: c, next: n };
     }
-    exports_11("GetAll", GetAll);
+    exports_16("GetAll", GetAll);
     /** Gets a global chest for storing armors from an `Actor`.
      * @remarks
      * To avoid bloat, this function returns `null` on non-unique actors so
@@ -2424,8 +2671,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             JFormMap.setForm(h, a, frm);
             SaveChestDbHandle(h);
         };
-        const Logger = (msg) => skyrimPlatform_2.printConsole(`***Error on Skimpify Framework***: ${msg}`);
-        return skyrimPlatform_2.ObjectReference.from(DmLib_2.FormLib.GetPersistentChest(Getter, Setter, Logger));
+        const Logger = (msg) => skyrimPlatform_7.printConsole(`***Error on Skimpify Framework***: ${msg}`);
+        return skyrimPlatform_7.ObjectReference.from(persistentChest_1.getPersistentChest(Getter, Setter, Logger));
     }
     /** Swaps an armor on an actor. This function preserves the original armor
      * (tempering, enchantments...) by storing it in a special global chest.
@@ -2459,6 +2706,12 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     }
     return {
         setters: [
+            function (persistentChest_1_1) {
+                persistentChest_1 = persistentChest_1_1;
+            },
+            function (isActorTypeNPC_1_1) {
+                isActorTypeNPC_1 = isActorTypeNPC_1_1;
+            },
             function (DmLib_2_1) {
                 DmLib_2 = DmLib_2_1;
             },
@@ -2471,8 +2724,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             function (JFormMap_2) {
                 JFormMap = JFormMap_2;
             },
-            function (skyrimPlatform_2_1) {
-                skyrimPlatform_2 = skyrimPlatform_2_1;
+            function (skyrimPlatform_7_1) {
+                skyrimPlatform_7 = skyrimPlatform_7_1;
             }
         ],
         execute: function () {
@@ -2498,7 +2751,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                  */
                 SkimpifyFramework.IsInstalled = () => DbHandle() !== 0;
             })(SkimpifyFramework || (SkimpifyFramework = {}));
-            exports_11("SkimpifyFramework", SkimpifyFramework);
+            exports_16("SkimpifyFramework", SkimpifyFramework);
             /** @experimental From all equipped armors, returns all the ones that have
              * skimpier versions.
              *
@@ -2512,7 +2765,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * @returns An array with all equipped armors that have an skimpy version and the
              * array with those versions.
              */
-            exports_11("GetAllSkimpy", GetAllSkimpy = (a) => GetAll(a, GetSkimpyData, GetModestData));
+            exports_16("GetAllSkimpy", GetAllSkimpy = (a) => GetAll(a, GetSkimpyData, GetModestData));
             /** @experimental From all equipped armors, returns all the ones that have
              * more modest versions.
              *
@@ -2526,49 +2779,49 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * @returns An array with all equipped armors that have a modest version and the
              * array with those versions.
              */
-            exports_11("GetAllModest", GetAllModest = (a) => GetAll(a, GetModestData, GetSkimpyData));
+            exports_16("GetAllModest", GetAllModest = (a) => GetAll(a, GetModestData, GetSkimpyData));
             /** Does this armor have a slip version?
              * @param  {ArmorArg} a Armor to check.
              */
-            exports_11("HasSlip", HasSlip = (a) => GetSkimpyType(a) === "slip" /* slip */);
+            exports_16("HasSlip", HasSlip = (a) => GetSkimpyType(a) === "slip" /* slip */);
             /** If the skimpy version of an `Armor` is a `slip`, returns it.
              *
              * @param a Armor to check.
              * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a `slip`.
              */
-            exports_11("GetSlip", GetSlip = (a) => NextByType(a, "slip" /* slip */));
+            exports_16("GetSlip", GetSlip = (a) => NextByType(a, "slip" /* slip */));
             /** Does this armor have a changed version?
              * @param  {ArmorArg} a Armor to check.
              */
-            exports_11("HasChange", HasChange = (a) => GetSkimpyType(a) === "change" /* change */);
+            exports_16("HasChange", HasChange = (a) => GetSkimpyType(a) === "change" /* change */);
             /** If the skimpy version of an `Armor` is a `change`, returns it.
              *
              * @param a Armor to check.
              * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
              */
-            exports_11("GetChange", GetChange = (a) => NextByType(a, "change" /* change */));
+            exports_16("GetChange", GetChange = (a) => NextByType(a, "change" /* change */));
             /** Does this armor have a damaged version?
              * @param  {ArmorArg} a Armor to check.
              */
-            exports_11("HasDamage", HasDamage = (a) => GetSkimpyType(a) === "damage" /* damage */);
+            exports_16("HasDamage", HasDamage = (a) => GetSkimpyType(a) === "damage" /* damage */);
             /** If the skimpy version of an `Armor` is a `damage`, returns it.
              *
              * @param a Armor to check.
              * @returns The damaged `Armor`. `null` if `a` has no Skimpy version or if it isn't a `damage`.
              */
-            exports_11("GetDamage", GetDamage = (a) => NextByType(a, "damage" /* damage */));
+            exports_16("GetDamage", GetDamage = (a) => NextByType(a, "damage" /* damage */));
             /** Checks if an armor has a registered modest version of itself. */
-            exports_11("HasModest", HasModest = (a) => HasKey(a, "prev"));
+            exports_16("HasModest", HasModest = (a) => HasKey(a, "prev"));
             /** Checks if an armor is a registered skimpy version of another. */
-            exports_11("IsSkimpy", IsSkimpy = HasModest);
+            exports_16("IsSkimpy", IsSkimpy = HasModest);
             /** Checks if an armor has a registered skimpy version of itself. */
-            exports_11("HasSkimpy", HasSkimpy = (a) => HasKey(a, "next"));
+            exports_16("HasSkimpy", HasSkimpy = (a) => HasKey(a, "next"));
             /** Checks if an armor is a registered modest version of another. */
-            exports_11("IsModest", IsModest = HasSkimpy);
+            exports_16("IsModest", IsModest = HasSkimpy);
             /** Checks if an armor has any registered variant of itself. */
-            exports_11("IsRegistered", IsRegistered = (a) => HasSkimpy(a) || HasModest(a));
+            exports_16("IsRegistered", IsRegistered = (a) => HasSkimpy(a) || HasModest(a));
             /** Checks if an armor has any registered variant of itself. */
-            exports_11("IsNotRegistered", IsNotRegistered = (a) => !HasSkimpy(a) && !HasModest(a));
+            exports_16("IsNotRegistered", IsNotRegistered = (a) => !HasSkimpy(a) && !HasModest(a));
             /** Swaps an equipped armor from an `Actor` to its slip version. Returns wether
              * the operation could be done or not.
              *
@@ -2582,7 +2835,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * chest, so tempering and enchantments are not lost.\
              * On non unique actors, their original armors will simply be discarded.
              */
-            exports_11("SwapToSlip", SwapToSlip = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetSlip));
+            exports_16("SwapToSlip", SwapToSlip = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetSlip));
             /** Swaps an equipped armor from an `Actor` to its changed version. Returns wether
              * the operation could be done or not.
              *
@@ -2596,7 +2849,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * chest, so tempering and enchantments are not lost.\
              * On non unique actors, their original armors will simply be discarded.
              */
-            exports_11("SwapToChange", SwapToChange = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetChange));
+            exports_16("SwapToChange", SwapToChange = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetChange));
             /** Swaps an equipped armor from an `Actor` to its damaged version. Returns wether
              * the operation could be done or not.
              *
@@ -2610,13 +2863,24 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
              * chest, so tempering and enchantments are not lost.\
              * On non unique actors, their original armors will simply be discarded.
              */
-            exports_11("SwapToDamage", SwapToDamage = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetDamage));
+            exports_16("SwapToDamage", SwapToDamage = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetDamage));
+            /** Tells wether an `Actor` can even equip armors.\
+             * Use this to check if your mod should try to change armors on an `Actor`.
+             * @param  {Actor} act Actor to check.
+             *
+             * @remarks
+             * It currently works by checking if the Actor's Race has the `ActorTypeNPC`
+             * keyword.
+             *
+             * Checking for this will inmediatly discard animals and creatures in most cases.
+             */
+            exports_16("CanUseArmor", CanUseArmor = (act) => isActorTypeNPC_1.isActorTypeNPC(act));
             /** Default type to assume what an armor version is when it has no associated/valid type. */
-            exports_11("defaultType", defaultType = "change" /* change */);
+            exports_16("defaultType", defaultType = "change" /* change */);
             /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
-            exports_11("DbHandle", DbHandle = () => JDB.solveObj(fwKey));
+            exports_16("DbHandle", DbHandle = () => JDB.solveObj(fwKey));
             /** Dir where armor configuration files are located. */
-            exports_11("cfgDir", cfgDir = "data/SKSE/Plugins/Skimpify Framework/");
+            exports_16("cfgDir", cfgDir = "data/SKSE/Plugins/Skimpify Framework/");
             /** Key used to save values added by this framework. */
             fwKey = ".Skimpify-Framework";
             /** Key to find chests. */
@@ -2626,17 +2890,17 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             /** Key used to save armor change relationships. */
             ChangeK = (k) => `${ArmorK(k)}T`;
             /** Key used to read armor change relationships from JContainers. */
-            exports_11("JcChangeK", JcChangeK = (k) => `${k}T`);
-            exports_11("ClearDB", ClearDB = () => JDB.setObj(fwKey, 0));
+            exports_16("JcChangeK", JcChangeK = (k) => `${k}T`);
+            exports_16("ClearDB", ClearDB = () => JDB.setObj(fwKey, 0));
             /** Sets a _Change Relationship_ between two armors. */
-            exports_11("SetRel", SetRel = (a1, a2, r, c) => {
+            exports_16("SetRel", SetRel = (a1, a2, r, c) => {
                 JFormDB.solveFormSetter(a1, ArmorK(r), a2, true); // Save form
                 JFormDB.solveStrSetter(a1, ChangeK(r), c, true); // Save change type
             });
             /** Checks if an armor has a registered variant. */
             HasKey = (a, r) => !a ? false : JFormDB.solveForm(a, ArmorK(r)) !== null;
             /** Ensures a string is a valid {@link ChangeRel}. Returns {@link defaultType} if string was invalid. */
-            exports_11("ValidateChangeRel", ValidateChangeRel = (rel) => rel.toLowerCase() === "slip" /* slip */
+            exports_16("ValidateChangeRel", ValidateChangeRel = (rel) => rel.toLowerCase() === "slip" /* slip */
                 ? "slip" /* slip */
                 : rel.toLowerCase() === "damage" /* damage */
                     ? "damage" /* damage */
@@ -2644,16 +2908,16 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_12, context_12) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_17, context_17) {
     "use strict";
-    var debug_1, DmLib_3, JTs_1, MiscUtil_1, skimpify_api_1, skyrimPlatform_3, LogR, AddVal, ArmorUniqueId, GetUniqueId, AddKey, autoN, skimpyNames;
-    var __moduleName = context_12 && context_12.id;
+    var debug_1, forEachArmor_1, DmLib_3, JTs_1, MiscUtil_1, skimpify_api_1, skyrimPlatform_8, LogR, AddVal, ArmorUniqueId, GetUniqueId, AddKey, autoN, skimpyNames;
+    var __moduleName = context_17 && context_17.id;
     /** Saves all registered armors to json files. */
     function SaveJson() {
         const m = new Map();
         JTs_1.JFormMapL.ForAllKeys(skimpify_api_1.DbHandle(), (k) => {
             var _a;
-            const a = skyrimPlatform_3.Armor.from(k);
+            const a = skyrimPlatform_8.Armor.from(k);
             if (!a)
                 return;
             const n = skimpify_api_1.GetSkimpyData(a);
@@ -2673,7 +2937,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         });
         OutputMapToJSon(m);
     }
-    exports_12("SaveJson", SaveJson);
+    exports_17("SaveJson", SaveJson);
     function AutoGenArmors() {
         debug_1.LogN("\n");
         debug_1.LogN("=================================");
@@ -2681,15 +2945,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         debug_1.LogN("=================================");
         autoN = 0;
         GenSkimpyGroupsByName(GetInventoryArmors());
-        skyrimPlatform_3.Debug.messageBox(`Data for ${autoN} pairs of armors in inventory has been automatically generated.
+        skyrimPlatform_8.Debug.messageBox(`Data for ${autoN} pairs of armors in inventory has been automatically generated.
 
   Now you can test in game if things are as you expected, then you can export them to json.`);
     }
-    exports_12("AutoGenArmors", AutoGenArmors);
+    exports_17("AutoGenArmors", AutoGenArmors);
     function GetInventoryArmors() {
         debug_1.LogN("Armors in inventory:\n");
         const r = new Array();
-        DmLib_3.FormLib.ForEachArmorR(skyrimPlatform_3.Game.getPlayer(), (a) => {
+        forEachArmor_1.forEachArmorR(skyrimPlatform_8.Game.getPlayer(), (a) => {
             const d = ArmorToData(a);
             if (d)
                 r.push(d);
@@ -2855,12 +3119,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
             const f = `${skimpify_api_1.cfgDir}${e[0]}.json`;
             MiscUtil_1.WriteToFile(f, Transform(e[1]), false, false);
         }
-        skyrimPlatform_3.Debug.messageBox(`All data was saved to their respective Json files in "data/SKSE/Plugins/Skimpify Framework".`);
+        skyrimPlatform_8.Debug.messageBox(`All data was saved to their respective Json files in "data/SKSE/Plugins/Skimpify Framework".`);
     }
     return {
         setters: [
             function (debug_1_1) {
                 debug_1 = debug_1_1;
+            },
+            function (forEachArmor_1_1) {
+                forEachArmor_1 = forEachArmor_1_1;
             },
             function (DmLib_3_1) {
                 DmLib_3 = DmLib_3_1;
@@ -2874,8 +3141,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
             function (skimpify_api_1_1) {
                 skimpify_api_1 = skimpify_api_1_1;
             },
-            function (skyrimPlatform_3_1) {
-                skyrimPlatform_3 = skyrimPlatform_3_1;
+            function (skyrimPlatform_8_1) {
+                skyrimPlatform_8 = skyrimPlatform_8_1;
             }
         ],
         execute: function () {
@@ -2912,24 +3179,23 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
     };
 });
 /*
+==============================================
+Typescript definitions for v4.2.2
+==============================================
+
+***********************************************************************
+ 
 This file was automatically generated by Papyrus-2-Typescript.exe
 https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
 
 The program has no way to know the intention of the humans that made
 the scripts, so it's always advisable to manually check all generated
 files to make sure everything is declared as it should.
-
-Take note the program assumes this script exists in some subfolder
-to the folder where `skyrimPlatform.ts` is found, otherwise you'll get
-"Cannot find module..." type of errors.
-
-If you want to have this script in some other place, just change the
-relative path of each `import`.
 */
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_13, context_13) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_18, context_18) {
     "use strict";
     var sp, sn, enableAPILog, retain, release, releaseAndRetain, releaseObjectsWithTag, zeroLifetime, addToPool, cleanPool, shallowCopy, deepCopy, isExists, isArray, isMap, isFormMap, isIntegerMap, empty, count, clear, readFromFile, readFromDirectory, objectFromPrototype, writeToFile, solvedValueType, hasPath, solveFlt, solveInt, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveStrSetter, solveObjSetter, solveFormSetter, evalLuaFlt, evalLuaInt, evalLuaStr, evalLuaObj, evalLuaForm;
-    var __moduleName = context_13 && context_13.id;
+    var __moduleName = context_18 && context_18.id;
     return {
         setters: [
             function (sp_7) {
@@ -2937,105 +3203,129 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Common functionality, shared by JArray, JMap, JFormMap, JIntMap */
+            /** Common functionality, shared by JArray, JMap, JFormMap, JIntMap
+            */
             sn = sp.JValue;
             /** Most call entries made to JC will be logged. Heavy traffic, by default is disabled.
-                Not thread safe for multiple users (though harmless). */
-            exports_13("enableAPILog", enableAPILog = (arg0) => sn.enableAPILog(arg0));
+            *     Not thread safe for multiple users (though harmless).
+            */
+            exports_18("enableAPILog", enableAPILog = (arg0) => sn.enableAPILog(arg0));
             /** --- Lifetime management functionality.
-                Read this https://github.com/ryobg/JContainers/wiki/Lifetime-Management before using any of lifetime management functions
-                
-                Retains and returns the object. */
-            exports_13("retain", retain = (object, tag = "") => sn.retain(object, tag));
-            /** Releases the object and returns zero, so you can release and nullify with one line of code: object = JValue.release(object) */
-            exports_13("release", release = (object) => sn.release(object));
-            /** Just a union of retain-release calls. Releases @previousObject, retains and returns @newObject. */
-            exports_13("releaseAndRetain", releaseAndRetain = (previousObject, newObject, tag = "") => sn.releaseAndRetain(previousObject, newObject, tag));
+            *     Read this https://github.com/ryobg/JContainers/wiki/Lifetime-Management before using any of lifetime management functions
+            *
+            *     Retains and returns the object.
+            */
+            exports_18("retain", retain = (object, tag = "") => sn.retain(object, tag));
+            /** Releases the object and returns zero, so you can release and nullify with one line of code: object = JValue.release(object)
+            */
+            exports_18("release", release = (object) => sn.release(object));
+            /** Just a union of retain-release calls. Releases @previousObject, retains and returns @newObject.
+            */
+            exports_18("releaseAndRetain", releaseAndRetain = (previousObject, newObject, tag = "") => sn.releaseAndRetain(previousObject, newObject, tag));
             /** Releases all objects tagged with @tag.
-                Internally invokes JValue.release on each object same amount of times it has been retained. */
-            exports_13("releaseObjectsWithTag", releaseObjectsWithTag = (tag) => sn.releaseObjectsWithTag(tag));
+            *     Internally invokes JValue.release on each object same amount of times it has been retained.
+            */
+            exports_18("releaseObjectsWithTag", releaseObjectsWithTag = (tag) => sn.releaseObjectsWithTag(tag));
             /** Minimizes the time JC temporarily owns the object, returns the object.
-                By using this function you help JC to delete unused objects as soon as possible.
-                Has zero effect if the object is being retained or if another object contains/references it. */
-            exports_13("zeroLifetime", zeroLifetime = (object) => sn.zeroLifetime(object));
+            *     By using this function you help JC to delete unused objects as soon as possible.
+            *     Has zero effect if the object is being retained or if another object contains/references it.
+            */
+            exports_18("zeroLifetime", zeroLifetime = (object) => sn.zeroLifetime(object));
             /** Handly for temporary objects (objects with no owners) - the pool 'locationName' owns any amount of objects, preventing their destuction, extends lifetime.
-                Do not forget to clean the pool later! Typical use:
-                int jTempMap = JValue.addToPool(JMap.object(), "uniquePoolName")
-                int jKeys = JValue.addToPool(JMap.allKeys(someJMap), "uniquePoolName")
-                and anywhere later:
-                JValue.cleanPool("uniquePoolName") */
-            exports_13("addToPool", addToPool = (object, poolName) => sn.addToPool(object, poolName));
-            exports_13("cleanPool", cleanPool = (poolName) => sn.cleanPool(poolName));
+            *     Do not forget to clean the pool later! Typical use:
+            *     int jTempMap = JValue.addToPool(JMap.object(), "uniquePoolName")
+            *     int jKeys = JValue.addToPool(JMap.allKeys(someJMap), "uniquePoolName")
+            *     and anywhere later:
+            *     JValue.cleanPool("uniquePoolName")
+            */
+            exports_18("addToPool", addToPool = (object, poolName) => sn.addToPool(object, poolName));
+            exports_18("cleanPool", cleanPool = (poolName) => sn.cleanPool(poolName));
             /** --- Mics. functionality
-                
-                Returns shallow copy (won't copy child objects) */
-            exports_13("shallowCopy", shallowCopy = (object) => sn.shallowCopy(object));
-            /** Returns deep copy */
-            exports_13("deepCopy", deepCopy = (object) => sn.deepCopy(object));
+            *
+            *     Returns shallow copy (won't copy child objects)
+            */
+            exports_18("shallowCopy", shallowCopy = (object) => sn.shallowCopy(object));
+            /** Returns deep copy
+            */
+            exports_18("deepCopy", deepCopy = (object) => sn.deepCopy(object));
             /** Tests whether given object identifier is not the null object.
-                Note that many other API functions already check that too. */
-            exports_13("isExists", isExists = (object) => sn.isExists(object));
-            /** Returns true if the object is map, array or formmap container */
-            exports_13("isArray", isArray = (object) => sn.isArray(object));
-            exports_13("isMap", isMap = (object) => sn.isMap(object));
-            exports_13("isFormMap", isFormMap = (object) => sn.isFormMap(object));
-            exports_13("isIntegerMap", isIntegerMap = (object) => sn.isIntegerMap(object));
-            /** Returns true, if the container is empty */
-            exports_13("empty", empty = (object) => sn.empty(object));
-            /** Returns amount of items in the container */
-            exports_13("count", count = (object) => sn.count(object));
-            /** Removes all items from the container */
-            exports_13("clear", clear = (object) => sn.clear(object));
+            *     Note that many other API functions already check that too.
+            */
+            exports_18("isExists", isExists = (object) => sn.isExists(object));
+            /** Returns true if the object is map, array or formmap container
+            */
+            exports_18("isArray", isArray = (object) => sn.isArray(object));
+            exports_18("isMap", isMap = (object) => sn.isMap(object));
+            exports_18("isFormMap", isFormMap = (object) => sn.isFormMap(object));
+            exports_18("isIntegerMap", isIntegerMap = (object) => sn.isIntegerMap(object));
+            /** Returns true, if the container is empty
+            */
+            exports_18("empty", empty = (object) => sn.empty(object));
+            /** Returns amount of items in the container
+            */
+            exports_18("count", count = (object) => sn.count(object));
+            /** Removes all items from the container
+            */
+            exports_18("clear", clear = (object) => sn.clear(object));
             /** JSON serialization/deserialization:
-                
-                Creates and returns a new container object containing contents of JSON file */
-            exports_13("readFromFile", readFromFile = (filePath) => sn.readFromFile(filePath));
+            *
+            *     Creates and returns a new container object containing contents of JSON file
+            */
+            exports_18("readFromFile", readFromFile = (filePath) => sn.readFromFile(filePath));
             /** Parses JSON files in a directory (non recursive) and returns JMap containing {filename, container-object} pairs.
-                Note: by default it does not filter files by extension and will try to parse everything */
-            exports_13("readFromDirectory", readFromDirectory = (directoryPath, extension = "") => sn.readFromDirectory(directoryPath, extension));
-            /** Creates a new container object using given JSON string-prototype */
-            exports_13("objectFromPrototype", objectFromPrototype = (prototype) => sn.objectFromPrototype(prototype));
-            /** Writes the object into JSON file */
-            exports_13("writeToFile", writeToFile = (object, filePath) => sn.writeToFile(object, filePath));
-            /** Returns type of resolved value. 0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string */
-            exports_13("solvedValueType", solvedValueType = (object, path) => sn.solvedValueType(object, path));
+            *     Note: by default it does not filter files by extension and will try to parse everything
+            */
+            exports_18("readFromDirectory", readFromDirectory = (directoryPath, extension = "") => sn.readFromDirectory(directoryPath, extension));
+            /** Creates a new container object using given JSON string-prototype
+            */
+            exports_18("objectFromPrototype", objectFromPrototype = (prototype) => sn.objectFromPrototype(prototype));
+            /** Writes the object into JSON file
+            */
+            exports_18("writeToFile", writeToFile = (object, filePath) => sn.writeToFile(object, filePath));
+            /** Returns type of resolved value. 0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
+            */
+            exports_18("solvedValueType", solvedValueType = (object, path) => sn.solvedValueType(object, path));
             /** Path resolving:
-                
-                Returns true, if it's possible to resolve given path, i.e. if it's possible to retrieve the value at the path.
-                For ex. JValue.hasPath(container, ".player.health") will test whether @container structure close to this one - {'player': {'health': health_value}} */
-            exports_13("hasPath", hasPath = (object, path) => sn.hasPath(object, path));
-            /** Attempts to retrieve value at given path. If fails, returns @default value */
-            exports_13("solveFlt", solveFlt = (object, path, defaultVal = 0.0) => sn.solveFlt(object, path, defaultVal));
-            exports_13("solveInt", solveInt = (object, path, defaultVal = 0) => sn.solveInt(object, path, defaultVal));
-            exports_13("solveStr", solveStr = (object, path, defaultVal = "") => sn.solveStr(object, path, defaultVal));
-            exports_13("solveObj", solveObj = (object, path, defaultVal = 0) => sn.solveObj(object, path, defaultVal));
-            exports_13("solveForm", solveForm = (object, path, defaultVal = null) => sn.solveForm(object, path, defaultVal));
+            *
+            *     Returns true, if it's possible to resolve given path, i.e. if it's possible to retrieve the value at the path.
+            *     For ex. JValue.hasPath(container, ".player.health") will test whether @container structure close to this one - {'player': {'health': health_value}}
+            */
+            exports_18("hasPath", hasPath = (object, path) => sn.hasPath(object, path));
+            /** Attempts to retrieve value at given path. If fails, returns @default value
+            */
+            exports_18("solveFlt", solveFlt = (object, path, defaultVal = 0.0) => sn.solveFlt(object, path, defaultVal));
+            exports_18("solveInt", solveInt = (object, path, defaultVal = 0) => sn.solveInt(object, path, defaultVal));
+            exports_18("solveStr", solveStr = (object, path, defaultVal = "") => sn.solveStr(object, path, defaultVal));
+            exports_18("solveObj", solveObj = (object, path, defaultVal = 0) => sn.solveObj(object, path, defaultVal));
+            exports_18("solveForm", solveForm = (object, path, defaultVal = null) => sn.solveForm(object, path, defaultVal));
             /** Attempts to assign the value. If @createMissingKeys is False it may fail to assign - if no such path exist.
-                With 'createMissingKeys=true' it creates any missing path element: solveIntSetter(map, ".keyA.keyB", 10, true) on empty JMap creates {keyA: {keyB: 10}} structure */
-            exports_13("solveFltSetter", solveFltSetter = (object, path, value, createMissingKeys = false) => sn.solveFltSetter(object, path, value, createMissingKeys));
-            exports_13("solveIntSetter", solveIntSetter = (object, path, value, createMissingKeys = false) => sn.solveIntSetter(object, path, value, createMissingKeys));
-            exports_13("solveStrSetter", solveStrSetter = (object, path, value, createMissingKeys = false) => sn.solveStrSetter(object, path, value, createMissingKeys));
-            exports_13("solveObjSetter", solveObjSetter = (object, path, value, createMissingKeys = false) => sn.solveObjSetter(object, path, value, createMissingKeys));
-            exports_13("solveFormSetter", solveFormSetter = (object, path, value, createMissingKeys = false) => sn.solveFormSetter(object, path, value, createMissingKeys));
-            /** Evaluates piece of lua code. Lua support is experimental */
-            exports_13("evalLuaFlt", evalLuaFlt = (object, luaCode, defaultVal = 0.0) => sn.evalLuaFlt(object, luaCode, defaultVal));
-            exports_13("evalLuaInt", evalLuaInt = (object, luaCode, defaultVal = 0) => sn.evalLuaInt(object, luaCode, defaultVal));
-            exports_13("evalLuaStr", evalLuaStr = (object, luaCode, defaultVal = "") => sn.evalLuaStr(object, luaCode, defaultVal));
-            exports_13("evalLuaObj", evalLuaObj = (object, luaCode, defaultVal = 0) => sn.evalLuaObj(object, luaCode, defaultVal));
-            exports_13("evalLuaForm", evalLuaForm = (object, luaCode, defaultVal = null) => sn.evalLuaForm(object, luaCode, defaultVal));
+            *     With 'createMissingKeys=true' it creates any missing path element: solveIntSetter(map, ".keyA.keyB", 10, true) on empty JMap creates {keyA: {keyB: 10}} structure
+            */
+            exports_18("solveFltSetter", solveFltSetter = (object, path, value, createMissingKeys = false) => sn.solveFltSetter(object, path, value, createMissingKeys));
+            exports_18("solveIntSetter", solveIntSetter = (object, path, value, createMissingKeys = false) => sn.solveIntSetter(object, path, value, createMissingKeys));
+            exports_18("solveStrSetter", solveStrSetter = (object, path, value, createMissingKeys = false) => sn.solveStrSetter(object, path, value, createMissingKeys));
+            exports_18("solveObjSetter", solveObjSetter = (object, path, value, createMissingKeys = false) => sn.solveObjSetter(object, path, value, createMissingKeys));
+            exports_18("solveFormSetter", solveFormSetter = (object, path, value, createMissingKeys = false) => sn.solveFormSetter(object, path, value, createMissingKeys));
+            /** Evaluates piece of lua code. Lua support is experimental
+            */
+            exports_18("evalLuaFlt", evalLuaFlt = (object, luaCode, defaultVal = 0.0) => sn.evalLuaFlt(object, luaCode, defaultVal));
+            exports_18("evalLuaInt", evalLuaInt = (object, luaCode, defaultVal = 0) => sn.evalLuaInt(object, luaCode, defaultVal));
+            exports_18("evalLuaStr", evalLuaStr = (object, luaCode, defaultVal = "") => sn.evalLuaStr(object, luaCode, defaultVal));
+            exports_18("evalLuaObj", evalLuaObj = (object, luaCode, defaultVal = 0) => sn.evalLuaObj(object, luaCode, defaultVal));
+            exports_18("evalLuaForm", evalLuaForm = (object, luaCode, defaultVal = null) => sn.evalLuaForm(object, luaCode, defaultVal));
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_14, context_14) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/player", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_19, context_19) {
     "use strict";
-    var DmLib_4, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_4, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, hk, FO, HK, Player, Armors, Load, Mark;
-    var __moduleName = context_14 && context_14.id;
+    var DmLib_4, player_1, forEachArmor_2, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_9, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, unintrusiveMessages, hk, FO, HK, ShowMessage, PlayerF, Armors, Load, Mark;
+    var __moduleName = context_19 && context_19.id;
     function main() {
-        skyrimPlatform_4.on("loadGame", () => {
+        skyrimPlatform_9.on("loadGame", () => {
             InitPlugin();
             allowInit = SIni(true);
         });
-        skyrimPlatform_4.once("update", () => {
+        skyrimPlatform_9.once("update", () => {
             if (allowInit || !WasInitialized())
                 InitPlugin();
         });
@@ -3059,7 +3349,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
         const OnUnequipAll = HK("unequipAll1");
         const OnUnequipAll2 = HK("unequipAll2");
         const OnTest = HK("test");
-        skyrimPlatform_4.on("update", () => {
+        skyrimPlatform_9.on("update", () => {
             OnLoadJson(Load.Armors);
             OnSaveJson(genJson_1.SaveJson);
             OnAutoGen(genJson_1.AutoGenArmors);
@@ -3078,28 +3368,34 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             OnTest(RunTest);
         });
         const i = develop ? " in DEVELOPER MODE" : "";
-        skyrimPlatform_4.printConsole(`Skimpify Framework successfully initialized${i}.`);
+        skyrimPlatform_9.printConsole(`Skimpify Framework successfully initialized${i}.`);
     }
-    exports_14("main", main);
+    exports_19("main", main);
     function RunTest() {
         // const p = FormLib.Player()
         // SwapToSlip(p, Armor.from(p.getWornForm(SlotMask.Body)))
         // FormLib.WaitActor(p, 4, (a) => {
         //   RestoreMostModest(a, Armor.from(a.getWornForm(SlotMask.Body)))
         // })
-        Player.Reveal();
+        PlayerF.Reveal();
     }
     function Dump() {
         // ClearDB()
         const f = `${skimpify_api_2.cfgDir}dump/dump.json`;
         JValue.writeToFile(skimpify_api_2.DbHandle(), f);
         JDB.writeToFile(`${skimpify_api_2.cfgDir}dump/dump all.json`);
-        skyrimPlatform_4.Debug.messageBox(`File was dumped to ${f}`);
+        ShowMessage(`File was dumped to ${f}`);
     }
     return {
         setters: [
             function (DmLib_4_1) {
                 DmLib_4 = DmLib_4_1;
+            },
+            function (player_1_1) {
+                player_1 = player_1_1;
+            },
+            function (forEachArmor_2_1) {
+                forEachArmor_2 = forEachArmor_2_1;
             },
             function (genJson_1_1) {
                 genJson_1 = genJson_1_1;
@@ -3119,8 +3415,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             function (skimpify_api_2_1) {
                 skimpify_api_2 = skimpify_api_2_1;
             },
-            function (skyrimPlatform_4_1) {
-                skyrimPlatform_4 = skyrimPlatform_4_1;
+            function (skyrimPlatform_9_1) {
+                skyrimPlatform_9 = skyrimPlatform_9_1;
             },
             function (debug_2_1) {
                 debug_2 = debug_2_1;
@@ -3139,16 +3435,18 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             // Avoid values to be lost on game reloading
             SIni = DmLib_4.Misc.PreserveVar(MemOnly, kIni);
             SMModest = DmLib_4.Misc.PreserveVar(MemOnly, kMModest);
-            allowInit = skyrimPlatform_4.storage[kIni] || false;
-            mModest = skyrimPlatform_4.storage[kMModest];
+            allowInit = skyrimPlatform_9.storage[kIni] || false;
+            mModest = skyrimPlatform_9.storage[kMModest];
             n = "skimpify-framework";
-            develop = skyrimPlatform_4.settings[n]["developerMode"];
+            develop = skyrimPlatform_9.settings[n]["developerMode"];
+            unintrusiveMessages = skyrimPlatform_9.settings[n]["unintrusiveMessages"];
             hk = "devHotkeys";
             FO = (k) => DmLib_4.Hotkeys.FromObject(n, hk, k);
             /** Gets a hotkey from settings */
             HK = (k) => DmLib_4.Hotkeys.ListenTo(FO(k), develop);
+            ShowMessage = unintrusiveMessages ? skyrimPlatform_9.Debug.notification : skyrimPlatform_9.Debug.messageBox;
             /**Functions made for playing */
-            (function (Player) {
+            (function (PlayerF) {
                 const SkimpyAt = (a) => {
                     if (skimpify_api_2.HasSlip(a))
                         return "slip" /* slip */;
@@ -3157,8 +3455,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     return undefined;
                 };
                 const TrySkimpify = (slot) => {
-                    const p = DmLib_4.FormLib.Player();
-                    const a = skyrimPlatform_4.Armor.from(p.getWornForm(slot));
+                    const p = player_1.Player();
+                    const a = skyrimPlatform_9.Armor.from(p.getWornForm(slot));
                     const t = SkimpyAt(a);
                     if (!t)
                         return false;
@@ -3176,15 +3474,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                         return;
                     if (TrySkimpify(4194304 /* PelvisSecondary */))
                         return;
-                    DmLib_4.FormLib.ForEachEquippedSlotMask(DmLib_4.FormLib.Player(), (slot) => TrySkimpify(slot));
+                    DmLib_4.FormLib.ForEachSlotMask(player_1.Player(), (slot) => TrySkimpify(slot));
                     // const all = FormLib.GetEquippedArmors(p)
                 }
-                Player.Reveal = Reveal;
-            })(Player || (Player = {}));
+                PlayerF.Reveal = Reveal;
+            })(PlayerF || (PlayerF = {}));
             (function (Armors) {
                 /** Unequips all armor on the player. */
                 function UnequipAll() {
-                    const pl = skyrimPlatform_4.Game.getPlayer();
+                    const pl = skyrimPlatform_9.Game.getPlayer();
                     // Don't use unequipAll() because it doesn't discriminate on what it will unequip
                     const aa = DmLib_4.FormLib.GetEquippedArmors(pl);
                     aa.forEach((a) => {
@@ -3203,21 +3501,21 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                 Armors.AllModest = () => ChangeAll(skimpify_api_2.GetAllModest);
                 /** Swaps all armors the player is using for some variant. */
                 function ChangeAll(f) {
-                    const pl = skyrimPlatform_4.Game.getPlayer();
+                    const pl = skyrimPlatform_9.Game.getPlayer();
                     const aa = f(pl);
                     aa.current.forEach((a, i) => {
                         Armors.SwapArmor(pl, a.armor, aa.next[i].armor);
                         if (a.kind)
-                            skyrimPlatform_4.Debug.notification(a.kind);
+                            skyrimPlatform_9.Debug.notification(a.kind);
                     });
                 }
                 /** Deletes all armors in player inventory. */
                 function Discard() {
-                    const p = skyrimPlatform_4.Game.getPlayer();
-                    DmLib_4.FormLib.ForEachArmorR(p, (a) => {
+                    const p = skyrimPlatform_9.Game.getPlayer();
+                    forEachArmor_2.forEachArmorR(p, (a) => {
                         p.removeItem(a, p.getItemCount(a), true, null);
                     });
-                    skyrimPlatform_4.Debug.messageBox(`All armors in the player inventory were deleted.`);
+                    ShowMessage(`All armors in the player inventory were deleted.`);
                 }
                 Armors.Discard = Discard;
             })(Armors || (Armors = {}));
@@ -3242,8 +3540,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     const m = `File loading completed.
     ${n} armors were read from ${f} files.`;
                     if (develop)
-                        skyrimPlatform_4.Debug.messageBox(m);
-                    skyrimPlatform_4.printConsole(m);
+                        ShowMessage(m);
+                    skyrimPlatform_9.printConsole(m);
                 }
                 Load.Armors = Armors;
                 function SaveVariant(parent, data, rel) {
@@ -3258,8 +3556,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     if (!s)
                         return null;
                     const [esp, id] = s.split("|");
-                    const f = skyrimPlatform_4.Game.getFormFromFile(parseInt(id, 16), esp);
-                    return skyrimPlatform_4.Armor.from(f);
+                    const f = skyrimPlatform_9.Game.getFormFromFile(parseInt(id, 16), esp);
+                    return skyrimPlatform_9.Armor.from(f);
                 }
             })(Load || (Load = {}));
             /** Functions for marking armors in manual mode. All of these only work on
@@ -3271,10 +3569,10 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                  * @param Continue What to do if only one piece of armor is equipped.
                  */
                 function OnlyOneArmor(Continue) {
-                    const aa = DmLib_4.FormLib.GetEquippedArmors(skyrimPlatform_4.Game.getPlayer());
+                    const aa = DmLib_4.FormLib.GetEquippedArmors(skyrimPlatform_9.Game.getPlayer());
                     aa.forEach((v) => debug_2.LogV(`${DmLib_4.DebugLib.Log.IntToHex(v.getFormID())}. Slot: ${v.getSlotMask()}. Name: ${v.getName()}`));
                     if (aa.length !== 1) {
-                        skyrimPlatform_4.Debug.messageBox(`This functionality only works with just one piece of armor equipped.
+                        ShowMessage(`This functionality only works with just one piece of armor equipped.
         Equip only the piece you want to work on.`);
                         return;
                     }
@@ -3290,16 +3588,16 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                             const m = `Can't create a Change Relationship because a modest version for this armor hasn't been set.
 
         Please mark one by using the "hkMarkModest" hotkey when having such armor equipped.`;
-                            skyrimPlatform_4.Debug.messageBox(m);
+                            ShowMessage(m);
                         };
                         if (mModest === invalid)
                             return ShowInvalid();
-                        const p = skyrimPlatform_4.Armor.from(skyrimPlatform_4.Game.getFormEx(mModest));
+                        const p = skyrimPlatform_9.Armor.from(skyrimPlatform_9.Game.getFormEx(mModest));
                         if (!p)
                             return ShowInvalid();
                         skimpify_api_2.AddChangeRel(p, a, c);
                         const m = `"${a.getName()}" was added as a skimpier version of ${p.getName()} with Change Relationship "${c}"`;
-                        skyrimPlatform_4.Debug.messageBox(m);
+                        ShowMessage(m);
                         mModest = SMModest(invalid);
                     });
                 }
@@ -3314,7 +3612,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     OnlyOneArmor((a) => {
                         const m = `"${a.getName()}" was marked as a modest version of some armor.
       Mark another piece to create a Change Relationship.`;
-                        skyrimPlatform_4.Debug.messageBox(m);
+                        ShowMessage(m);
                         mModest = debug_2.LogVT("Manual mode. Modest armor id", SMModest(a.getFormID()), DmLib_4.DebugLib.Log.IntToHex);
                     });
                 }
@@ -3324,7 +3622,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     OnlyOneArmor((a) => {
                         skimpify_api_2.ClearChangeRel(a);
                         const m = `"${a.getName()}" was cleared from all its Change Relationships.`;
-                        skyrimPlatform_4.Debug.messageBox(m);
+                        ShowMessage(m);
                     });
                 }
                 Mark.Clear = Clear;
@@ -3348,7 +3646,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
       
       ${fm}`;
                         debug_2.LogV(m);
-                        skyrimPlatform_4.Debug.messageBox(m);
+                        ShowMessage(m);
                     });
                 }
                 Mark.DebugOne = DebugOne;
@@ -3356,10 +3654,10 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/index", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry"], function (exports_15, context_15) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/index", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry"], function (exports_20, context_20) {
     "use strict";
     var entry;
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_20 && context_20.id;
     return {
         setters: [
             function (entry_1) {

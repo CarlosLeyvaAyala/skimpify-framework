@@ -1,4 +1,5 @@
 import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
+import { forEachArmorR } from "DmLib/Form/forEachArmor"
 import { DebugLib, FormLib } from "DmLib"
 import { JFormMapL } from "JContainers/JTs"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
@@ -117,7 +118,7 @@ function GetInventoryArmors(): ArmorData[] {
   LogN("Armors in inventory:\n")
   const r: ArmorData[] = new Array()
 
-  FormLib.ForEachArmorR(Game.getPlayer() as Actor, (a) => {
+  forEachArmorR(Game.getPlayer() as Actor, (a) => {
     const d = ArmorToData(a)
     if (d) r.push(d)
   })

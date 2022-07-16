@@ -1,4 +1,6 @@
 import { DebugLib, FormLib, Hotkeys, Misc } from "DmLib"
+import { Player } from "DmLib/Actor/player"
+import { forEachArmorR } from "DmLib/Form/forEachArmor"
 import { AutoGenArmors, SaveJson } from "genJson"
 import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
@@ -20,7 +22,6 @@ import {
   HasSlip,
   JcChangeK,
   RelType,
-  RestoreMostModest,
   SkimpyData,
   SwapToChange,
   SwapToSlip,
@@ -61,11 +62,14 @@ let mModest = storage[kMModest] as number | -1
 
 const n = "skimpify-framework"
 const develop = settings[n]["developerMode"] as boolean
+const unintrusiveMessages = settings[n]["unintrusiveMessages"] as boolean
 
 const hk = "devHotkeys"
 const FO = (k: string) => Hotkeys.FromObject(n, hk, k)
 /** Gets a hotkey from settings */
 const HK = (k: string) => Hotkeys.ListenTo(FO(k), develop)
+
+const ShowMessage = unintrusiveMessages ? Debug.notification : Debug.messageBox
 
 export function main() {
   on("loadGame", () => {
@@ -135,7 +139,7 @@ function RunTest() {
   // FormLib.WaitActor(p, 4, (a) => {
   //   RestoreMostModest(a, Armor.from(a.getWornForm(SlotMask.Body)))
   // })
-  Player.Reveal()
+  PlayerF.Reveal()
 }
 
 function Dump() {
@@ -145,11 +149,11 @@ function Dump() {
   JValue.writeToFile(DbHandle(), f)
   JDB.writeToFile(`${cfgDir}dump/dump all.json`)
 
-  Debug.messageBox(`File was dumped to ${f}`)
+  ShowMessage(`File was dumped to ${f}`)
 }
 
 /**Functions made for playing */
-namespace Player {
+namespace PlayerF {
   const SkimpyAt = (a: Armor | null) => {
     if (HasSlip(a)) return ChangeRel.slip
     if (HasChange(a)) return ChangeRel.change
@@ -157,7 +161,7 @@ namespace Player {
     return undefined
   }
   const TrySkimpify = (slot: SlotMask) => {
-    const p = FormLib.Player()
+    const p = Player()
     const a = Armor.from(p.getWornForm(slot))
     const t = SkimpyAt(a)
     if (!t) return false
@@ -170,7 +174,7 @@ namespace Player {
     if (TrySkimpify(SlotMask.Body)) return
     if (TrySkimpify(SlotMask.PelvisPrimary)) return
     if (TrySkimpify(SlotMask.PelvisSecondary)) return
-    FormLib.ForEachSlotMask(FormLib.Player(), (slot) => TrySkimpify(slot))
+    FormLib.ForEachSlotMask(Player(), (slot) => TrySkimpify(slot))
     // const all = FormLib.GetEquippedArmors(p)
   }
 }
@@ -211,10 +215,10 @@ namespace Armors {
   /** Deletes all armors in player inventory. */
   export function Discard() {
     const p = Game.getPlayer() as Actor
-    FormLib.ForEachArmorR(p, (a) => {
+    forEachArmorR(p, (a) => {
       p.removeItem(a, p.getItemCount(a), true, null)
     })
-    Debug.messageBox(`All armors in the player inventory were deleted.`)
+    ShowMessage(`All armors in the player inventory were deleted.`)
   }
 }
 
@@ -241,7 +245,7 @@ namespace Load {
     const m = `File loading completed.
     ${n} armors were read from ${f} files.`
 
-    if (develop) Debug.messageBox(m)
+    if (develop) ShowMessage(m)
     printConsole(m)
   }
 
@@ -282,7 +286,7 @@ namespace Mark {
     )
 
     if (aa.length !== 1) {
-      Debug.messageBox(
+      ShowMessage(
         `This functionality only works with just one piece of armor equipped.
         Equip only the piece you want to work on.`
       )
@@ -301,7 +305,7 @@ namespace Mark {
         const m = `Can't create a Change Relationship because a modest version for this armor hasn't been set.
 
         Please mark one by using the "hkMarkModest" hotkey when having such armor equipped.`
-        Debug.messageBox(m)
+        ShowMessage(m)
       }
 
       if (mModest === invalid) return ShowInvalid()
@@ -312,7 +316,7 @@ namespace Mark {
       AddChangeRel(p, a, c)
 
       const m = `"${a.getName()}" was added as a skimpier version of ${p.getName()} with Change Relationship "${c}"`
-      Debug.messageBox(m)
+      ShowMessage(m)
       mModest = SMModest(invalid)
     })
   }
@@ -329,7 +333,7 @@ namespace Mark {
     OnlyOneArmor((a) => {
       const m = `"${a.getName()}" was marked as a modest version of some armor.
       Mark another piece to create a Change Relationship.`
-      Debug.messageBox(m)
+      ShowMessage(m)
 
       mModest = LogVT(
         "Manual mode. Modest armor id",
@@ -344,7 +348,7 @@ namespace Mark {
     OnlyOneArmor((a) => {
       ClearChangeRel(a)
       const m = `"${a.getName()}" was cleared from all its Change Relationships.`
-      Debug.messageBox(m)
+      ShowMessage(m)
     })
   }
 
@@ -370,7 +374,7 @@ namespace Mark {
       
       ${fm}`
       LogV(m)
-      Debug.messageBox(m)
+      ShowMessage(m)
     })
   }
 }

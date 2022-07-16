@@ -1,8 +1,740 @@
 {
+  "VtawWardrobe5.esp|81e": {
+    "name": "blouse",
+    "next": "VtawWardrobe5.esp|829",
+    "nextN": "Blouse Open",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|81f": {
+    "name": "Blouse (Black)",
+    "next": "VtawWardrobe5.esp|82a",
+    "nextN": "Blouse Open (Black)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|820": {
+    "name": "Blouse (Flannel)",
+    "next": "VtawWardrobe5.esp|82b",
+    "nextN": "Blouse Open (Flannel)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|821": {
+    "name": "Blouse (Floral)",
+    "next": "VtawWardrobe5.esp|82c",
+    "nextN": "Blouse Open (Floral)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|822": {
+    "name": "Blouse (Knit)",
+    "next": "VtawWardrobe5.esp|82d",
+    "nextN": "Blouse Open (Knit)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|823": {
+    "name": "Blouse (Lace)",
+    "next": "VtawWardrobe5.esp|82e",
+    "nextN": "Blouse Open (Lace)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|824": {
+    "name": "Blouse (Latex)",
+    "next": "VtawWardrobe5.esp|82f",
+    "nextN": "Blouse Open (Latex)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|825": {
+    "name": "Blouse (Leather Black)",
+    "next": "VtawWardrobe5.esp|830",
+    "nextN": "Blouse Open (Leather Black)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|826": {
+    "name": "Blouse (Leather Brown)",
+    "next": "VtawWardrobe5.esp|831",
+    "nextN": "Blouse Open (Leather Brown)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|827": {
+    "name": "Blouse (Stripes)",
+    "next": "VtawWardrobe5.esp|832",
+    "nextN": "Blouse Open (Stripes)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|828": {
+    "name": "Blouse (Torn)",
+    "next": "VtawWardrobe5.esp|833",
+    "nextN": "Blouse Open (Torn)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|839": {
+    "name": "Blouse Translucent",
+    "next": "VtawWardrobe5.esp|834",
+    "nextN": "Blouse Open Translucent",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83a": {
+    "name": "Blouse Translucent (Damage)",
+    "next": "VtawWardrobe5.esp|835",
+    "nextN": "Blouse Open Translucent (Damage)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83b": {
+    "name": "Blouse Translucent (Lace 2)",
+    "next": "VtawWardrobe5.esp|836",
+    "nextN": "Blouse Open Translucent (Lace 2)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83c": {
+    "name": "Blouse Translucent (Lace)",
+    "next": "VtawWardrobe5.esp|837",
+    "nextN": "Blouse Open Translucent (Lace)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83d": {
+    "name": "Blouse Translucent (Wet)",
+    "next": "VtawWardrobe5.esp|838",
+    "nextN": "Blouse Open Translucent (Wet)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83e": {
+    "name": "Bodysuit (Black)",
+    "next": "VtawWardrobe5.esp|875",
+    "nextN": "Bodysuit (Black) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|83f": {
+    "name": "Bodysuit (Brown)",
+    "next": "VtawWardrobe5.esp|876",
+    "nextN": "Bodysuit (Brown) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|840": {
+    "name": "Bodysuit (Cyber)",
+    "next": "VtawWardrobe5.esp|877",
+    "nextN": "Bodysuit (Cyber) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|841": {
+    "name": "Bodysuit (Fabric)",
+    "next": "VtawWardrobe5.esp|878",
+    "nextN": "Bodysuit (Fabric) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|842": {
+    "name": "Bodysuit (Institute)",
+    "next": "VtawWardrobe5.esp|879",
+    "nextN": "Bodysuit (Institute) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|843": {
+    "name": "Bodysuit (Latex)",
+    "next": "VtawWardrobe5.esp|87a",
+    "nextN": "Bodysuit (Latex) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|844": {
+    "name": "Bodysuit (Metal)",
+    "next": "VtawWardrobe5.esp|87b",
+    "nextN": "Bodysuit (Metal) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|845": {
+    "name": "Bodysuit (Nano)",
+    "next": "VtawWardrobe5.esp|87c",
+    "nextN": "Bodysuit (Nano) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|846": {
+    "name": "Bodysuit (Stripe)",
+    "next": "VtawWardrobe5.esp|87d",
+    "nextN": "Bodysuit (Stripe) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|847": {
+    "name": "Bodysuit (Vault)",
+    "next": "VtawWardrobe5.esp|87e",
+    "nextN": "Bodysuit (Vault) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|848": {
+    "name": "Bodysuit (White)",
+    "next": "VtawWardrobe5.esp|87f",
+    "nextN": "Bodysuit (White) V1",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86a": {
+    "name": "Bodysuit No Arm (Black) ",
+    "next": "VtawWardrobe5.esp|880",
+    "nextN": "Bodysuit No Arm (Black) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86b": {
+    "name": "Bodysuit No Arm (Brown) ",
+    "next": "VtawWardrobe5.esp|881",
+    "nextN": "Bodysuit No Arm (Brown) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86c": {
+    "name": "Bodysuit No Arm (Cyber) ",
+    "next": "VtawWardrobe5.esp|882",
+    "nextN": "Bodysuit No Arm (Cyber) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86d": {
+    "name": "Bodysuit No Arm (Fabric) ",
+    "next": "VtawWardrobe5.esp|883",
+    "nextN": "Bodysuit No Arm (Fabric) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86e": {
+    "name": "Bodysuit No Arm (Institute) ",
+    "next": "VtawWardrobe5.esp|884",
+    "nextN": "Bodysuit No Arm (Institute) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|86f": {
+    "name": "Bodysuit No Arm (Latex) ",
+    "next": "VtawWardrobe5.esp|885",
+    "nextN": "Bodysuit No Arm (Latex) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|870": {
+    "name": "Bodysuit No Arm (Metal) ",
+    "next": "VtawWardrobe5.esp|886",
+    "nextN": "Bodysuit No Arm (Metal) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|871": {
+    "name": "Bodysuit No Arm (Nano) ",
+    "next": "VtawWardrobe5.esp|887",
+    "nextN": "Bodysuit No Arm (Nano) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|872": {
+    "name": "Bodysuit No Arm (Stripe) ",
+    "next": "VtawWardrobe5.esp|888",
+    "nextN": "Bodysuit No Arm (Stripe) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|873": {
+    "name": "Bodysuit No Arm (Vault) ",
+    "next": "VtawWardrobe5.esp|889",
+    "nextN": "Bodysuit No Arm (Vault) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|874": {
+    "name": "Bodysuit No Arm (White) ",
+    "next": "VtawWardrobe5.esp|88a",
+    "nextN": "Bodysuit No Arm (White) V1 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|875": {
+    "name": "Bodysuit (Black) V1",
+    "next": "VtawWardrobe5.esp|88b",
+    "nextN": "Bodysuit (Black) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|876": {
+    "name": "Bodysuit (Brown) V1",
+    "next": "VtawWardrobe5.esp|88c",
+    "nextN": "Bodysuit (Brown) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|877": {
+    "name": "Bodysuit (Cyber) V1",
+    "next": "VtawWardrobe5.esp|88d",
+    "nextN": "Bodysuit (Cyber) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|878": {
+    "name": "Bodysuit (Fabric) V1",
+    "next": "VtawWardrobe5.esp|88e",
+    "nextN": "Bodysuit (Fabric) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|879": {
+    "name": "Bodysuit (Institute) V1",
+    "next": "VtawWardrobe5.esp|88f",
+    "nextN": "Bodysuit (Institute) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87a": {
+    "name": "Bodysuit (Latex) V1",
+    "next": "VtawWardrobe5.esp|890",
+    "nextN": "Bodysuit (Latex) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87b": {
+    "name": "Bodysuit (Metal) V1",
+    "next": "VtawWardrobe5.esp|891",
+    "nextN": "Bodysuit (Metal) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87c": {
+    "name": "Bodysuit (Nano) V1",
+    "next": "VtawWardrobe5.esp|892",
+    "nextN": "Bodysuit (Nano) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87d": {
+    "name": "Bodysuit (Stripe) V1",
+    "next": "VtawWardrobe5.esp|893",
+    "nextN": "Bodysuit (Stripe) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87e": {
+    "name": "Bodysuit (Vault) V1",
+    "next": "VtawWardrobe5.esp|894",
+    "nextN": "Bodysuit (Vault) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|87f": {
+    "name": "Bodysuit (White) V1",
+    "next": "VtawWardrobe5.esp|895",
+    "nextN": "Bodysuit (White) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|880": {
+    "name": "Bodysuit No Arm (Black) V1 ",
+    "next": "VtawWardrobe5.esp|896",
+    "nextN": "Bodysuit No Arm (Black) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|881": {
+    "name": "Bodysuit No Arm (Brown) V1 ",
+    "next": "VtawWardrobe5.esp|897",
+    "nextN": "Bodysuit No Arm (Brown) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|882": {
+    "name": "Bodysuit No Arm (Cyber) V1 ",
+    "next": "VtawWardrobe5.esp|898",
+    "nextN": "Bodysuit No Arm (Cyber) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|883": {
+    "name": "Bodysuit No Arm (Fabric) V1 ",
+    "next": "VtawWardrobe5.esp|899",
+    "nextN": "Bodysuit No Arm (Fabric) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|884": {
+    "name": "Bodysuit No Arm (Institute) V1 ",
+    "next": "VtawWardrobe5.esp|89a",
+    "nextN": "Bodysuit No Arm (Institute) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|885": {
+    "name": "Bodysuit No Arm (Latex) V1 ",
+    "next": "VtawWardrobe5.esp|89b",
+    "nextN": "Bodysuit No Arm (Latex) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|886": {
+    "name": "Bodysuit No Arm (Metal) V1 ",
+    "next": "VtawWardrobe5.esp|89c",
+    "nextN": "Bodysuit No Arm (Metal) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|887": {
+    "name": "Bodysuit No Arm (Nano) V1 ",
+    "next": "VtawWardrobe5.esp|89d",
+    "nextN": "Bodysuit No Arm (Nano) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|888": {
+    "name": "Bodysuit No Arm (Stripe) V1 ",
+    "next": "VtawWardrobe5.esp|89e",
+    "nextN": "Bodysuit No Arm (Stripe) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|889": {
+    "name": "Bodysuit No Arm (Vault) V1 ",
+    "next": "VtawWardrobe5.esp|89f",
+    "nextN": "Bodysuit No Arm (Vault) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|88a": {
+    "name": "Bodysuit No Arm (White) V1 ",
+    "next": "VtawWardrobe5.esp|8a0",
+    "nextN": "Bodysuit No Arm (White) V3 ",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a1": {
+    "name": "Bodysuit (Black) V4",
+    "next": "VtawWardrobe5.esp|8ac",
+    "nextN": "Bodysuit (Black) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a2": {
+    "name": "Bodysuit (Brown) V4",
+    "next": "VtawWardrobe5.esp|8ad",
+    "nextN": "Bodysuit (Brown) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a3": {
+    "name": "Bodysuit (Cyber) V4",
+    "next": "VtawWardrobe5.esp|8ae",
+    "nextN": "Bodysuit (Cyber) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a4": {
+    "name": "Bodysuit (Fabric) V4",
+    "next": "VtawWardrobe5.esp|8af",
+    "nextN": "Bodysuit (Fabric) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a5": {
+    "name": "Bodysuit (Institute) V4",
+    "next": "VtawWardrobe5.esp|8b0",
+    "nextN": "Bodysuit (Institute) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a6": {
+    "name": "Bodysuit (Latex) V4",
+    "next": "VtawWardrobe5.esp|8b1",
+    "nextN": "Bodysuit (Latex) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a7": {
+    "name": "Bodysuit (Metal) V4",
+    "next": "VtawWardrobe5.esp|8b2",
+    "nextN": "Bodysuit (Metal) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a8": {
+    "name": "Bodysuit (Nano) V4",
+    "next": "VtawWardrobe5.esp|8b3",
+    "nextN": "Bodysuit (Nano) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8a9": {
+    "name": "Bodysuit (Stripe) V4",
+    "next": "VtawWardrobe5.esp|8b4",
+    "nextN": "Bodysuit (Stripe) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8aa": {
+    "name": "Bodysuit (Vault) V4",
+    "next": "VtawWardrobe5.esp|8b5",
+    "nextN": "Bodysuit (Vault) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8ab": {
+    "name": "Bodysuit (White) V4",
+    "next": "VtawWardrobe5.esp|8b6",
+    "nextN": "Bodysuit (White) V5",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|8e0": {
+    "name": "DoS - Main",
+    "next": "VtawWardrobe5.esp|8e5",
+    "nextN": "DoS - Main V2",
+    "nextT": "change"
+  },
   "VtawWardrobe5.esp|8e1": {
     "name": "DoS - Main (Black)",
     "next": "VtawWardrobe5.esp|8e6",
     "nextN": "DoS - Main V2 (Black)",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|8e2": {
+    "name": "DoS - Main (Brown)",
+    "next": "VtawWardrobe5.esp|8e7",
+    "nextN": "DoS - Main V2 (Brown)",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|8e3": {
+    "name": "DoS - Main (Metal)",
+    "next": "VtawWardrobe5.esp|8e8",
+    "nextN": "DoS - Main V2 (Metal)",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|8e4": {
+    "name": "DoS - Main (Red)",
+    "next": "VtawWardrobe5.esp|8e9",
+    "nextN": "DoS - Main V2 (Red)",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|911": {
+    "name": "hotpants",
+    "next": "VtawWardrobe5.esp|917",
+    "nextN": "Hotpants Open",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|912": {
+    "name": "Hotpants (Acid)",
+    "next": "VtawWardrobe5.esp|918",
+    "nextN": "Hotpants Open (Acid)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|913": {
+    "name": "Hotpants (Camo)",
+    "next": "VtawWardrobe5.esp|919",
+    "nextN": "Hotpants Open (Camo)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|914": {
+    "name": "Hotpants (Dark Blue)",
+    "next": "VtawWardrobe5.esp|91a",
+    "nextN": "Hotpants Open (Dark Blue)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|915": {
+    "name": "Hotpants (Leather Black)",
+    "next": "VtawWardrobe5.esp|91b",
+    "nextN": "Hotpants Open (Leather Black)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|916": {
+    "name": "Hotpants (Leather Brown)",
+    "next": "VtawWardrobe5.esp|91c",
+    "nextN": "Hotpants Open (Leather Brown)",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|96c": {
+    "name": "Suspender",
+    "next": "VtawWardrobe5.esp|96d",
+    "nextN": "Suspender V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|977": {
+    "name": "Top 2 (Grey)",
+    "next": "VtawWardrobe5.esp|987",
+    "nextN": "Top 2 (Grey) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|978": {
+    "name": "Top 2 (America)",
+    "next": "VtawWardrobe5.esp|988",
+    "nextN": "Top 2 (America) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|979": {
+    "name": "Top 2 (Black)",
+    "next": "VtawWardrobe5.esp|989",
+    "nextN": "Top 2 (Black) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97a": {
+    "name": "Top 2 (Cyberpunk)",
+    "next": "VtawWardrobe5.esp|98a",
+    "nextN": "Top 2 (Cyberpunk) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97b": {
+    "name": "Top 2 (Flannel)",
+    "next": "VtawWardrobe5.esp|98b",
+    "nextN": "Top 2 (Flannel) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97c": {
+    "name": "Top 2 (Girl)",
+    "next": "VtawWardrobe5.esp|98c",
+    "nextN": "Top 2 (Girl) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97d": {
+    "name": "Top 2 (Knit)",
+    "next": "VtawWardrobe5.esp|98d",
+    "nextN": "Top 2 (Knit) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97e": {
+    "name": "Top 2 (Latex)",
+    "next": "VtawWardrobe5.esp|98e",
+    "nextN": "Top 2 (Latex) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|97f": {
+    "name": "Top 2 (Leather)",
+    "next": "VtawWardrobe5.esp|98f",
+    "nextN": "Top 2 (Leather) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|980": {
+    "name": "Top 2 (Palm)",
+    "next": "VtawWardrobe5.esp|990",
+    "nextN": "Top 2 (Palm) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|981": {
+    "name": "Top 2 (Pink Emoji)",
+    "next": "VtawWardrobe5.esp|991",
+    "nextN": "Top 2 (Pink Emoji) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|982": {
+    "name": "Top 2 (Pink)",
+    "next": "VtawWardrobe5.esp|992",
+    "nextN": "Top 2 (Pink) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|983": {
+    "name": "Top 2 (Scifi)",
+    "next": "VtawWardrobe5.esp|993",
+    "nextN": "Top 2 (Scifi) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|984": {
+    "name": "Top 2 (Transparent 1)",
+    "next": "VtawWardrobe5.esp|994",
+    "nextN": "Top 2 (Transparent 1) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|985": {
+    "name": "Top 2 (Transparent 2)",
+    "next": "VtawWardrobe5.esp|995",
+    "nextN": "Top 2 (Transparent 2) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|986": {
+    "name": "Top 2 (White)",
+    "next": "VtawWardrobe5.esp|996",
+    "nextN": "Top 2 (White) V2",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|987": {
+    "name": "Top 2 (Grey) V2",
+    "next": "VtawWardrobe5.esp|997",
+    "nextN": "Top 2 (Grey) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|988": {
+    "name": "Top 2 (America) V2",
+    "next": "VtawWardrobe5.esp|998",
+    "nextN": "Top 2 (America) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|989": {
+    "name": "Top 2 (Black) V2",
+    "next": "VtawWardrobe5.esp|999",
+    "nextN": "Top 2 (Black) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98a": {
+    "name": "Top 2 (Cyberpunk) V2",
+    "next": "VtawWardrobe5.esp|99a",
+    "nextN": "Top 2 (Cyberpunk) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98b": {
+    "name": "Top 2 (Flannel) V2",
+    "next": "VtawWardrobe5.esp|99b",
+    "nextN": "Top 2 (Flannel) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98c": {
+    "name": "Top 2 (Girl) V2",
+    "next": "VtawWardrobe5.esp|99c",
+    "nextN": "Top 2 (Girl) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98d": {
+    "name": "Top 2 (Knit) V2",
+    "next": "VtawWardrobe5.esp|99d",
+    "nextN": "Top 2 (Knit) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98e": {
+    "name": "Top 2 (Latex) V2",
+    "next": "VtawWardrobe5.esp|99e",
+    "nextN": "Top 2 (Latex) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|98f": {
+    "name": "Top 2 (Leather) V2",
+    "next": "VtawWardrobe5.esp|99f",
+    "nextN": "Top 2 (Leather) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|990": {
+    "name": "Top 2 (Palm) V2",
+    "next": "VtawWardrobe5.esp|9a0",
+    "nextN": "Top 2 (Palm) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|991": {
+    "name": "Top 2 (Pink Emoji) V2",
+    "next": "VtawWardrobe5.esp|9a1",
+    "nextN": "Top 2 (Pink Emoji) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|992": {
+    "name": "Top 2 (Pink) V2",
+    "next": "VtawWardrobe5.esp|9a2",
+    "nextN": "Top 2 (Pink) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|993": {
+    "name": "Top 2 (Scifi) V2",
+    "next": "VtawWardrobe5.esp|9a3",
+    "nextN": "Top 2 (Scifi) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|994": {
+    "name": "Top 2 (Transparent 1) V2",
+    "next": "VtawWardrobe5.esp|9a4",
+    "nextN": "Top 2 (Transparent 1) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|995": {
+    "name": "Top 2 (Transparent 2) V2",
+    "next": "VtawWardrobe5.esp|9a5",
+    "nextN": "Top 2 (Transparent 2) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|996": {
+    "name": "Top 2 (White) V2",
+    "next": "VtawWardrobe5.esp|9a6",
+    "nextN": "Top 2 (White) V3",
+    "nextT": "slip"
+  },
+  "VtawWardrobe5.esp|9ae": {
+    "name": "Top 4 (Black)",
+    "next": "VtawWardrobe5.esp|9b6",
+    "nextN": "Top 4 (Black) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9af": {
+    "name": "Top 4 (America)",
+    "next": "VtawWardrobe5.esp|9b7",
+    "nextN": "Top 4 (America) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b0": {
+    "name": "Top 4 (Brown)",
+    "next": "VtawWardrobe5.esp|9b8",
+    "nextN": "Top 4 (Brown) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b1": {
+    "name": "Top 4 (Girl)",
+    "next": "VtawWardrobe5.esp|9b9",
+    "nextN": "Top 4 (Girl) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b2": {
+    "name": "Top 4 (Latex)",
+    "next": "VtawWardrobe5.esp|9ba",
+    "nextN": "Top 4 (Latex) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b3": {
+    "name": "Top 4 (Transparent 1)",
+    "next": "VtawWardrobe5.esp|9bb",
+    "nextN": "Top 4 (Transparent 1) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b4": {
+    "name": "Top 4 (Transparent 2)",
+    "next": "VtawWardrobe5.esp|9bc",
+    "nextN": "Top 4 (Transparent 2) V2",
+    "nextT": "change"
+  },
+  "VtawWardrobe5.esp|9b5": {
+    "name": "Top 4 (White)",
+    "next": "VtawWardrobe5.esp|9bd",
+    "nextN": "Top 4 (White) V2",
     "nextT": "change"
   }
 }

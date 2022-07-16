@@ -4,6 +4,7 @@
     "cover": "Ctrl LeftArrow"
   },
   "developerMode": false,
+  "unintrusiveMessages": true,
   "devHotkeys": {
     "loadJson": "Alt Q",
     "saveJson": "Alt W",
