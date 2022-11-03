@@ -162,9 +162,9 @@
     "nextT": "slip"
   },
   "VtawWardrobe5.esp|86a": {
-    "name": "Bodysuit No Arm (Black) ",
+    "name": "  Bodysuit No Arm (Black) ",
     "next": "VtawWardrobe5.esp|880",
-    "nextN": "Bodysuit No Arm (Black) V1 ",
+    "nextN": "  Bodysuit No Arm (Black) V1 ",
     "nextT": "slip"
   },
   "VtawWardrobe5.esp|86b": {
@@ -294,9 +294,9 @@
     "nextT": "slip"
   },
   "VtawWardrobe5.esp|880": {
-    "name": "Bodysuit No Arm (Black) V1 ",
+    "name": "  Bodysuit No Arm (Black) V1 ",
     "next": "VtawWardrobe5.esp|896",
-    "nextN": "Bodysuit No Arm (Black) V3 ",
+    "nextN": "  Bodysuit No Arm (Black) V3 ",
     "nextT": "slip"
   },
   "VtawWardrobe5.esp|881": {

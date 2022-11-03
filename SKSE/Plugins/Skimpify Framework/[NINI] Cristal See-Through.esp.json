@@ -1,0 +1,26 @@
+{
+  "[NINI] Cristal See-Through.esp|801": {
+    "name": "Crystal See-Through Upper",
+    "next": "[NINI] Cristal See-Through.esp|80a",
+    "nextN": "Crystal See-Through Upper Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Cristal See-Through.esp|809": {
+    "name": "Crystal See-Through Lower",
+    "next": "[NINI] Cristal See-Through.esp|80b",
+    "nextN": "Crystal See-Through Lower Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Cristal See-Through.esp|82b": {
+    "name": "Crystal See-Through Lower [Black]",
+    "next": "[NINI] Cristal See-Through.esp|82c",
+    "nextN": "Crystal See-Through Lower Slutty [Black]",
+    "nextT": "change"
+  },
+  "[NINI] Cristal See-Through.esp|82f": {
+    "name": "Crystal See-Through Upper [Black]",
+    "next": "[NINI] Cristal See-Through.esp|830",
+    "nextN": "Crystal See-Through Upper Slutty [Black]",
+    "nextT": "change"
+  }
+}

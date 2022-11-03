@@ -1,0 +1,14 @@
+{
+  "Hunter of Darkness [SE].esp|d67": {
+    "name": "타키 닌자복 - 바디수트",
+    "next": "Hunter of Darkness [SE].esp|d8c",
+    "nextN": "타키 닌자복 - 바디수트 XXtra",
+    "nextT": "damage"
+  },
+  "Hunter of Darkness [SE].esp|d8c": {
+    "name": "타키 닌자복 - 바디수트 XXtra",
+    "next": "Hunter of Darkness [SE].esp|d8d",
+    "nextN": "타키 닌자복 - 바디수트 XXXtra",
+    "nextT": "damage"
+  }
+}

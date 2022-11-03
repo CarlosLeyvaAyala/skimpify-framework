@@ -1,0 +1,14 @@
+{
+  "[NINI] Bless 0002.esp|805": {
+    "name": "Bless 0002 Upper",
+    "next": "[NINI] Bless 0002.esp|812",
+    "nextN": "Bless 0002 Upper Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Bless 0002.esp|807": {
+    "name": "Bless 0002 Lower",
+    "next": "[NINI] Bless 0002.esp|813",
+    "nextN": "Bless 0002 Lower Slutty",
+    "nextT": "change"
+  }
+}
