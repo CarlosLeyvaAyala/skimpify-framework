@@ -1,0 +1,14 @@
+{
+  "Elf Crusader SE.esp|80e": {
+    "name": "Elf Crusader Top",
+    "next": "Elf Crusader SE.esp|826",
+    "nextN": "Elf Crusader Top Alt",
+    "nextT": "change"
+  },
+  "Elf Crusader SE.esp|815": {
+    "name": "Elf Crusader Top Silver",
+    "next": "Elf Crusader SE.esp|827",
+    "nextN": "Elf Crusader Top Silver Alt",
+    "nextT": "change"
+  }
+}

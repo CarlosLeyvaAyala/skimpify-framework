@@ -1,0 +1,20 @@
+{
+  "[Christine] Ida Elf Archer.esp|817": {
+    "name": "Ida Elf Archer Cuirass Default",
+    "next": "[Christine] Ida Elf Archer.esp|835",
+    "nextN": "Ida Elf Archer Cuirass Default Slutty",
+    "nextT": "change"
+  },
+  "[Christine] Ida Elf Archer.esp|819": {
+    "name": "Ida Elf Archer Cuirass Sapphire",
+    "next": "[Christine] Ida Elf Archer.esp|836",
+    "nextN": "Ida Elf Archer Cuirass Sapphire Slutty",
+    "nextT": "change"
+  },
+  "[Christine] Ida Elf Archer.esp|81a": {
+    "name": "Ida Elf Archer Cuirass Ruby",
+    "next": "[Christine] Ida Elf Archer.esp|837",
+    "nextN": "Ida Elf Archer Cuirass Ruby Slutty",
+    "nextT": "change"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "H2135HalloweenOutfit2020 [SE].esp|80d": {
+    "name": "H2135's H.O.2020 Dress [Black]",
+    "next": "H2135HalloweenOutfit2020 [SE].esp|80e",
+    "nextN": "H2135's H.O.2020 Dress Ripped [Black]",
+    "nextT": "damage"
+  },
+  "H2135HalloweenOutfit2020 [SE].esp|84e": {
+    "name": "H2135's H.O.2020 Dress [Brown]",
+    "next": "H2135HalloweenOutfit2020 [SE].esp|84f",
+    "nextN": "H2135's H.O.2020 Dress Ripped [Brown]",
+    "nextT": "damage"
+  },
+  "H2135HalloweenOutfit2020 [SE].esp|874": {
+    "name": "H2135's H.O.2020 Dress [Wine]",
+    "next": "H2135HalloweenOutfit2020 [SE].esp|875",
+    "nextN": "H2135's H.O.2020 Dress Ripped [Wine]",
+    "nextT": "damage"
+  },
+  "H2135HalloweenOutfit2020 [SE].esp|89a": {
+    "name": "H2135's H.O.2020 Dress [White]",
+    "next": "H2135HalloweenOutfit2020 [SE].esp|89b",
+    "nextN": "H2135's H.O.2020 Dress Ripped [White]",
+    "nextT": "damage"
+  }
+}

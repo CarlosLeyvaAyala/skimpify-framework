@@ -1,14 +1,14 @@
 {
   "[NINI] Damaged Feather.esp|804": {
-    "name": "Damaged Feather Upper",
+    "name": "  Damaged Feather Upper",
     "next": "[NINI] Damaged Feather.esp|812",
-    "nextN": "Damaged Feather Upper Slutty",
+    "nextN": "  Damaged Feather Upper Slutty",
     "nextT": "change"
   },
   "[NINI] Damaged Feather.esp|812": {
-    "name": "Damaged Feather Upper Slutty",
+    "name": "  Damaged Feather Upper Slutty",
     "next": "[NINI] Damaged Feather.esp|819",
-    "nextN": "Damaged Feather Upper Nude",
+    "nextN": "  Damaged Feather Upper Nude",
     "nextT": "change"
   }
 }

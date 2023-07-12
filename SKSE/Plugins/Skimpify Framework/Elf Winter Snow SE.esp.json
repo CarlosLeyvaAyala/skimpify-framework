@@ -1,0 +1,14 @@
+{
+  "Elf Winter Snow SE.esp|810": {
+    "name": "Elf Winter Snow Top",
+    "next": "Elf Winter Snow SE.esp|815",
+    "nextN": "Elf Winter Snow Top Alt",
+    "nextT": "change"
+  },
+  "Elf Winter Snow SE.esp|817": {
+    "name": "Elf Winter Snow Top Red",
+    "next": "Elf Winter Snow SE.esp|81c",
+    "nextN": "Elf Winter Snow Top Alt Red",
+    "nextT": "change"
+  }
+}

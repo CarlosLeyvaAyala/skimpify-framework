@@ -1,0 +1,14 @@
+{
+  "[Hirosin]Xc2 Nia blade outfit(ESL).ESP|83b": {
+    "name": "[Hirosin]XC2 Nia Blade outfit Basic",
+    "next": "[Hirosin]Xc2 Nia blade outfit(ESL).ESP|89c",
+    "nextN": "[Hirosin]XC2 Nia Blade outfit Naked",
+    "nextT": "change"
+  },
+  "[Hirosin]Xc2 Nia blade outfit(ESL).ESP|89d": {
+    "name": "[Hirosin]XC2 Nia Blade Skirt",
+    "next": "[Hirosin]Xc2 Nia blade outfit(ESL).ESP|8a3",
+    "nextN": "[Hirosin]XC2 Nia Blade Skirt NP",
+    "nextT": "change"
+  }
+}

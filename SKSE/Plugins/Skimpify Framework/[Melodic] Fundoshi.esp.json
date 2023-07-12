@@ -1,0 +1,26 @@
+{
+  "[Melodic] Fundoshi.esp|802": {
+    "name": "Fundoshi Top",
+    "next": "[Melodic] Fundoshi.esp|80c",
+    "nextN": "Fundoshi Top Xtra",
+    "nextT": "slip"
+  },
+  "[Melodic] Fundoshi.esp|803": {
+    "name": "Fundoshi Bottom",
+    "next": "[Melodic] Fundoshi.esp|80d",
+    "nextN": "Fundoshi Bottom Xtra",
+    "nextT": "change"
+  },
+  "[Melodic] Fundoshi.esp|81b": {
+    "name": "Fundoshi Top 2",
+    "next": "[Melodic] Fundoshi.esp|81a",
+    "nextN": "Fundoshi Top 2 Xtra",
+    "nextT": "slip"
+  },
+  "[Melodic] Fundoshi.esp|81d": {
+    "name": "Fundoshi Bottom 2",
+    "next": "[Melodic] Fundoshi.esp|81c",
+    "nextN": "Fundoshi Bottom 2 Xtra",
+    "nextT": "change"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "[Caenarvon] Plegian Dark Mage.esp|80b": {
+    "name": "Plegian Dark Mage Undergarment",
+    "next": "[Caenarvon] Plegian Dark Mage.esp|83b",
+    "nextN": "Plegian Dark Mage Undergarment (Torn)",
+    "nextT": "damage"
+  },
+  "[Caenarvon] Plegian Dark Mage.esp|823": {
+    "name": "Plegian Dark Mage Bodystocking",
+    "next": "[Caenarvon] Plegian Dark Mage.esp|834",
+    "nextN": "Plegian Dark Mage Bodystocking (Torn)",
+    "nextT": "damage"
+  },
+  "[Caenarvon] Plegian Dark Mage.esp|826": {
+    "name": "Plegian Dark Mage Greatcloak",
+    "next": "[Caenarvon] Plegian Dark Mage.esp|83c",
+    "nextN": "Plegian Dark Mage Greatcloak (Torn)",
+    "nextT": "damage"
+  },
+  "[Caenarvon] Plegian Dark Mage.esp|828": {
+    "name": "Plegian Dark Mage Loincloth",
+    "next": "[Caenarvon] Plegian Dark Mage.esp|83d",
+    "nextN": "Plegian Dark Mage Loincloth (Torn)",
+    "nextT": "damage"
+  },
+  "[Caenarvon] Plegian Dark Mage.esp|832": {
+    "name": "Plegian Dark Mage Open Bodystocking",
+    "next": "[Caenarvon] Plegian Dark Mage.esp|833",
+    "nextN": "Plegian Dark Mage Open Bodystocking (Torn)",
+    "nextT": "damage"
+  }
+}

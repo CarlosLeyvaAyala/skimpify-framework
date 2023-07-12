@@ -1,0 +1,8 @@
+{
+  "MHW_VelkhanaRe.esp|828": {
+    "name": "MHW_Rimeguard B01",
+    "next": "MHW_VelkhanaRe.esp|829",
+    "nextN": "MHW_Rimeguard B02",
+    "nextT": "change"
+  }
+}
