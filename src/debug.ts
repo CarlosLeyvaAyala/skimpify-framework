@@ -1,7 +1,7 @@
-import { DebugLib } from "DmLib"
+import * as Log from "DmLib/Log"
 
-const L = DebugLib.Log
-const fs = DebugLib.Log.CreateAll(
+const L = Log
+const fs = Log.CreateAll(
   "SkimpifyFramework",
   L.Level.info,
   L.ConsoleFmt,

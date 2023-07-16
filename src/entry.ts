@@ -1,6 +1,8 @@
-import { DebugLib, FormLib, Hotkeys, Misc } from "DmLib"
-import { Player } from "DmLib/Actor/player"
-import { forEachArmorR } from "DmLib/Form/forEachArmor"
+import * as Log from "DmLib/Log"
+import * as Hk from "DmLib/Hotkeys"
+import { preserveVar } from "DmLib/Misc"
+import { Player } from "DmLib/Actor"
+import { ForEachSlotMask, GetEquippedArmors, forEachArmorR } from "DmLib/Form"
 import { AutoGenArmors, SaveJson } from "genJson"
 import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
@@ -54,8 +56,8 @@ const kIni = SK("init")
 const kMModest = SK("mmodest")
 
 // Avoid values to be lost on game reloading
-const SIni = Misc.PreserveVar<boolean>(MemOnly, kIni)
-const SMModest = Misc.PreserveVar<number>(MemOnly, kMModest)
+const SIni = preserveVar<boolean>(MemOnly, kIni)
+const SMModest = preserveVar<number>(MemOnly, kMModest)
 
 let allowInit = (storage[kIni] as boolean) || false
 let mModest = storage[kMModest] as number | -1
@@ -65,9 +67,9 @@ const develop = settings[n]["developerMode"] as boolean
 const unintrusiveMessages = settings[n]["unintrusiveMessages"] as boolean
 
 const hk = "devHotkeys"
-const FO = (k: string) => Hotkeys.FromObject(n, hk, k)
+const FO = (k: string) => Hk.FromObject(n, hk, k)
 /** Gets a hotkey from settings */
-const HK = (k: string) => Hotkeys.ListenTo(FO(k), develop)
+const HK = (k: string) => Hk.ListenTo(FO(k), develop)
 
 const ShowMessage = unintrusiveMessages ? Debug.notification : Debug.messageBox
 
@@ -131,6 +133,9 @@ export function main() {
 
   const i = develop ? " in DEVELOPER MODE" : ""
   printConsole(`Skimpify Framework successfully initialized${i}.`)
+  printConsole("*".repeat(200))
+  printConsole("*".repeat(200))
+  printConsole("*".repeat(200))
 }
 
 function RunTest() {
@@ -174,7 +179,7 @@ namespace PlayerF {
     if (TrySkimpify(SlotMask.Body)) return
     if (TrySkimpify(SlotMask.PelvisPrimary)) return
     if (TrySkimpify(SlotMask.PelvisSecondary)) return
-    FormLib.ForEachSlotMask(Player(), (slot) => TrySkimpify(slot))
+    ForEachSlotMask(Player(), (slot) => TrySkimpify(slot))
     // const all = FormLib.GetEquippedArmors(p)
   }
 }
@@ -184,7 +189,7 @@ namespace Armors {
   export function UnequipAll() {
     const pl = Game.getPlayer() as Actor
     // Don't use unequipAll() because it doesn't discriminate on what it will unequip
-    const aa = FormLib.GetEquippedArmors(pl)
+    const aa = GetEquippedArmors(pl)
     aa.forEach((a) => {
       pl.unequipItem(a, false, true)
     })
@@ -276,10 +281,10 @@ namespace Mark {
    * @param Continue What to do if only one piece of armor is equipped.
    */
   function OnlyOneArmor(Continue: (a: Armor) => void) {
-    const aa = FormLib.GetEquippedArmors(Game.getPlayer())
+    const aa = GetEquippedArmors(Game.getPlayer())
     aa.forEach((v) =>
       LogV(
-        `${DebugLib.Log.IntToHex(
+        `${Log.IntToHex(
           v.getFormID()
         )}. Slot: ${v.getSlotMask()}. Name: ${v.getName()}`
       )
@@ -338,7 +343,7 @@ namespace Mark {
       mModest = LogVT(
         "Manual mode. Modest armor id",
         SMModest(a.getFormID()),
-        DebugLib.Log.IntToHex
+        Log.IntToHex
       )
     })
   }

@@ -1,6 +1,9 @@
-import { getPersistentChest } from "DmLib/Form/persistentChest"
-import { isActorTypeNPC } from "DmLib/Actor/isActorTypeNPC"
-import { FormLib } from "DmLib"
+import { isActorTypeNPC } from "DmLib/Actor"
+import {
+  ForEachEquippedArmor,
+  GetEquippedArmors,
+  getPersistentChest,
+} from "DmLib/Form"
 import * as JDB from "JContainers/JDB"
 import * as JFormDB from "JContainers/JFormDB"
 import * as JFormMap from "JContainers/JFormMap"
@@ -8,8 +11,6 @@ import {
   Actor,
   Armor,
   Form,
-  Game,
-  Keyword,
   ObjectReference,
   printConsole,
 } from "skyrimPlatform"
@@ -342,7 +343,7 @@ export function RestoreMostModest(act: ActorArg, skimpyArmor: ArmorArg) {
 }
 
 export function RestoreAllMostModest(act: Actor) {
-  FormLib.ForEachEquippedArmor(act, (a) => {
+  ForEachEquippedArmor(act, (a) => {
     RestoreMostModest(act, a)
   })
 }
@@ -500,7 +501,7 @@ export function GetAll(
   Next: SkimpyDataFunc,
   Curr: SkimpyDataFunc
 ): EquippedData {
-  const aa = FormLib.GetEquippedArmors(a)
+  const aa = GetEquippedArmors(a)
   const n = aa.map((v) => Next(v)).filter((v) => v.armor)
   const c = n.map((v) => Curr(v.armor))
   return { current: c, next: n }

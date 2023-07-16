@@ -1,20 +1,19 @@
-import { LogI, LogN, LogNT, LogV, LogVT } from "debug"
-import { forEachArmorR } from "DmLib/Form/forEachArmor"
-import { DebugLib, FormLib } from "DmLib"
+import { forEachArmorR, getEspAndId, getUniqueId } from "DmLib/Form"
+import * as Log from "DmLib/Log"
 import { JFormMapL } from "JContainers/JTs"
 import { WriteToFile } from "PapyrusUtil/MiscUtil"
 import {
   AddChangeRel,
-  cfgDir,
   ChangeRel,
   DbHandle,
-  defaultType,
-  GetModestData,
   GetSkimpyData,
+  cfgDir,
+  defaultType,
 } from "skimpify-api"
 import { Actor, Armor, Debug, Game } from "skyrimPlatform"
+import { LogI, LogN, LogNT, LogV, LogVT } from "./debug"
 
-const LogR = DebugLib.Log.R
+const LogR = Log.R
 
 interface OutputObject {
   uId: string
@@ -64,7 +63,7 @@ export function SaveJson() {
     const n = GetSkimpyData(a)
     if (!n.armor) return // No need to write to file an armor with no children
 
-    const curr = FormLib.GetFormEspAndId(a)
+    const curr = getEspAndId(a)
 
     AddKey(curr.modName, m)
     AddVal(curr.modName, m, {
@@ -88,7 +87,7 @@ const AddVal = (esp: string, m: OutputMap, v: OutputObject) => {
 }
 
 const ArmorUniqueId = (a: Armor | null) =>
-  !a ? undefined : FormLib.GetFormUniqueId(a, GetUniqueId)
+  !a ? undefined : getUniqueId(a, GetUniqueId)
 
 const GetUniqueId = (esp: string, fixedFormId: number) =>
   `${esp}|${fixedFormId.toString(16)}`
@@ -144,7 +143,7 @@ function ArmorToData(a: Armor): ArmorData | null {
   const L = (uID: string) => `${uID}\n`
 
   if (!a.isPlayable() || a.getName() === "") return null
-  const info = FormLib.GetFormEspAndId(a)
+  const info = getEspAndId(a)
 
   return {
     esp: info.modName,

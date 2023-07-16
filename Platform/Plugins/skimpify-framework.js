@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-/* eslint-disable @typescript-eslint/no-namespace */
-// Generated automatically. Do not edit.
 System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", [], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -10,1528 +7,702 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_2, context_2) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Combinators", [], function (exports_2, context_2) {
     "use strict";
-    var skyrimPlatform_1, TimeLib, MathLib, Combinators, FormLib, ArrayLib, MapLib, Misc, Hotkeys, DebugLib, AnimLib;
+    var I, K, O, Return;
     var __moduleName = context_2 && context_2.id;
+    function Tap(x, f) {
+        f(x);
+        return x;
+    }
+    exports_2("Tap", Tap);
+    return {
+        setters: [],
+        execute: function () {
+            exports_2("I", I = (x) => x);
+            exports_2("K", K = (x) => (y) => x);
+            exports_2("O", O = (f1, f2) => (...args) => f1(...args) || f2(...args));
+            exports_2("Return", Return = (f, x) => Tap(x, K(f)));
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Log", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Combinators"], function (exports_3, context_3) {
+    "use strict";
+    var skyrimPlatform_1, Level, ConsoleFmt, FileFmt, append, appendT, C, R;
+    var __moduleName = context_3 && context_3.id;
+    function LevelFromSettings(pluginName, optionName) {
+        return LevelFromValue(skyrimPlatform_1.settings[pluginName][optionName]);
+    }
+    exports_3("LevelFromSettings", LevelFromSettings);
+    function LevelFromValue(v) {
+        const l = typeof v === "string"
+            ? v.toLowerCase()
+            : typeof v === "number"
+                ? v
+                : "verbose";
+        let t = Level[l];
+        if (typeof l === "number")
+            t = Level[t];
+        return t === undefined ? Level.verbose : t;
+    }
+    exports_3("LevelFromValue", LevelFromValue);
+    function Append(f, append) {
+        return (msg) => f(append + msg);
+    }
+    exports_3("Append", Append);
+    function AppendT(f, append) {
+        return (msg, x, fmt) => f(append + msg, x, fmt);
+    }
+    exports_3("AppendT", AppendT);
+    function CreateFunction(currLogLvl, logAt, modName, ConsoleFmt, FileFmt) {
+        return function (msg) {
+            const canLog = currLogLvl >= logAt || (currLogLvl < 0 && currLogLvl === logAt);
+            if (!canLog)
+                return;
+            const t = new Date();
+            if (ConsoleFmt)
+                skyrimPlatform_1.printConsole(ConsoleFmt(currLogLvl, logAt, modName, t, msg));
+            if (FileFmt)
+                skyrimPlatform_1.writeLogs(modName, FileFmt(currLogLvl, logAt, modName, t, msg));
+        };
+    }
+    exports_3("CreateFunction", CreateFunction);
+    function CreateAll(mod, logLvl, Console, File) {
+        const CLF = (logAt) => CreateFunction(logLvl, logAt, mod, Console, File);
+        const O = CLF(Level.optimization);
+        const N = CLF(Level.none);
+        const E = CLF(Level.error);
+        const I = CLF(Level.info);
+        const V = CLF(Level.verbose);
+        return {
+            Optimization: O,
+            None: N,
+            Error: E,
+            Info: I,
+            Verbose: V,
+            TapO: Tap(O),
+            TapN: Tap(N),
+            TapE: Tap(E),
+            TapI: Tap(I),
+            TapV: Tap(V),
+        };
+    }
+    exports_3("CreateAll", CreateAll);
+    function Tap(f) {
+        return function (msg, x, g) {
+            if (g) {
+                if (msg)
+                    f(`${msg}: ${g(x)}`);
+                else
+                    f(g(x));
+            }
+            else {
+                if (msg)
+                    f(`${msg}: ${x}`);
+                else
+                    f(`${x}`);
+            }
+            return x;
+        };
+    }
+    exports_3("Tap", Tap);
+    function IntToHex(x) {
+        return !x || typeof x !== "number"
+            ? "IntToHex: Undefined value"
+            : x.toString(16);
+    }
+    exports_3("IntToHex", IntToHex);
     return {
         setters: [
             function (skyrimPlatform_1_1) {
                 skyrimPlatform_1 = skyrimPlatform_1_1;
+            },
+            function (C_1) {
+                C = C_1;
             }
         ],
         execute: function () {
-            /** Time related functions. */
-            (function (TimeLib) {
-                /** Ratio to convert Skyrim hours to human hours. */
-                const gameHourRatio = 1.0 / 24.0;
-                /** Current time in {@link SkyrimHours}. */
-                TimeLib.Now = skyrimPlatform_1.Utility.getCurrentGameTime;
-                /** Changes {@link SkyrimHours} to {@link HumanHours}.
-                 *
-                 * @param x Time in {@link SkyrimHours}.
-                 * @returns Time in human readable hours.
-                 *
-                 * @example
-                 * ToHumanHours(2.0)   // => 48. Two full days
-                 * ToHumanHours(0.5)   // => 12. Half a day
-                 */
-                TimeLib.ToHumanHours = (x) => x / gameHourRatio;
-                /** Converts a {@link SkyrimHours} to a `string` in {@link HumanHours}. */
-                TimeLib.ToHumanHoursStr = (x) => TimeLib.ToHumanHours(x).toString();
-                /** Converts a time in minutes to hours. */
-                TimeLib.MinutesToHours = (x) => x / 60;
-                /** Converts a time in hours to minutes. */
-                TimeLib.HoursToMinutes = (x) => x * 60;
-                /** Converts {@link HumanHours} to {@link SkyrimHours}.
-                 *
-                 * @param x Time in human readable hours.
-                 * @returns Time in {@link SkyrimHours}.
-                 *
-                 * @example
-                 * ToHumanHours(48)   // => 2.0. Two full days
-                 * ToHumanHours(12)   // => 0.5. Half a day
-                 */
-                TimeLib.ToSkyrimHours = (x) => x * gameHourRatio;
-                /** Returns in human hours how much time has passed between `Now` and some hour given
-                 * in {@link SkyrimHours}.
-                 * @param then {@link SkyrimHours}
-                 * @returns Hour span in {@link HumanHours}
-                 */
-                TimeLib.HourSpan = (then) => TimeLib.ToHumanHours(TimeLib.Now() - then);
-                /** Converts {@link HumanMinutes} to {@link SkyrimHours}.
-                 * @param  {number} x Minutes to convert.
-                 */
-                TimeLib.MinutesToSkyrimHours = (x) => TimeLib.ToSkyrimHours(TimeLib.MinutesToHours(x));
-                /** Converts {@link SkyrimHours} to {@link HumanMinutes}.
-                 * @param  {number} x Minutes to convert.
-                 */
-                TimeLib.SkyrimHoursToHumanMinutes = (x) => TimeLib.HoursToMinutes(TimeLib.ToHumanHours(x));
-            })(TimeLib || (TimeLib = {}));
-            exports_2("TimeLib", TimeLib);
-            /** Math related functions. */
-            (function (MathLib) {
-                /** Creates a linear function adjusted to two points.
-                 *
-                 * @param p1 Initial point.
-                 * @param p2 Ending point.
-                 * @returns A linear function that accepts an `x` argument.
-                 *
-                 * @example
-                 * const f = LinCurve({ x: 24, y: 2 }, { x: 96, y: 16 })
-                 * f(24) // => 2
-                 * f(96) // => 16
-                 * f(0)  // => -2.6666666666667
-                 */
-                function LinCurve(p1, p2) {
-                    const x1 = p1.x;
-                    const y1 = p1.y;
-                    const m = (p2.y - y1) / (p2.x - x1);
-                    return (x) => m * (x - x1) + y1;
-                }
-                MathLib.LinCurve = LinCurve;
-                /** Creates an exponential function that adjusts a curve of some `shape` to two points.
-                 *
-                 * @remarks
-                 * Some `shape` values, like `0`, may lead to linear functions instead of exponential ones.
-                 * For those cases, this function returns a {@link LinCurve}.
-                 *
-                 * @param shape
-                 * @param p1 Initial point.
-                 * @param p2 Ending point.
-                 * @returns An exponential function that accepets an `x` argument.
-                 *
-                 * @example
-                 * const f = ExpCurve(-2.3, { x: 0, y: 3 }, { x: 1, y: 0.5 })
-                 * f(0)       // => 3
-                 * f(0.1)     // => 2.4290958125478785
-                 * f(0.5)     // => 1.1012227076272225
-                 * f(0.9)     // => 0.572039991172326
-                 * f(1)       // => 0.5
-                 */
-                function ExpCurve(shape, p1, p2) {
-                    const e = Math.exp;
-                    const b = shape;
-                    const ebx1 = e(b * p1.x);
-                    const divisor = e(b * p2.x) - ebx1;
-                    // Shape is actually a line, not an exponential curve.
-                    if (divisor === 0)
-                        return LinCurve(p1, p2);
-                    const a = (p2.y - p1.y) / divisor;
-                    const c = p1.y - a * ebx1;
-                    return (x) => a * e(b * x) + c;
-                }
-                MathLib.ExpCurve = ExpCurve;
-                /** Creates a spline function given a list of points.
-                 *
-                 * @remarks
-                 * This function:
-                 *  - Was adapted from https://www.developpez.net/forums/d331608-3/general-developpement/algorithme-mathematiques/contribuez/image-interpolation-spline-cubique/#post3513925
-                 *  - Is not optimized for plotting charts. Will be slow when used in that context.
-                 *  - Acts like Photoshop curves. I.e. if the first and/or last point isn't at
-                 *    the edge of the valid range [`0`..`1`] it will consider outlier `y` values
-                 *    to be a straight line from the edge `points`.
-                 *
-                 * @param points Points used to create the spline.
-                 * `x` range ***MUST BE [`0`..`1`]***.
-                 * `points` ***MUST BE*** ordered by x.
-                 *
-                 * @returns A function that accepts a `x` (ranging at [`0`..`1`]) and evaluates the
-                 * spline value at that point.
-                 */
-                function CubicSpline(points) {
-                    const n = points.length - 1;
-                    // Avoid invalid number of points.
-                    if (n == -1)
-                        return (x) => 0;
-                    if (n == 0)
-                        return (x) => points[0].y;
-                    const sd = SecondDerivative(points);
-                    return (x) => {
-                        // Start as a flat line
-                        const p1 = points[0];
-                        if (p1.x > 0 && x <= p1.x)
-                            return p1.y;
-                        // End as a flat line
-                        const pn = points[n];
-                        if (pn.x < 1 && x >= pn.x)
-                            return pn.y;
-                        // Make sure the last point is always returned
-                        if (x === pn.x)
-                            return pn.y;
-                        for (let i = 0; i < n; i++) {
-                            const cur = points[i];
-                            const next = points[i + 1];
-                            if (x >= cur.x && x < next.x) {
-                                const t = (x - cur.x) / (next.x - cur.x);
-                                const a = 1 - t;
-                                const b = t;
-                                const h = next.x - cur.x;
-                                return (a * cur.y +
-                                    b * next.y +
-                                    ((h * h) / 6) *
-                                        ((a * a * a - a) * sd[i] + (b * b * b - b) * sd[i + 1]));
-                            }
-                        }
-                        // Should never return this. Used for debugging purposes.
-                        return -999999;
-                    };
-                }
-                MathLib.CubicSpline = CubicSpline;
-                /** Helper function for {@link CubicSpline}. Calculates f'' for a list of points. */
-                function SecondDerivative(p) {
-                    const n = p.length;
-                    // build the tridiagonal system
-                    // (assume 0 boundary conditions: y2[0]=y2[-1]=0)
-                    let matrix = Array.from({ length: n }, (_) => [0, 0, 0]);
-                    let result = Array.from({ length: n }, (_) => 0);
-                    matrix[0][1] = 1;
-                    for (let i = 1; i < n - 1; i++) {
-                        matrix[i][0] = (p[i].x - p[i - 1].x) / 6;
-                        matrix[i][1] = (p[i + 1].x - p[i - 1].x) / 3;
-                        matrix[i][2] = (p[i + 1].x - p[i].x) / 6;
-                        result[i] =
-                            (p[i + 1].y - p[i].y) / (p[i + 1].x - p[i].x) -
-                                (p[i].y - p[i - 1].y) / (p[i].x - p[i - 1].x);
-                    }
-                    matrix[n - 1][1] = 1;
-                    // solving pass1 (up->down)
-                    for (let i = 1; i < n; i++) {
-                        const k = matrix[i][0] / matrix[i - 1][1];
-                        matrix[i][1] -= k * matrix[i - 1][2];
-                        matrix[i][0] = 0;
-                        result[i] -= k * result[i - 1];
-                    }
-                    // solving pass2 (down->up)
-                    for (let i = n - 2; i >= 0; i--) {
-                        const k = matrix[i][2] / matrix[i + 1][1];
-                        matrix[i][1] -= k * matrix[i + 1][0];
-                        matrix[i][2] = 0;
-                        result[i] -= k * result[i + 1];
-                    }
-                    // return second derivative value for each point P
-                    let y2 = new Array(n);
-                    for (let i = 0; i < n; i++)
-                        y2[i] = result[i] / matrix[i][1];
-                    return y2;
-                }
-                /** Returns a function that ensures some value is at least `min`.
-                 *
-                 * @param min The minimum value a number can be.
-                 * @returns A function that accepts a number `x` and returns `x` or `min`.
-                 *
-                 * @example
-                 * const LowestHp = ForceMin(10)
-                 * LowestHp(-1)     // => 10
-                 * LowestHp(255)    // => 255
-                 */
-                MathLib.ForceMin = (min) => (x) => Math.max(min, x);
-                /** Returns a function that ensures some value is at most `max`.
-                 *
-                 * @param max The maximum value a number can be.
-                 * @returns A function that accepts a number `x` and returns `x` or `max`.
-                 *
-                 * @example
-                 * let MaxSpeed = ForceMax(1.7)
-                 * MaxSpeed(2)     // => 1.7
-                 * MaxSpeed(1.7)   // => 1.7
-                 * MaxSpeed(0.5)   // => 0.5
-                 *
-                 * MaxSpeed = ForceMax(1)
-                 * MaxSpeed(1.1)   // => 1
-                 */
-                MathLib.ForceMax = (max) => (x) => Math.min(max, x);
-                /** Returns a function that ensures some value is between the (inclusive) range [`min`..`max`].
-                 *
-                 * @param min The minimum value a number can be.
-                 * @param max The maximum value a number can be.
-                 * @returns A function that accepts a number `x` and makes sure it stays within `min` and `max`.
-                 *
-                 * @example
-                 * const itemCount = 42
-                 * let Take = ForceRange(0, itemCount)
-                 * Take(-100)     // => 0
-                 * Take(255)      // => 42
-                 * Take(3)        // => 3
-                 *
-                 * // Redefine Take function to reflect new data
-                 * Take = ForceRange(0, itemCount - Take(3))
-                 */
-                MathLib.ForceRange = (min, max) => (x) => MathLib.ForceMin(min)(MathLib.ForceMax(max)(x));
-                /** Ensures some value is always positive.
-                 *
-                 * @param x A number.
-                 * @returns `0` if `x` is negative, else `x`.
-                 *
-                 * @example
-                 * ForcePositive(-100)     // => 0
-                 * ForcePositive(255)      // => 255
-                 * ForcePositive(0)        // => 0
-                 */
-                MathLib.ForcePositive = (x) => MathLib.ForceMin(0)(x);
-                /** Ensures some value always stays within the (inclusive) range [`0`..`1`].
-                 *
-                 * @param x A number.
-                 * @returns A number between [`0`..`1`].
-                 *
-                 * @example
-                 * ForcePercent(-0.1)       // => 0
-                 * ForcePercent(10)         // => 1
-                 * ForcePercent(0.5)        // => 0.5
-                 */
-                MathLib.ForcePercent = (x) => MathLib.ForceRange(0, 1)(x);
-            })(MathLib || (MathLib = {}));
-            exports_2("MathLib", MathLib);
-            /** Functional programming combinators.
-             *
-             * @remarks
-             * Many of these may be arcane, but they are quite useful nonetheless.
-             *
-             * Some of them are used in this library and you aren't required to use any
-             * of these, ever.\
-             * But if you know when to use them, your code will be shorter and your intentions
-             * clearer.
-             *
-             * Highly recommended reading:
-             *
-             * - https://tgdwyer.github.io/
-             * - https://leanpub.com/javascriptallongesix/read#leanpub-auto-making-data-out-of-functions
-             */
-            (function (Combinators) {
-                /** Returns whatever it's passed to it.
-                 *
-                 * @param x
-                 * @returns x
-                 *
-                 * @remarks
-                 * **This is NOT STUPID**. It's useful, for example, for feeding it to
-                 * functions that may transform values, but we don't want to transform
-                 * something in particular.
-                 *
-                 * It's not much useful by itself, but you will soon see its value
-                 * when you start composing functions.
-                 *
-                 * @see {@link K} for other uses.
-                 *
-                 * @example
-                 * const lower = (x: string) => x.toLowerCase()
-                 * const upper = (x: string) => x.toUpperCase()
-                 * const f = (x: string, g: (x: string) => string) => g(x)
-                 *
-                 * const x = f("LOWER", lower)
-                 * const y = f("upper", upper)
-                 * const z = f("sAmE", I)
-                 */
-                Combinators.I = (x) => x;
-                /** Returns a function that accepts one parameter, but ignores it and returns whatever
-                 * you originally defined it with.
-                 *
-                 * @param x
-                 * @returns `function (y: any) => x`
-                 *
-                 * @remarks
-                 * This can be used to make a function constant; that is, no matter what you
-                 * pass to it, it will always returns the value you first defined it with.
-                 * This is useful to plug constants into places that are expecting functions.
-                 *
-                 * If combined with {@link I} it can do useful things. `K(I)` will always
-                 * return the second parameter you pass to it.
-                 *
-                 * Combined with {@link O} can be used to make one liners that ensure a calculated value
-                 * is always returned.
-                 *
-                 * @see {@link O} for more uses.
-                 *
-                 * @example
-                 * const first = K
-                 * const second = k(I)
-                 * first("primero")("segundo")    // => "primero"
-                 * second("primero")("segundo")   // => "segundo"
-                 *
-                 * const msg = K("You are a moron")
-                 * const validate = (x: number) => (typeof x !== "number" ? null : x.toString())
-                 * const intToStr = O(validate, msg)
-                 * intToStr(null)   // => "You are a moron"
-                 * intToStr(32)     // => 32
-                 *
-                 * const guaranteedActorBase = O((a: Actor) => a.getLeveledActorBase(), K(Game.getPlayer()?.getBaseObject()))
-                 * guaranteedActorBase(null)              // => player
-                 * guaranteedActorBase(whiterunGuard)     // => Whiterun Guard
-                 */
-                Combinators.K = (x) => (y) => x;
-                /** Creates a function that accepts one parameter `x`. Returns `f1(x)` if not `null`, else `f2(x)`.
-                 *
-                 * @param f1 First function to apply.
-                 * @param f2 Second function to apply.
-                 * @returns `f1(x)` if not `null`, else `f2(x)`.
-                 */
-                Combinators.O = (f1, f2) => (...args) => f1(...args) || f2(...args);
-                /** Applies function `f` to `x` and returns `x`. Useful for chaining functions that return nothing.
-                 *
-                 * @param x
-                 * @param f
-                 * @returns x
-                 */
-                function Tap(x, f) {
-                    f(x);
-                    return x;
-                }
-                Combinators.Tap = Tap;
-                /** Returns a value while executing a function.
-                 *
-                 * @see {@link DebugLib.Log.R} for a sample usage.
-                 *
-                 * @param f Function to execute.
-                 * @param x Value to return.
-                 * @returns `x`
-                 */
-                Combinators.Return = (f, x) => Tap(x, Combinators.K(f));
-            })(Combinators || (Combinators = {}));
-            exports_2("Combinators", Combinators);
-            /** Functions related to `Forms`. */
-            (function (FormLib) {
-                /** Returns what type of item a `Form` is.
-                 * @param  {Form|null} item Form to check.
-                 */
-                function GetItemType(item) {
-                    if (!item)
-                        return 0 /* None */;
-                    if (skyrimPlatform_1.Weapon.from(item))
-                        return 1 /* Weapon */;
-                    if (skyrimPlatform_1.Ammo.from(item))
-                        return 2 /* Ammo */;
-                    if (skyrimPlatform_1.Armor.from(item))
-                        return 3 /* Armor */;
-                    const asP = skyrimPlatform_1.Potion.from(item);
-                    if (asP) {
-                        if (asP.isPoison())
-                            return 5 /* Poison */;
-                        if (asP.isFood())
-                            return 7 /* Food */;
-                        return 4 /* Potion */;
-                    }
-                    if (skyrimPlatform_1.Ingredient.from(item))
-                        return 8 /* Ingredient */;
-                    if (skyrimPlatform_1.Book.from(item))
-                        return 9 /* Book */;
-                    if (skyrimPlatform_1.Key.from(item))
-                        return 10 /* Key */;
-                    if (skyrimPlatform_1.SoulGem.from(item))
-                        return 12 /* SoulGem */;
-                    if (skyrimPlatform_1.MiscObject.from(item))
-                        return 11 /* Misc */;
-                    return 0 /* None */;
-                }
-                FormLib.GetItemType = GetItemType;
-                /** Tries to do something on an `Actor` on each slot mask.
-                 * @param  {Actor|null} a Actor to work on.
-                 * @param  {(slot:number)=>void} DoSomething What to do on each slot mask.
-                 */
-                function ForEachSlotMask(a, DoSomething) {
-                    if (!a)
-                        return;
-                    for (let i = 1 /* Head */; i < 2147483648 /* FX01 */; i *= 2) {
-                        DoSomething(i);
-                    }
-                }
-                FormLib.ForEachSlotMask = ForEachSlotMask;
-                /** Does something for each `Armor` an `Actor` has equipped.
-                 *
-                 * @param a Actor to check.
-                 * @param DoSomething What to do when an equipped armor is found.
-                 */
-                // * Notice how this function doesn't use ForEachEquippedSlotMask.
-                // * That's because this function is used quite a lot in real time
-                // * and it's better to help it be faster, even if it's only one bit.
-                function ForEachEquippedArmor(a, DoSomething) {
-                    if (!a)
-                        return;
-                    for (let i = 1 /* Head */; i < 2147483648 /* FX01 */; i *= 2) {
-                        const x = skyrimPlatform_1.Armor.from(a.getWornForm(i));
-                        if (x)
-                            DoSomething(x);
-                    }
-                }
-                FormLib.ForEachEquippedArmor = ForEachEquippedArmor;
-                /** Gets all armors an `Actor` is wearing.
-                 *
-                 * @param a Actor to check for.
-                 * @param nonRepeated Some armors may occupy more than one bodyslot.
-                 * When this value is `false`, those armors will be returned multiple times: once for each slot.
-                 * @param playableOnly Return only playeable armors?
-                 * @param namedOnly Return only named armors?
-                 * @returns An array with all equipped armors.
-                 *
-                 * @remarks
-                 * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
-                 * it's recommended to be used with caution in real production code.
-                 *
-                 * However, it can be safely used sparingly.
-                 */
-                function GetEquippedArmors(a, nonRepeated = true, playableOnly = true, namedOnly = true) {
-                    if (!a)
-                        return [];
-                    const all = [];
-                    ForEachEquippedArmor(a, (x) => {
-                        const p = playableOnly ? (x.isPlayable() ? x : null) : x;
-                        const n = p && namedOnly ? (p.getName() !== "" ? p : null) : p;
-                        if (n)
-                            all.push(n);
-                    });
-                    const GetNonRepeated = () => {
-                        const uIds = [...new Set(all.map((a) => a.getFormID()))];
-                        return uIds.map((id) => skyrimPlatform_1.Armor.from(skyrimPlatform_1.Game.getFormEx(id)));
-                    };
-                    return nonRepeated ? GetNonRepeated() : all;
-                }
-                FormLib.GetEquippedArmors = GetEquippedArmors;
-                /** Iterates over all keywords belonging to some `Form`, from last to first.
-                 *
-                 * @param o - The form to iterate over.
-                 * @param f - Function applied to each keyword.
-                 */
-                function ForEachKeywordR(o, f) {
-                    if (!o)
-                        return;
-                    let i = o.getNumKeywords();
-                    while (i > 0) {
-                        i--;
-                        const k = skyrimPlatform_1.Keyword.from(o.getNthKeyword(i));
-                        if (k)
-                            f(k);
-                    }
-                }
-                FormLib.ForEachKeywordR = ForEachKeywordR;
-                /** Iterates over all items belonging to some `Outfit`, from last to first.
-                 *
-                 * @param o - The outfit to iterate over.
-                 * @param f - Function applied to each item.
-                 */
-                function ForEachOutfitItemR(o, f) {
-                    if (!o)
-                        return;
-                    let i = o.getNumParts();
-                    while (i > 0) {
-                        i--;
-                        const ii = o.getNthPart(i);
-                        if (ii)
-                            f(ii);
-                    }
-                }
-                FormLib.ForEachOutfitItemR = ForEachOutfitItemR;
-                /** Iterates over all forms of `formType` in some `cell`.
-                 *
-                 * @param cell Cell to search forms for.
-                 * @param formType {@link FormType}
-                 * @param f Function applied to each `Form`.
-                 */
-                function ForEachFormInCell(cell, formType, f) {
-                    if (!cell)
-                        return;
-                    let i = cell.getNumRefs(formType);
-                    while (i > 0) {
-                        i--;
-                        const frm = cell.getNthRef(i, formType);
-                        if (frm)
-                            f(frm);
-                    }
-                }
-                FormLib.ForEachFormInCell = ForEachFormInCell;
-                /** Gets the esp a form belongs to.
-                 *
-                 * @param form Form to get the esp from.
-                 * @returns Name and type of the esp file he form belongs to.
-                 */
-                // * This code was adapted from `GetFormIdentifier` in FileUtils.cpp
-                // * in SKEE64 (RaceMenu dll); line 177.
-                function GetFormEsp(form) {
-                    const nil = { name: "", type: 2 /* unknown */ };
-                    if (!form)
-                        return nil;
-                    const formId = form.getFormID();
-                    const modIndex = formId >>> 24;
-                    if (modIndex == 0xfe) {
-                        const lightIndex = (formId >>> 12) & 0xfff;
-                        if (lightIndex < skyrimPlatform_1.Game.getLightModCount())
-                            return { name: skyrimPlatform_1.Game.getLightModName(lightIndex), type: 1 /* esl */ };
-                    }
-                    else
-                        return { name: skyrimPlatform_1.Game.getModName(modIndex), type: 0 /* esp */ };
-                    return nil;
-                }
-                FormLib.GetFormEsp = GetFormEsp;
-                /** Adapter to change a {@link FormEspInfo} to `undefined` if needed. */
-                FormLib.FormEspInfoToUndef = (d) => d.type === 2 /* unknown */ ? { name: undefined, type: undefined } : d;
-                /** Returns the relative `formId` of some `Form`.
-                 *
-                 * @param form The `Form` to get the relative `formId` from.
-                 * @param modType Does the `Form` belong to an esp or esl file?
-                 * @returns Fixed `formId`. `-1` if `form` or `modType` are invalid.
-                 */
-                function GetFixedFormId(form, modType) {
-                    if (!form || modType === 2 /* unknown */)
-                        return -1;
-                    const id = form.getFormID();
-                    return modType === 0 /* esp */ ? id & 0xffffff : id & 0xfff;
-                }
-                FormLib.GetFixedFormId = GetFixedFormId;
-                /** Returns the esp file, type and fixed formId for a `Form`.
-                 *
-                 * @param form `Form` to get data from.
-                 * @returns An object with all data.
-                 */
-                function GetFormEspAndId(form) {
-                    const esp = GetFormEsp(form);
-                    const id = GetFixedFormId(form, esp.type);
-                    return { modName: esp.name, type: esp.type, fixedFormId: id };
-                }
-                FormLib.GetFormEspAndId = GetFormEspAndId;
-                /** Returns a string in the `PluginName|0xHexFormID` format.
-                 * @param  {string} espName
-                 * @param  {number} fixedFormId
-                 *
-                 * @remarks
-                 * This is used by default by {@link GetFormUniqueId}.
-                 */
-                FormLib.DefaultUIdFmt = (espName, fixedFormId) => `${espName}|0x${fixedFormId.toString(16)}`;
-                /** Returns a string that can be used as an unique `Form` identifier.
-                 *
-                 * @param form The `Form` to generate data for.
-                 * @param format The function that will be used to give format to the result of this function.
-                 * @returns A unique `string` identifier based on fixed formId and esp file data.
-                 *
-                 * @example
-                 * const b = Game.getFormEx(0x03003012)
-                 * const uId = GetFormUniqueId(b) // => "Hearthfires.esm|0x3012"
-                 * const uId2 = GetFormUniqueId(b, (e, i) => `${e}|0x${i.toString(16)}`) // => "Hearthfires.esm|0x3012"
-                 */
-                function GetFormUniqueId(form, format = FormLib.DefaultUIdFmt) {
-                    if (!form)
-                        return "Undefined form";
-                    const d = GetFormEspAndId(form);
-                    return format(d.modName, d.fixedFormId, d.type);
-                }
-                FormLib.GetFormUniqueId = GetFormUniqueId;
-                /** Returns wether an `ObjectReference` is an alchemy lab.
-                 * @param  {ObjectReference} furniture The furniture to check.
-                 *
-                 * @remarks
-                 * This function is intended to be used with `on("furnitureEnter")`
-                 * and `on("furnitureExit")` Skyrim Platform events.
-                 */
-                FormLib.IsAlchemyLab = (furniture) => ObjRefHasName(furniture, "alchemy");
-                /** Tests if an object reference contains some name */
-                const ObjRefHasName = (f, name) => { var _a; return (_a = f.getBaseObject()) === null || _a === void 0 ? void 0 : _a.getName().toLowerCase().includes(name); };
-            })(FormLib || (FormLib = {}));
-            exports_2("FormLib", FormLib);
-            /** Functions related to arrays. */
-            (function (ArrayLib) {
-                /** Returns a random element from some array.
-                 *
-                 * @param arr Array to get the element from.
-                 * @returns A random element.
-                 */
-                function RandomElement(arr) {
-                    return arr[Math.floor(Math.random() * arr.length)];
-                }
-                ArrayLib.RandomElement = RandomElement;
-            })(ArrayLib || (ArrayLib = {}));
-            exports_2("ArrayLib", ArrayLib);
-            /** Functions related to maps. */
-            (function (MapLib) {
-                /** Joins two maps, applying a function when keys collide.
-                 *
-                 * @param m1 First map.
-                 * @param m2 Second map.
-                 * @param OnExistingKey Function for solving collisions.
-                 * @returns
-                 */
-                function JoinMaps(m1, m2, OnExistingKey) {
-                    if (!m2)
-                        return m1;
-                    const o = new Map(m1);
-                    m2.forEach((v2, k) => {
-                        if (o.has(k))
-                            o.set(k, OnExistingKey(o.get(k), v2, k));
-                        else
-                            o.set(k, v2);
-                    });
-                    return o;
-                }
-                MapLib.JoinMaps = JoinMaps;
-            })(MapLib || (MapLib = {}));
-            exports_2("MapLib", MapLib);
-            /** Miscelaneous functions that don't belong to other categories. */
-            (function (Misc) {
-                /** Avoids a function to be executed many times at the same time.
-                 *
-                 * @param f The function to wrap.
-                 * @returns A function that will be called only once when the engine
-                 * tries to spam it.
-                 *
-                 * @remarks
-                 * Sometimes the engine is so fast a function may be called many times
-                 * in a row. For example, the `OnSleepStart` event may be fired 4 times
-                 * in a row, thus executing a function those 4 times, even when it was
-                 * intended to run only once.
-                 *
-                 * This function will make a function in that situation to be called
-                 * only once, as expected.
-                 *
-                 * @warning
-                 * Since this function is a "closure" it needs to be used outside loops
-                 * and things that may redefine the inner variables inside it.
-                 *
-                 * If this function doesn't appear to work, try to use it outside the
-                 * current execution block.
-                 *
-                 * @example
-                 * let f = () => { printConsole("Only once") }
-                 * f = AvoidRapidFire(f)
-                 *
-                 * // The engine is so fast this will actually work
-                 * f()
-                 * f()
-                 * f()
-                 */
-                function AvoidRapidFire(f) {
-                    let lastExecuted = 0;
-                    return () => {
-                        const t = TimeLib.Now();
-                        if (lastExecuted === t)
-                            return;
-                        lastExecuted = t;
-                        f();
-                    };
-                }
-                Misc.AvoidRapidFire = AvoidRapidFire;
-                /** Adapts a JContainers saving function so it can be used with {@link PreserveVar}.
-                 *
-                 * @param f Function to adapt.
-                 * @returns A function that accepts a key and a value.
-                 *
-                 * @example
-                 * const SaveFlt = JContainersToPreserving(JDB.solveFltSetter)
-                 * const SaveInt = JContainersToPreserving(JDB.solveIntSetter)
-                 */
-                function JContainersToPreserving(f) {
-                    return (k, v) => {
-                        f(k, v, true);
-                    };
-                }
-                Misc.JContainersToPreserving = JContainersToPreserving;
-                /** Adapts a PapyrusUtil saving function so it can be used with {@link PreserveVar}.
-                 *
-                 * @param f Function to adapt.
-                 * @param obj Object to save values on. Use `null` to save globally.
-                 * @returns A function that accepts a key and a value.
-                 *
-                 * @example
-                 * const SaveFlt = PapyrusUtilToPreserving(PapyrusUtil.SetFloatValue, null)
-                 * const SaveInt = PapyrusUtilToPreserving(PapyrusUtil.SetIntValue, null)
-                 */
-                function PapyrusUtilToPreserving(f, obj) {
-                    return (k, v) => {
-                        f(obj, k, v);
-                    };
-                }
-                Misc.PapyrusUtilToPreserving = PapyrusUtilToPreserving;
-                /** Saves a variable to both storage and wherever the `Store` function saves it.
-                 *
-                 * @remarks
-                 * The `storage` variable saves values across hot reloads, but not game sessions.
-                 *
-                 * At the time of creating this function, Skyrim Platform doesn't implement any
-                 * way of saving variables to the SKSE co-save, so values aren't preserved across
-                 * save game saves.
-                 *
-                 * This function lets us save variables using wrapped functions from either
-                 * **JContainers** or **PapyursUtil**.
-                 *
-                 * @param Store A function that saves a variable somewhere.
-                 * @param k `string` key to identify where the variable will be saved.
-                 * @returns A fuction that saves a value and returns it.
-                 *
-                 * @example
-                 * const SaveFlt = JContainersToPreserving(JDB.solveFltSetter)
-                 * const SaveInt = JContainersToPreserving(JDB.solveIntSetter)
-                 * const SFloat = PreserveVar(SaveFlt, "floatKey")
-                 * const SInt = PreserveVar(SaveInt, "intKey")
-                 *
-                 * // Use SFloat each time we want to make sure a value won't get lost when reloading the game.
-                 * let x = SFloat(10)   // => x === 10
-                 * x = SFloat(53.78)    // => x === 53.78
-                 */
-                function PreserveVar(Store, k) {
-                    return (x) => {
-                        skyrimPlatform_1.storage[k] = x;
-                        Store(k, x);
-                        return x;
-                    };
-                }
-                Misc.PreserveVar = PreserveVar;
-                /** Returns a function that accepts a function `f` that gets executed each `seconds`.
-                 *
-                 * @remarks
-                 * This is meant to be used as a substitute of sorts to the `OnUpdate` Papyrus event,
-                 * but it doesn't check if the player has the game paused inside a menu; that's up to
-                 * `f` to implement.
-                 *
-                 * @param seconds Seconds between checks.
-                 * @returns A function that accepts a function `f`.
-                 *
-                 * @example
-                 * const RTcalc = UpdateEach(3)
-                 *
-                 * on("update", () => {
-                 *    RTcalc(() => { printConsole("Real time calculations") })
-                 * }
-                 */
-                function UpdateEach(seconds) {
-                    let lastUpdated = 0;
-                    return (f) => {
-                        const t = skyrimPlatform_1.Utility.getCurrentRealTime();
-                        if (t - lastUpdated < seconds)
-                            return;
-                        lastUpdated = t;
-                        f();
-                    };
-                }
-                Misc.UpdateEach = UpdateEach;
-            })(Misc || (Misc = {}));
-            exports_2("Misc", Misc);
-            /** Functions related to hotkeys. */
-            (function (Hotkeys) {
-                /** Was copied from skyrimPlatform.ts because definitions in there are exported as a `const enum`,
-                 * thus making impossible to convert a string `DxScanCode` to number.
-                 *
-                 * With that setup it was impossible to make {@link FromSettings} to read scan codes as strings.
-                 */
-                let DxScanCode;
-                (function (DxScanCode) {
-                    DxScanCode[DxScanCode["None"] = 0] = "None";
-                    DxScanCode[DxScanCode["Escape"] = 1] = "Escape";
-                    DxScanCode[DxScanCode["N1"] = 2] = "N1";
-                    DxScanCode[DxScanCode["N2"] = 3] = "N2";
-                    DxScanCode[DxScanCode["N3"] = 4] = "N3";
-                    DxScanCode[DxScanCode["N4"] = 5] = "N4";
-                    DxScanCode[DxScanCode["N5"] = 6] = "N5";
-                    DxScanCode[DxScanCode["N6"] = 7] = "N6";
-                    DxScanCode[DxScanCode["N7"] = 8] = "N7";
-                    DxScanCode[DxScanCode["N8"] = 9] = "N8";
-                    DxScanCode[DxScanCode["N9"] = 10] = "N9";
-                    DxScanCode[DxScanCode["N0"] = 11] = "N0";
-                    DxScanCode[DxScanCode["Minus"] = 12] = "Minus";
-                    DxScanCode[DxScanCode["Equals"] = 13] = "Equals";
-                    DxScanCode[DxScanCode["Backspace"] = 14] = "Backspace";
-                    DxScanCode[DxScanCode["Tab"] = 15] = "Tab";
-                    DxScanCode[DxScanCode["Q"] = 16] = "Q";
-                    DxScanCode[DxScanCode["W"] = 17] = "W";
-                    DxScanCode[DxScanCode["E"] = 18] = "E";
-                    DxScanCode[DxScanCode["R"] = 19] = "R";
-                    DxScanCode[DxScanCode["T"] = 20] = "T";
-                    DxScanCode[DxScanCode["Y"] = 21] = "Y";
-                    DxScanCode[DxScanCode["U"] = 22] = "U";
-                    DxScanCode[DxScanCode["I"] = 23] = "I";
-                    DxScanCode[DxScanCode["O"] = 24] = "O";
-                    DxScanCode[DxScanCode["P"] = 25] = "P";
-                    DxScanCode[DxScanCode["LeftBracket"] = 26] = "LeftBracket";
-                    DxScanCode[DxScanCode["RightBracket"] = 27] = "RightBracket";
-                    DxScanCode[DxScanCode["Enter"] = 28] = "Enter";
-                    DxScanCode[DxScanCode["LeftControl"] = 29] = "LeftControl";
-                    DxScanCode[DxScanCode["A"] = 30] = "A";
-                    DxScanCode[DxScanCode["S"] = 31] = "S";
-                    DxScanCode[DxScanCode["D"] = 32] = "D";
-                    DxScanCode[DxScanCode["F"] = 33] = "F";
-                    DxScanCode[DxScanCode["G"] = 34] = "G";
-                    DxScanCode[DxScanCode["H"] = 35] = "H";
-                    DxScanCode[DxScanCode["J"] = 36] = "J";
-                    DxScanCode[DxScanCode["K"] = 37] = "K";
-                    DxScanCode[DxScanCode["L"] = 38] = "L";
-                    DxScanCode[DxScanCode["Semicolon"] = 39] = "Semicolon";
-                    DxScanCode[DxScanCode["Apostrophe"] = 40] = "Apostrophe";
-                    DxScanCode[DxScanCode["Console"] = 41] = "Console";
-                    DxScanCode[DxScanCode["LeftShift"] = 42] = "LeftShift";
-                    DxScanCode[DxScanCode["BackSlash"] = 43] = "BackSlash";
-                    DxScanCode[DxScanCode["Z"] = 44] = "Z";
-                    DxScanCode[DxScanCode["X"] = 45] = "X";
-                    DxScanCode[DxScanCode["C"] = 46] = "C";
-                    DxScanCode[DxScanCode["V"] = 47] = "V";
-                    DxScanCode[DxScanCode["B"] = 48] = "B";
-                    DxScanCode[DxScanCode["N"] = 49] = "N";
-                    DxScanCode[DxScanCode["M"] = 50] = "M";
-                    DxScanCode[DxScanCode["Comma"] = 51] = "Comma";
-                    DxScanCode[DxScanCode["Period"] = 52] = "Period";
-                    DxScanCode[DxScanCode["ForwardSlash"] = 53] = "ForwardSlash";
-                    DxScanCode[DxScanCode["RightShift"] = 54] = "RightShift";
-                    DxScanCode[DxScanCode["NumMult"] = 55] = "NumMult";
-                    DxScanCode[DxScanCode["LeftAlt"] = 56] = "LeftAlt";
-                    DxScanCode[DxScanCode["Spacebar"] = 57] = "Spacebar";
-                    DxScanCode[DxScanCode["CapsLock"] = 58] = "CapsLock";
-                    DxScanCode[DxScanCode["F1"] = 59] = "F1";
-                    DxScanCode[DxScanCode["F2"] = 60] = "F2";
-                    DxScanCode[DxScanCode["F3"] = 61] = "F3";
-                    DxScanCode[DxScanCode["F4"] = 62] = "F4";
-                    DxScanCode[DxScanCode["F5"] = 63] = "F5";
-                    DxScanCode[DxScanCode["F6"] = 64] = "F6";
-                    DxScanCode[DxScanCode["F7"] = 65] = "F7";
-                    DxScanCode[DxScanCode["F8"] = 66] = "F8";
-                    DxScanCode[DxScanCode["F9"] = 67] = "F9";
-                    DxScanCode[DxScanCode["F10"] = 68] = "F10";
-                    DxScanCode[DxScanCode["NumLock"] = 69] = "NumLock";
-                    DxScanCode[DxScanCode["ScrollLock"] = 70] = "ScrollLock";
-                    DxScanCode[DxScanCode["Num7"] = 71] = "Num7";
-                    DxScanCode[DxScanCode["Num8"] = 72] = "Num8";
-                    DxScanCode[DxScanCode["Num9"] = 73] = "Num9";
-                    DxScanCode[DxScanCode["NumMinus"] = 74] = "NumMinus";
-                    DxScanCode[DxScanCode["Num4"] = 75] = "Num4";
-                    DxScanCode[DxScanCode["Num5"] = 76] = "Num5";
-                    DxScanCode[DxScanCode["Num6"] = 77] = "Num6";
-                    DxScanCode[DxScanCode["NumPlus"] = 78] = "NumPlus";
-                    DxScanCode[DxScanCode["Num1"] = 79] = "Num1";
-                    DxScanCode[DxScanCode["Num2"] = 80] = "Num2";
-                    DxScanCode[DxScanCode["Num3"] = 81] = "Num3";
-                    DxScanCode[DxScanCode["Num0"] = 82] = "Num0";
-                    DxScanCode[DxScanCode["NumDot"] = 83] = "NumDot";
-                    DxScanCode[DxScanCode["F11"] = 87] = "F11";
-                    DxScanCode[DxScanCode["F12"] = 88] = "F12";
-                    DxScanCode[DxScanCode["NumEnter"] = 156] = "NumEnter";
-                    DxScanCode[DxScanCode["RightControl"] = 157] = "RightControl";
-                    DxScanCode[DxScanCode["NumSlash"] = 181] = "NumSlash";
-                    DxScanCode[DxScanCode["SysRqPtrScr"] = 183] = "SysRqPtrScr";
-                    DxScanCode[DxScanCode["RightAlt"] = 184] = "RightAlt";
-                    DxScanCode[DxScanCode["Pause"] = 197] = "Pause";
-                    DxScanCode[DxScanCode["Home"] = 199] = "Home";
-                    DxScanCode[DxScanCode["UpArrow"] = 200] = "UpArrow";
-                    DxScanCode[DxScanCode["PgUp"] = 201] = "PgUp";
-                    DxScanCode[DxScanCode["LeftArrow"] = 203] = "LeftArrow";
-                    DxScanCode[DxScanCode["RightArrow"] = 205] = "RightArrow";
-                    DxScanCode[DxScanCode["End"] = 207] = "End";
-                    DxScanCode[DxScanCode["DownArrow"] = 208] = "DownArrow";
-                    DxScanCode[DxScanCode["PgDown"] = 209] = "PgDown";
-                    DxScanCode[DxScanCode["Insert"] = 210] = "Insert";
-                    DxScanCode[DxScanCode["Delete"] = 211] = "Delete";
-                    DxScanCode[DxScanCode["LeftMouseButton"] = 256] = "LeftMouseButton";
-                    DxScanCode[DxScanCode["RightMouseButton"] = 257] = "RightMouseButton";
-                    DxScanCode[DxScanCode["MiddleMouseButton"] = 258] = "MiddleMouseButton";
-                    DxScanCode[DxScanCode["MouseButton3"] = 259] = "MouseButton3";
-                    DxScanCode[DxScanCode["MouseButton4"] = 260] = "MouseButton4";
-                    DxScanCode[DxScanCode["MouseButton5"] = 261] = "MouseButton5";
-                    DxScanCode[DxScanCode["MouseButton6"] = 262] = "MouseButton6";
-                    DxScanCode[DxScanCode["MouseButton7"] = 263] = "MouseButton7";
-                    DxScanCode[DxScanCode["MouseWheelUp"] = 264] = "MouseWheelUp";
-                    DxScanCode[DxScanCode["MouseWheelDown"] = 265] = "MouseWheelDown";
-                })(DxScanCode = Hotkeys.DxScanCode || (Hotkeys.DxScanCode = {}));
-                Hotkeys.DoNothing = () => { };
-                Hotkeys.DoNothingOnHold = (_) => () => { };
-                /** Creates a function that reads and logs a Hotkey at the same time.
-                 *
-                 * @param Log {@link DebugLib.Log.TappedFunction} used to log the hotkey.
-                 * @param Get A function that gets a hotkey by name.
-                 * @param appendStr Message to append before the hotkey name and data. `"Hotkey "` by default.
-                 * @returns A function that accepts a key name and returns a {@link Hotkey}.
-                 *
-                 * @example
-                 * const LH = DebugLib.Log.Tap(printConsole)
-                 * const GetHotkey = GetAndLog(LH, FromValue)
-                 *
-                 * ListenTo(GetHotkey("hk1")) // => "Hotkey hk1: Shift Enter" is printed to console
-                 */
-                function GetAndLog(Log, Get, appendStr = "Hotkey ") {
-                    const A = appendStr ? DebugLib.Log.AppendT(Log, appendStr) : Log;
-                    return (k) => A(k, Get(k), ToString);
-                }
-                Hotkeys.GetAndLog = GetAndLog;
-                /** Gets a hotkey from some configuration file.
-                 *
-                 * @remarks
-                 * This function can read both numbers and strings defined in {@link DxScanCode}.
-                 *
-                 * @param pluginName Name of the plugin to get the value from.
-                 * @param optionName Name of the variable that carries the value.
-                 * @returns The hotkey. `DxScanCode.None` if invalid.
-                 */
-                Hotkeys.FromSettings = (pluginName, optionName) => FromValue(skyrimPlatform_1.settings[pluginName][optionName]);
-                /** Reads a hotkey from a Json object inside some settings file.
-                 * @example
-                 * ```json
-                 * // Settings file
-                 * {
-                 *   "hotkeys": {
-                 *     "hk1": "Shift Enter"
-                 *   }
-                 * }
-                 * ```
-                 * ```ts
-                 *
-                 * // Typescript
-                 * const hk = FromObject("plugin", "hotkeys", "hk1") // => Shift + Enter
-                 * ```
-                 * @param pluginName Name of the plugin to get the value from.
-                 * @param objectName Name of the parent object of the wanted key.
-                 * @param optionName Name of the variable that carries the value.
-                 * @returns The hotkey. `DxScanCode.None` if invalid.
-                 */
-                Hotkeys.FromObject = (pluginName, objectName, optionName
-                // @ts-ignore
-                ) => FromValue(skyrimPlatform_1.settings[pluginName][objectName][optionName]);
-                /** Extracts modifiers from a string hotkey. */
-                function ExtractHkAndModifiers(s) {
-                    if (!s)
-                        return { hk: "None", modifiers: undefined };
-                    let m = {};
-                    const Find = (sub) => {
-                        if (s.indexOf(sub) > -1) {
-                            s = s.replace(sub, "").trim();
-                            return true;
-                        }
-                        else
-                            return false;
-                    };
-                    m.alt = Find("Alt");
-                    m.ctrl = Find("Ctrl");
-                    m.shift = Find("Shift");
-                    // Undefined if no modifiers were found
-                    m = !m.alt && !m.ctrl && !m.shift ? undefined : m;
-                    return { hk: s, modifiers: m };
-                }
-                /** Returns wether a Modifier is pressed. */
-                function IsModifierPressed(m) {
-                    const l = m === "Alt"
-                        ? DxScanCode.LeftAlt
-                        : m === "Ctrl"
-                            ? DxScanCode.LeftControl
-                            : DxScanCode.LeftShift;
-                    const r = m === "Alt"
-                        ? DxScanCode.RightAlt
-                        : m === "Ctrl"
-                            ? DxScanCode.RightControl
-                            : DxScanCode.RightShift;
-                    return () => skyrimPlatform_1.Input.isKeyPressed(l) || skyrimPlatform_1.Input.isKeyPressed(r);
-                }
-                /** Is `Shift` pressed? */
-                Hotkeys.IsShiftPressed = IsModifierPressed("Shift");
-                /** Is `Ctrl` pressed? */
-                Hotkeys.IsCtrlPressed = IsModifierPressed("Ctrl");
-                /** Is `Alt` pressed? */
-                Hotkeys.IsAltPressed = IsModifierPressed("Alt");
-                /** Converts either a `string` or `number` to a hotkey value.
-                 * @remarks
-                 * This function is best used in tandem with {@link ListenTo},
-                 * so that function can execute hotkeys like `"Ctrl Enter"`.
-                 */
-                function FromValue(l) {
-                    let t = undefined;
-                    let m = undefined;
-                    if (typeof l === "string") {
-                        const { hk, modifiers } = ExtractHkAndModifiers(l);
-                        t = DxScanCode[hk];
-                        m = modifiers;
-                    }
-                    else if (typeof l === "number")
-                        t = l;
-                    return t === undefined ? { hk: DxScanCode.None } : { hk: t, modifiers: m };
-                }
-                Hotkeys.FromValue = FromValue;
-                /** Converts a {@link Hotkey} to string.
-                 * @remarks Used for presenting info to players.
-                 */
-                function ToString(h) {
-                    var _a, _b, _c;
-                    const k = DxScanCode[h.hk];
-                    const s = ((_a = h.modifiers) === null || _a === void 0 ? void 0 : _a.shift) ? "Shift + " : "";
-                    const c = ((_b = h.modifiers) === null || _b === void 0 ? void 0 : _b.ctrl) ? "Ctrl + " : "";
-                    const a = ((_c = h.modifiers) === null || _c === void 0 ? void 0 : _c.alt) ? "Alt + " : "";
-                    return c + s + a + k;
-                }
-                Hotkeys.ToString = ToString;
-                /** Used to contain the function that checks for modifiers.
-                 * Made like this for optimization purposes.
-                 */
-                let Modifiers;
-                (function (Modifiers) {
-                    const S = Hotkeys.IsShiftPressed;
-                    const A = Hotkeys.IsAltPressed;
-                    const C = Hotkeys.IsCtrlPressed;
-                    const T = (k, P, f) => {
-                        const p = P();
-                        if (k) {
-                            if (!p)
-                                return false; // Key isn't pressed, but should
-                            return f(); // Check if next sequence is pressed
-                        }
-                        else {
-                            if (p)
-                                return false; // Key is pressed, but shouldn't
-                            return f(); // Check if next sequence is pressed
-                        }
-                    };
-                    function Continue(m) {
-                        const TC = () => T(m.ctrl, C, () => true);
-                        const TAC = () => T(m.alt, A, TC);
-                        const TSAC = () => T(m.shift, S, TAC);
-                        return TSAC();
-                    }
-                    Modifiers.Continue = Continue;
-                })(Modifiers || (Modifiers = {}));
-                /** Listen to {@link Hotkey}. */
-                Hotkeys.ListenTo = (hk, enable = true) => ListenToS(hk.hk, enable, hk.modifiers);
-                /** "ListenTo - Simple". Listens for some Hotkey press / release / hold.
-                 *
-                 * @see {@link https://www.creationkit.com/index.php?title=Input_Script#DXScanCodes | DXScanCodes}
-                 * for possible hotkey values.
-                 *
-                 * @remarks
-                 * Use functions generated by this function ***only inside an `'update'` event***.
-                 * But ***DON'T GENERATE functions INSIDE an `'update'` event***.
-                 *
-                 * This function is intended to be used for quick prototyping.\
-                 * For "production" code, use {@link ListenTo}.
-                 *
-                 * @param hk The hotkey to listen for.
-                 * @param enable If `false`, a blank function will be returned.\
-                 * Use this argument when you need to listen to hotkeys only when you know some condition
-                 * will be true. This will avoid wasting time doing checks that will never come true.
-                 *
-                 * @returns A function that accepts three callbacks:
-                 * 1. OnKeyPress
-                 * 1. OnKeyReleased
-                 * 1. OnKeyHold - This one gets how many frames has the key being held
-                 *
-                 * @example
-                 * const LogPress = () => { printConsole(`Key was pressed`) }
-                 *
-                 * const LogRelease = () => { printConsole(`Key was released`) }
-                 *
-                 * const LogHold: KeyHoldEvt = n => () => { printConsole(`Key has been held for ${n} frames.`) }
-                 *
-                 * const DoStuff = ListenTo(76)           // Listen to num5
-                 * const OnlyCareForHold = ListenTo(77)   // Listen to num6
-                 *
-                 * const specialModeEnabled = settings["mod"]["specialMode"]
-                 * const SpecialOperation = ListenTo(DxScanCode.F10, specialModeEnabled)
-                 *
-                 * on('update', () => {
-                 *   DoStuff(LogPress, LogRelease, LogHold)
-                 *   OnlyCareForHold(undefined, undefined, LogHold)
-                 *
-                 *   SpecialOperation(LogPress)
-                 *
-                 *   // Never generate functions inside an update event.
-                 *   // The following code won't work.
-                 *   const NonWorking = ListenTo(78)
-                 *   NonWorking(LogPress, undefined, LogHold)
-                 * })
-                 */
-                function ListenToS(hk, enable = true, modifiers) {
-                    let old = false;
-                    let frames = 0;
-                    return enable && hk > DxScanCode.None
-                        ? (OnPress = Hotkeys.DoNothing, OnRelease = Hotkeys.DoNothing, OnHold = Hotkeys.DoNothingOnHold) => {
-                            if (modifiers && !Modifiers.Continue(modifiers))
-                                return;
-                            const p = skyrimPlatform_1.Input.isKeyPressed(hk);
-                            if (old !== p) {
-                                frames = 0;
-                                if (p)
-                                    skyrimPlatform_1.once("update", OnPress);
-                                else
-                                    skyrimPlatform_1.once("update", OnRelease);
-                            }
-                            else if (p) {
-                                frames++;
-                                skyrimPlatform_1.once("update", OnHold(frames));
-                            }
-                            old = p;
-                        }
-                        : (OnPress = Hotkeys.DoNothing, OnRelease = Hotkeys.DoNothing, OnHold = Hotkeys.DoNothingOnHold) => { };
-                }
-                Hotkeys.ListenToS = ListenToS;
-                /** Not an useful function. Use it as a template. @see {@link ListenTo} */
-                Hotkeys.LogPress = () => {
-                    skyrimPlatform_1.printConsole(`Key was pressed`);
-                };
-                /** Not an useful function. Use it as a template. @see {@link ListenTo} */
-                Hotkeys.LogRelease = () => {
-                    skyrimPlatform_1.printConsole(`Key was released`);
-                };
-                /** Not an useful function. Use it as a template. @see {@link ListenTo} */
-                Hotkeys.LogHold = (n) => () => {
-                    skyrimPlatform_1.printConsole(`Key has been held for ${n} frames.`);
-                };
-            })(Hotkeys || (Hotkeys = {}));
-            exports_2("Hotkeys", Hotkeys);
-            /** Useful functions for debugging. */
-            (function (DebugLib) {
-                let Log;
-                (function (Log) {
-                    /** How much will the console be spammed.
-                     * - optimization     Meant to only output the times functions take to execute. Used for bottleneck solving.
-                     * - none       No spam.
-                     * - error      Just errors and stuff like that.
-                     * - info       Detailed info so players can know if things are going as expected, but not enough for actual debugging.
-                     * - verbose    Info meant for developers. Use it for reporting errors or unexpected behavior.
-                     */
-                    let Level;
-                    (function (Level) {
-                        Level[Level["optimization"] = -1] = "optimization";
-                        Level[Level["none"] = 0] = "none";
-                        Level[Level["error"] = 1] = "error";
-                        Level[Level["info"] = 2] = "info";
-                        Level[Level["verbose"] = 3] = "verbose";
-                    })(Level = Log.Level || (Log.Level = {}));
-                    /** Gets the logging level from some configuration file.
-                     *
-                     * @param pluginName Name of the plugin to get the value from.
-                     * @param optionName Name of the variable that carries the value.
-                     * @returns The logging level from file. `verbose` if value was invalid.
-                     */
-                    function LevelFromSettings(pluginName, optionName) {
-                        return LevelFromValue(skyrimPlatform_1.settings[pluginName][optionName]);
-                    }
-                    Log.LevelFromSettings = LevelFromSettings;
-                    function LevelFromValue(v) {
-                        const l = typeof v === "string"
-                            ? v.toLowerCase()
-                            : typeof v === "number"
-                                ? v
-                                : "verbose";
-                        let t = Level[l];
-                        if (typeof l === "number")
-                            t = Level[t];
-                        return t === undefined ? Level.verbose : t;
-                    }
-                    Log.LevelFromValue = LevelFromValue;
-                    /** Returns a string in the form `"[Mod name]: Message"`.
-                     * @see {@link FileFmt}.
-                     *
-                     * @remarks
-                     * You can use this function as a guide on how a {@link LogFormat} function
-                     * used for {@link CreateFunction} can be made.
-                     *
-                     * @example
-                     * const LogI = CreateFunction(userLevel, Level.info, "my-mod", ConsoleFmt, FileFmt)
-                     * const LogV = CreateFunction(userLevel, Level.verbose, "my-mod", ConsoleFmt, FileFmt)
-                     *
-                     * // Console output: "[my-mod]: This is important for the player."
-                     * // File output: "[info] 4/5/2021 12:32:15 p.m.: This is important for the player."
-                     * LogI("This is important for the player.")
-                     *
-                     * // Console output: "[my-mod]: This is useful for debugging."
-                     * // File output: "[verbose] 4/5/2021 12:32:15 p.m.: This is useful for debugging."
-                     * LogV("This is useful for debugging.")
-                     */
-                    Log.ConsoleFmt = (_, __, n, ___, msg) => `[${n}]: ${msg}`;
-                    /** Returns a string in the form `"[logging level] date-time: Message"`.
-                     * @see {@link ConsoleFmt}.
-                     *
-                     * @remarks
-                     * You can use this function as a guide on how a {@link LogFormat} function
-                     * used for {@link CreateFunction} can be made.
-                     *
-                     * Format for https://github.com/Scarfsail/AdvancedLogViewer :\
-                     *    `[{Type}] {Date} {Time}: {Message}`
-                     *
-                     * @example
-                     * const LogI = CreateFunction(userLevel, Level.info, "my-mod", ConsoleFmt, FileFmt)
-                     * const LogV = CreateFunction(userLevel, Level.verbose, "my-mod", ConsoleFmt, FileFmt)
-                     *
-                     * // Console output: "[my-mod]: This is important for the player."
-                     * // File output: "[info] 4/5/2021 12:32:15 p.m.: This is important for the player."
-                     * LogI("This is important for the player.")
-                     *
-                     * // Console output: "[my-mod]: This is useful for debugging."
-                     * // File output: "[verbose] 4/5/2021 12:32:15 p.m.: This is useful for debugging."
-                     * LogV("This is useful for debugging.")
-                     */
-                    Log.FileFmt = (_, m, __, t, msg) => `[${Level[m]}] ${t.toLocaleString()}: ${msg}`;
-                    /** Creates a logging function that appends some message before logging.
-                     *
-                     * @param f Function to wrap.
-                     * @param append Message to append each time the result is called.
-                     * @returns A {@link LoggingFunction}.
-                     *
-                     * @example
-                     * const CMLL = Append(printConsole, "Kemonito: ")
-                     * CMLL("Kicks")       // => "Kemonito: Kicks"
-                     * CMLL("Flies!")      // => "Kemonito: Flies!"
-                     * CMLL("Is love")     // => "Kemonito: Is love"
-                     * CMLL("Is life")     // => "Kemonito: Is life"
-                     */
-                    function Append(f, append) {
-                        return (msg) => f(append + msg);
-                    }
-                    Log.Append = Append;
-                    /** Creates a logging function that appends some message before logging.
-                     *
-                     * @see {@link Append}
-                     *
-                     * @param f Function to wrap.
-                     * @param append Message to append each time the result is called.
-                     * @returns A {@link TappedFunction}.
-                     */
-                    function AppendT(f, append) {
-                        return (msg, x, fmt) => f(append + msg, x, fmt);
-                    }
-                    Log.AppendT = AppendT;
-                    /** Creates a function used for logging. Said function can log to either console or to some file.
-                     *
-                     * @see {@link FileFmt}, {@link ConsoleFmt}.
-                     *
-                     * @param currLogLvl The log level the user has selected. I.e. how much info they want to get.
-                     * @param logAt At which level this function will log.
-                     * @param modName Name of the mod. Will be used to output messages and to name the output file.
-                     * Output file will be named `"Data\Platform\Plugins\modName-logs.txt"`.
-                     * @param ConsoleFmt A function of type {@link LogFormat}. If `undefined`, nothing will be output to console.
-                     * @param FileFmt A function of type {@link LogFormat}. If `undefined`, nothing will be output to file.
-                     * @returns A function that logs a message as a string.
-                     *
-                     * @example
-                     * // LogI will only log to file
-                     * const LogI = CreateFunction(Level.info, Level.info, "my-mod", undefined, FileFmt)
-                     *
-                     * // LogV won't log anything because player only wants to log at most Level.info type messages
-                     * const LogV = CreateFunction(Level.info, Level.verbose, "my-mod", ConsoleFmt, FileFmt)
-                     */
-                    function CreateFunction(currLogLvl, logAt, modName, ConsoleFmt, FileFmt) {
-                        return function (msg) {
-                            const canLog = currLogLvl >= logAt || (currLogLvl < 0 && currLogLvl === logAt);
-                            if (!canLog)
-                                return;
-                            const t = new Date();
-                            if (ConsoleFmt)
-                                skyrimPlatform_1.printConsole(ConsoleFmt(currLogLvl, logAt, modName, t, msg));
-                            if (FileFmt)
-                                skyrimPlatform_1.writeLogs(modName, FileFmt(currLogLvl, logAt, modName, t, msg));
-                        };
-                    }
-                    Log.CreateFunction = CreateFunction;
-                    /** Creates all functions at all logging levels with their corresponding Tapped counterparts.
-                     *
-                     * @param mod Mod name. This will be saved for each line.
-                     * @param logLvl Current logging level for the mod.
-                     * @param Console Console format.
-                     * @param File File format.
-                     * @returns An object with all functions.
-                     */
-                    function CreateAll(mod, logLvl, Console, File) {
-                        const CLF = (logAt) => CreateFunction(logLvl, logAt, mod, Console, File);
-                        const O = CLF(Level.optimization);
-                        const N = CLF(Level.none);
-                        const E = CLF(Level.error);
-                        const I = CLF(Level.info);
-                        const V = CLF(Level.verbose);
-                        return {
-                            /** Log at special mode: optimization. */
-                            Optimization: O,
-                            /** Log at none level. Basically, ignore logging settings, except when using special modes. */
-                            None: N,
-                            /** Log at error level. */
-                            Error: E,
-                            /** Log at info level. */
-                            Info: I,
-                            /** Log at verbose level. */
-                            Verbose: V,
-                            /** Log at special mode: optimization. Return value. */
-                            TapO: Tap(O),
-                            /** Log at none level and return value. */
-                            TapN: Tap(N),
-                            /** Log at error level and return value. */
-                            TapE: Tap(E),
-                            /** Log at info level and return value. */
-                            TapI: Tap(I),
-                            /** Log at verbose level and return value. */
-                            TapV: Tap(V),
-                        };
-                    }
-                    Log.CreateAll = CreateAll;
-                    /** Makes a logging function to log a value, then returns that value.
-                     *
-                     * @param f - The logging function.
-                     * @returns A {@link TappedFunction}.
-                     *
-                     * @remarks
-                     * This function is intended to be used to initialize variables while logging them,
-                     * so logging looks cleaner and variables become self documenting in code and
-                     * "debuggeable" at the same time.
-                     *
-                     * @example
-                     * const IntToHex = (x: number) => x.toString(16)
-                     * const LogAndInit = Tap(printConsole)
-                     *
-                     * // "Value for x: 3". Meanwhile: x === 3.
-                     * const x = LogAndInit("Value for x", 3)
-                     *
-                     * // "Hex: ff". Meanwhile: ff === 255
-                     * const ff = LogAndInit("Hex", 255, IntToHex)
-                     *
-                     * // Don't know what the next call will yield, but we can log it to console to see it!
-                     * const form = LogAndInit("Found form", Game.getFormFromFile(0x3bba, "Skyrim.esm"))
-                     */
-                    function Tap(f) {
-                        return function (msg, x, g) {
-                            if (g) {
-                                if (msg)
-                                    f(`${msg}: ${g(x)}`);
-                                else
-                                    f(g(x));
-                            }
-                            else {
-                                if (msg)
-                                    f(`${msg}: ${x}`);
-                                else
-                                    f(`${x}`);
-                            }
-                            return x;
-                        };
-                    }
-                    Log.Tap = Tap;
-                    const C = Combinators;
-                    /** Returns `x` while executing a logging function. `R` means _[R]eturn_.
-                     *
-                     * @remarks
-                     * This is useful for uncluttering logging calls when returning values from functions,
-                     * but can be used to log variable assignments as well.
-                     *
-                     * At first this may look like it's doing the same as {@link Tap}, but this function provides much
-                     * more flexibility at the cost of doing more writing.\
-                     * Both functions are useful and can be used together for great flexibilty.
-                     *
-                     * @param f A function that takes any number of arguments and returns `void`.
-                     * @param x The value to be returned.
-                     * @returns `x`
-                     *
-                     * @example
-                     * const Msg = (s: string) => { printConsole(`This is a ${s}`) }
-                     * const x = R(Msg("number"), 2)       // => "This is a number"; x === 2
-                     * const s = R(Msg("string"), "noob")  // => "This is a string"; s === "noob"
-                     */
-                    Log.R = C.Return;
-                    /** Converts an integer to hexadecimal notation.
-                     *
-                     * @remarks
-                     * This function has apparently absurd safeguards because it's intended to be used for logging.\
-                     * If you want a straight forward conversion, just use `x.toString(16)`.
-                     *
-                     * @param x
-                     * @returns string
-                     */
-                    function IntToHex(x) {
-                        return !x || typeof x !== "number"
-                            ? "IntToHex: Undefined value"
-                            : x.toString(16);
-                    }
-                    Log.IntToHex = IntToHex;
-                })(Log = DebugLib.Log || (DebugLib.Log = {}));
-                /** @experimental
-                 * Doesn't work right now. Maybe I need to use promises and whatnot.
-                 *
-                 * Measures the time it takes a function to execute and logs that.
-                 *
-                 * @remarks
-                 * `Utility.getCurrentRealTime()` seems to be returning the same value for both
-                 * times the function starts and ends.\
-                 * I suspect this is because most functions in Skyrim Platform don't wait for the others to end.
-                 *
-                 * @param f - Function to measure.
-                 * @param Log - Function used for logging the time. You can supply a logging level-aware function.
-                 */
-                function Benchmark(f, Log) {
-                    return () => {
-                        const t1 = skyrimPlatform_1.Utility.getCurrentRealTime();
-                        Log(`${f.name} start time: ${t1}`);
-                        const ff = new Promise((resolve, _) => {
-                            f();
-                            resolve(skyrimPlatform_1.Utility.getCurrentRealTime());
-                        });
-                        ff.then((t2) => {
-                            Log(`${f.name} end time: ${t2}`);
-                            Log(`Execution time for ${f.name}: ${t2 - t1}`);
-                        });
-                    };
-                }
-                DebugLib.Benchmark = Benchmark;
-            })(DebugLib || (DebugLib = {}));
-            exports_2("DebugLib", DebugLib);
-            /** Animation helpers */
-            (function (AnimLib) {
-                /** Adds a hook to react to some animation event.
-                 * @param  {string} animName Name of the animation to react to.
-                 * @param  {()=>void} callback Function to call when animation is played.
-                 * @param  {number | undefined} minFormId Minimum FormId of actors to react to.
-                 * @param  {number | undefined} maxFormId Maximum FormId of actors to react to.
-                 */
-                function HookAnim(animName, callback, minFormId, maxFormId) {
-                    skyrimPlatform_1.hooks.sendAnimationEvent.add({
-                        enter(_) { },
-                        leave(c) {
-                            if (c.animationSucceeded)
-                                skyrimPlatform_1.once("update", () => callback());
-                        },
-                    }, minFormId, maxFormId, animName);
-                }
-                AnimLib.HookAnim = HookAnim;
-            })(AnimLib || (AnimLib = {}));
-            exports_2("AnimLib", AnimLib);
+            (function (Level) {
+                Level[Level["optimization"] = -1] = "optimization";
+                Level[Level["none"] = 0] = "none";
+                Level[Level["error"] = 1] = "error";
+                Level[Level["info"] = 2] = "info";
+                Level[Level["verbose"] = 3] = "verbose";
+            })(Level || (Level = {}));
+            exports_3("Level", Level);
+            exports_3("ConsoleFmt", ConsoleFmt = (_, __, n, ___, msg) => `[${n}]: ${msg}`);
+            exports_3("FileFmt", FileFmt = (_, m, __, t, msg) => `[${Level[m]}] ${t.toLocaleString()}: ${msg}`);
+            exports_3("append", append = Append);
+            exports_3("appendT", appendT = AppendT);
+            exports_3("R", R = C.Return);
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/player", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_3, context_3) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Hotkeys", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Log"], function (exports_4, context_4) {
     "use strict";
-    var skyrimPlatform_2, playerId, Player;
-    var __moduleName = context_3 && context_3.id;
-    /**
-     * Is an object the player?
-     * @param a Object to be tested.
-     * @returns Wether the object is the player.
-     */
-    function isPlayer(a) {
-        if (!a)
-            return false;
-        return a.getFormID() === playerId;
+    var skyrimPlatform_2, Log, DxScanCode, DoNothing, DoNothingOnHold, FromSettings, FromObject, IsShiftPressed, IsCtrlPressed, IsAltPressed, fromValue, Modifiers, ListenTo, LogPress, LogRelease, LogHold;
+    var __moduleName = context_4 && context_4.id;
+    function GetAndLog(log, Get, appendStr = "Hotkey ") {
+        const A = appendStr ? Log.AppendT(log, appendStr) : log;
+        return (k) => A(k, Get(k), ToString);
     }
-    exports_3("isPlayer", isPlayer);
+    exports_4("GetAndLog", GetAndLog);
+    function ExtractHkAndModifiers(s) {
+        if (!s)
+            return { hk: "None", modifiers: undefined };
+        let m = {};
+        const Find = (sub) => {
+            if (s.indexOf(sub) > -1) {
+                s = s.replace(sub, "").trim();
+                return true;
+            }
+            else
+                return false;
+        };
+        m.alt = Find("Alt");
+        m.ctrl = Find("Ctrl");
+        m.shift = Find("Shift");
+        m = !m.alt && !m.ctrl && !m.shift ? undefined : m;
+        return { hk: s, modifiers: m };
+    }
+    function IsModifierPressed(m) {
+        const l = m === "Alt"
+            ? DxScanCode.LeftAlt
+            : m === "Ctrl"
+                ? DxScanCode.LeftControl
+                : DxScanCode.LeftShift;
+        const r = m === "Alt"
+            ? DxScanCode.RightAlt
+            : m === "Ctrl"
+                ? DxScanCode.RightControl
+                : DxScanCode.RightShift;
+        return () => skyrimPlatform_2.Input.isKeyPressed(l) || skyrimPlatform_2.Input.isKeyPressed(r);
+    }
+    function FromValue(l) {
+        let t = undefined;
+        let m = undefined;
+        if (typeof l === "string") {
+            const { hk, modifiers } = ExtractHkAndModifiers(l);
+            t = DxScanCode[hk];
+            m = modifiers;
+        }
+        else if (typeof l === "number")
+            t = l;
+        return t === undefined ? { hk: DxScanCode.None } : { hk: t, modifiers: m };
+    }
+    exports_4("FromValue", FromValue);
+    function ToString(h) {
+        var _a, _b, _c;
+        const k = DxScanCode[h.hk];
+        const s = ((_a = h.modifiers) === null || _a === void 0 ? void 0 : _a.shift) ? "Shift + " : "";
+        const c = ((_b = h.modifiers) === null || _b === void 0 ? void 0 : _b.ctrl) ? "Ctrl + " : "";
+        const a = ((_c = h.modifiers) === null || _c === void 0 ? void 0 : _c.alt) ? "Alt + " : "";
+        return c + s + a + k;
+    }
+    exports_4("ToString", ToString);
+    function ListenToS(hk, enable = true, modifiers) {
+        let old = false;
+        let frames = 0;
+        return enable && hk > DxScanCode.None
+            ? (OnPress = DoNothing, OnRelease = DoNothing, OnHold = DoNothingOnHold) => {
+                if (modifiers && !Modifiers.Continue(modifiers))
+                    return;
+                const p = skyrimPlatform_2.Input.isKeyPressed(hk);
+                if (old !== p) {
+                    frames = 0;
+                    if (p)
+                        skyrimPlatform_2.once("update", OnPress);
+                    else
+                        skyrimPlatform_2.once("update", OnRelease);
+                }
+                else if (p) {
+                    frames++;
+                    skyrimPlatform_2.once("update", OnHold(frames));
+                }
+                old = p;
+            }
+            : (OnPress = DoNothing, OnRelease = DoNothing, OnHold = DoNothingOnHold) => { };
+    }
+    exports_4("ListenToS", ListenToS);
     return {
         setters: [
             function (skyrimPlatform_2_1) {
                 skyrimPlatform_2 = skyrimPlatform_2_1;
+            },
+            function (Log_1) {
+                Log = Log_1;
             }
         ],
         execute: function () {
-            /** Player FormId. */
-            exports_3("playerId", playerId = 0x14);
-            /** Gets the player as an `Actor`.
-             *
-             * @remarks
-             * This function is intended to be used as a callback when you are defining functions that
-             * need the player, but
-             * {@link https://github.com/skyrim-multiplayer/skymp/blob/main/docs/skyrim_platform/native.md#native-functions game functions are not available}
-             * when defining them.
-             *
-             * @privateRemarks
-             * `Game.getPlayer()` is guaranteed to get an `Actor` in Skyrim Platform, so it's
-             * ok to do `Game.getPlayer() as Actor`.
-             */
-            exports_3("Player", Player = () => skyrimPlatform_2.Game.getPlayer());
+            (function (DxScanCode) {
+                DxScanCode[DxScanCode["None"] = 0] = "None";
+                DxScanCode[DxScanCode["Escape"] = 1] = "Escape";
+                DxScanCode[DxScanCode["N1"] = 2] = "N1";
+                DxScanCode[DxScanCode["N2"] = 3] = "N2";
+                DxScanCode[DxScanCode["N3"] = 4] = "N3";
+                DxScanCode[DxScanCode["N4"] = 5] = "N4";
+                DxScanCode[DxScanCode["N5"] = 6] = "N5";
+                DxScanCode[DxScanCode["N6"] = 7] = "N6";
+                DxScanCode[DxScanCode["N7"] = 8] = "N7";
+                DxScanCode[DxScanCode["N8"] = 9] = "N8";
+                DxScanCode[DxScanCode["N9"] = 10] = "N9";
+                DxScanCode[DxScanCode["N0"] = 11] = "N0";
+                DxScanCode[DxScanCode["Minus"] = 12] = "Minus";
+                DxScanCode[DxScanCode["Equals"] = 13] = "Equals";
+                DxScanCode[DxScanCode["Backspace"] = 14] = "Backspace";
+                DxScanCode[DxScanCode["Tab"] = 15] = "Tab";
+                DxScanCode[DxScanCode["Q"] = 16] = "Q";
+                DxScanCode[DxScanCode["W"] = 17] = "W";
+                DxScanCode[DxScanCode["E"] = 18] = "E";
+                DxScanCode[DxScanCode["R"] = 19] = "R";
+                DxScanCode[DxScanCode["T"] = 20] = "T";
+                DxScanCode[DxScanCode["Y"] = 21] = "Y";
+                DxScanCode[DxScanCode["U"] = 22] = "U";
+                DxScanCode[DxScanCode["I"] = 23] = "I";
+                DxScanCode[DxScanCode["O"] = 24] = "O";
+                DxScanCode[DxScanCode["P"] = 25] = "P";
+                DxScanCode[DxScanCode["LeftBracket"] = 26] = "LeftBracket";
+                DxScanCode[DxScanCode["RightBracket"] = 27] = "RightBracket";
+                DxScanCode[DxScanCode["Enter"] = 28] = "Enter";
+                DxScanCode[DxScanCode["LeftControl"] = 29] = "LeftControl";
+                DxScanCode[DxScanCode["A"] = 30] = "A";
+                DxScanCode[DxScanCode["S"] = 31] = "S";
+                DxScanCode[DxScanCode["D"] = 32] = "D";
+                DxScanCode[DxScanCode["F"] = 33] = "F";
+                DxScanCode[DxScanCode["G"] = 34] = "G";
+                DxScanCode[DxScanCode["H"] = 35] = "H";
+                DxScanCode[DxScanCode["J"] = 36] = "J";
+                DxScanCode[DxScanCode["K"] = 37] = "K";
+                DxScanCode[DxScanCode["L"] = 38] = "L";
+                DxScanCode[DxScanCode["Semicolon"] = 39] = "Semicolon";
+                DxScanCode[DxScanCode["Apostrophe"] = 40] = "Apostrophe";
+                DxScanCode[DxScanCode["Console"] = 41] = "Console";
+                DxScanCode[DxScanCode["LeftShift"] = 42] = "LeftShift";
+                DxScanCode[DxScanCode["BackSlash"] = 43] = "BackSlash";
+                DxScanCode[DxScanCode["Z"] = 44] = "Z";
+                DxScanCode[DxScanCode["X"] = 45] = "X";
+                DxScanCode[DxScanCode["C"] = 46] = "C";
+                DxScanCode[DxScanCode["V"] = 47] = "V";
+                DxScanCode[DxScanCode["B"] = 48] = "B";
+                DxScanCode[DxScanCode["N"] = 49] = "N";
+                DxScanCode[DxScanCode["M"] = 50] = "M";
+                DxScanCode[DxScanCode["Comma"] = 51] = "Comma";
+                DxScanCode[DxScanCode["Period"] = 52] = "Period";
+                DxScanCode[DxScanCode["ForwardSlash"] = 53] = "ForwardSlash";
+                DxScanCode[DxScanCode["RightShift"] = 54] = "RightShift";
+                DxScanCode[DxScanCode["NumMult"] = 55] = "NumMult";
+                DxScanCode[DxScanCode["LeftAlt"] = 56] = "LeftAlt";
+                DxScanCode[DxScanCode["Spacebar"] = 57] = "Spacebar";
+                DxScanCode[DxScanCode["CapsLock"] = 58] = "CapsLock";
+                DxScanCode[DxScanCode["F1"] = 59] = "F1";
+                DxScanCode[DxScanCode["F2"] = 60] = "F2";
+                DxScanCode[DxScanCode["F3"] = 61] = "F3";
+                DxScanCode[DxScanCode["F4"] = 62] = "F4";
+                DxScanCode[DxScanCode["F5"] = 63] = "F5";
+                DxScanCode[DxScanCode["F6"] = 64] = "F6";
+                DxScanCode[DxScanCode["F7"] = 65] = "F7";
+                DxScanCode[DxScanCode["F8"] = 66] = "F8";
+                DxScanCode[DxScanCode["F9"] = 67] = "F9";
+                DxScanCode[DxScanCode["F10"] = 68] = "F10";
+                DxScanCode[DxScanCode["NumLock"] = 69] = "NumLock";
+                DxScanCode[DxScanCode["ScrollLock"] = 70] = "ScrollLock";
+                DxScanCode[DxScanCode["Num7"] = 71] = "Num7";
+                DxScanCode[DxScanCode["Num8"] = 72] = "Num8";
+                DxScanCode[DxScanCode["Num9"] = 73] = "Num9";
+                DxScanCode[DxScanCode["NumMinus"] = 74] = "NumMinus";
+                DxScanCode[DxScanCode["Num4"] = 75] = "Num4";
+                DxScanCode[DxScanCode["Num5"] = 76] = "Num5";
+                DxScanCode[DxScanCode["Num6"] = 77] = "Num6";
+                DxScanCode[DxScanCode["NumPlus"] = 78] = "NumPlus";
+                DxScanCode[DxScanCode["Num1"] = 79] = "Num1";
+                DxScanCode[DxScanCode["Num2"] = 80] = "Num2";
+                DxScanCode[DxScanCode["Num3"] = 81] = "Num3";
+                DxScanCode[DxScanCode["Num0"] = 82] = "Num0";
+                DxScanCode[DxScanCode["NumDot"] = 83] = "NumDot";
+                DxScanCode[DxScanCode["F11"] = 87] = "F11";
+                DxScanCode[DxScanCode["F12"] = 88] = "F12";
+                DxScanCode[DxScanCode["NumEnter"] = 156] = "NumEnter";
+                DxScanCode[DxScanCode["RightControl"] = 157] = "RightControl";
+                DxScanCode[DxScanCode["NumSlash"] = 181] = "NumSlash";
+                DxScanCode[DxScanCode["SysRqPtrScr"] = 183] = "SysRqPtrScr";
+                DxScanCode[DxScanCode["RightAlt"] = 184] = "RightAlt";
+                DxScanCode[DxScanCode["Pause"] = 197] = "Pause";
+                DxScanCode[DxScanCode["Home"] = 199] = "Home";
+                DxScanCode[DxScanCode["UpArrow"] = 200] = "UpArrow";
+                DxScanCode[DxScanCode["PgUp"] = 201] = "PgUp";
+                DxScanCode[DxScanCode["LeftArrow"] = 203] = "LeftArrow";
+                DxScanCode[DxScanCode["RightArrow"] = 205] = "RightArrow";
+                DxScanCode[DxScanCode["End"] = 207] = "End";
+                DxScanCode[DxScanCode["DownArrow"] = 208] = "DownArrow";
+                DxScanCode[DxScanCode["PgDown"] = 209] = "PgDown";
+                DxScanCode[DxScanCode["Insert"] = 210] = "Insert";
+                DxScanCode[DxScanCode["Delete"] = 211] = "Delete";
+                DxScanCode[DxScanCode["LeftMouseButton"] = 256] = "LeftMouseButton";
+                DxScanCode[DxScanCode["RightMouseButton"] = 257] = "RightMouseButton";
+                DxScanCode[DxScanCode["MiddleMouseButton"] = 258] = "MiddleMouseButton";
+                DxScanCode[DxScanCode["MouseButton3"] = 259] = "MouseButton3";
+                DxScanCode[DxScanCode["MouseButton4"] = 260] = "MouseButton4";
+                DxScanCode[DxScanCode["MouseButton5"] = 261] = "MouseButton5";
+                DxScanCode[DxScanCode["MouseButton6"] = 262] = "MouseButton6";
+                DxScanCode[DxScanCode["MouseButton7"] = 263] = "MouseButton7";
+                DxScanCode[DxScanCode["MouseWheelUp"] = 264] = "MouseWheelUp";
+                DxScanCode[DxScanCode["MouseWheelDown"] = 265] = "MouseWheelDown";
+            })(DxScanCode || (DxScanCode = {}));
+            exports_4("DxScanCode", DxScanCode);
+            exports_4("DoNothing", DoNothing = () => { });
+            exports_4("DoNothingOnHold", DoNothingOnHold = (_) => () => { });
+            exports_4("FromSettings", FromSettings = (pluginName, optionName) => FromValue(skyrimPlatform_2.settings[pluginName][optionName]));
+            exports_4("FromObject", FromObject = (pluginName, objectName, optionName) => FromValue(skyrimPlatform_2.settings[pluginName][objectName][optionName]));
+            exports_4("IsShiftPressed", IsShiftPressed = IsModifierPressed("Shift"));
+            exports_4("IsCtrlPressed", IsCtrlPressed = IsModifierPressed("Ctrl"));
+            exports_4("IsAltPressed", IsAltPressed = IsModifierPressed("Alt"));
+            exports_4("fromValue", fromValue = FromValue);
+            (function (Modifiers) {
+                const S = IsShiftPressed;
+                const A = IsAltPressed;
+                const C = IsCtrlPressed;
+                const T = (k, P, f) => {
+                    const p = P();
+                    if (k) {
+                        if (!p)
+                            return false;
+                        return f();
+                    }
+                    else {
+                        if (p)
+                            return false;
+                        return f();
+                    }
+                };
+                function Continue(m) {
+                    const TC = () => T(m.ctrl, C, () => true);
+                    const TAC = () => T(m.alt, A, TC);
+                    const TSAC = () => T(m.shift, S, TAC);
+                    return TSAC();
+                }
+                Modifiers.Continue = Continue;
+            })(Modifiers || (Modifiers = {}));
+            exports_4("ListenTo", ListenTo = (hk, enable = true) => ListenToS(hk.hk, enable, hk.modifiers));
+            exports_4("LogPress", LogPress = () => {
+                skyrimPlatform_2.printConsole(`Key was pressed`);
+            });
+            exports_4("LogRelease", LogRelease = () => {
+                skyrimPlatform_2.printConsole(`Key was released`);
+            });
+            exports_4("LogHold", LogHold = (n) => () => {
+                skyrimPlatform_2.printConsole(`Key has been held for ${n} frames.`);
+            });
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachItem", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_4, context_4) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Time", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_5, context_5) {
     "use strict";
-    var skyrimPlatform_3;
-    var __moduleName = context_4 && context_4.id;
-    /**
-     * Iterates over all items belonging to some `ObjectReference`, from last to first.
-     * @internal
-     *
-     * @param o - The object reference to iterate over.
-     * @param f - Function applied to each item.
-     *
-     * @remarks
-     * Better use {@link forEachItem }.\
-     * That function sends a `Form`, not a `Form | null`, so you are guaranteed to
-     * have a form at the point that function gets executed.
-     */
+    var skyrimPlatform_3, gameHourRatio, Now, ToHumanHours, toHumanHours, ToHumanHoursStr, MinutesToHours, HoursToMinutes, ToSkyrimHours, toSkyrimHours, HourSpan, hourSpan, MinutesToSkyrimHours, SkyrimHoursToHumanMinutes;
+    var __moduleName = context_5 && context_5.id;
+    return {
+        setters: [
+            function (skyrimPlatform_3_1) {
+                skyrimPlatform_3 = skyrimPlatform_3_1;
+            }
+        ],
+        execute: function () {
+            gameHourRatio = 1.0 / 24.0;
+            exports_5("Now", Now = skyrimPlatform_3.Utility.getCurrentGameTime);
+            exports_5("ToHumanHours", ToHumanHours = (x) => x / gameHourRatio);
+            exports_5("toHumanHours", toHumanHours = ToHumanHours);
+            exports_5("ToHumanHoursStr", ToHumanHoursStr = (x) => ToHumanHours(x).toString());
+            exports_5("MinutesToHours", MinutesToHours = (x) => x / 60);
+            exports_5("HoursToMinutes", HoursToMinutes = (x) => x * 60);
+            exports_5("ToSkyrimHours", ToSkyrimHours = (x) => x * gameHourRatio);
+            exports_5("toSkyrimHours", toSkyrimHours = ToSkyrimHours);
+            exports_5("HourSpan", HourSpan = (then) => ToHumanHours(Now() - then));
+            exports_5("hourSpan", hourSpan = HourSpan);
+            exports_5("MinutesToSkyrimHours", MinutesToSkyrimHours = (x) => ToSkyrimHours(MinutesToHours(x)));
+            exports_5("SkyrimHoursToHumanMinutes", SkyrimHoursToHumanMinutes = (x) => HoursToMinutes(ToHumanHours(x)));
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Error", [], function (exports_6, context_6) {
+    "use strict";
+    var __moduleName = context_6 && context_6.id;
+    function isErrorWithMessage(error) {
+        return (typeof error === "object" &&
+            error !== null &&
+            "message" in error &&
+            typeof error.message === "string");
+    }
+    function toErrorWithMessage(maybeError) {
+        if (isErrorWithMessage(maybeError))
+            return maybeError;
+        try {
+            return new Error(JSON.stringify(maybeError));
+        }
+        catch (_a) {
+            return new Error(String(maybeError));
+        }
+    }
+    function getErrorMsg(error) {
+        return toErrorWithMessage(error).message;
+    }
+    exports_6("getErrorMsg", getErrorMsg);
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Misc", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Time", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Error"], function (exports_7, context_7) {
+    "use strict";
+    var skyrimPlatform_4, Time, Error_1, preserveVar, updateEach, guid;
+    var __moduleName = context_7 && context_7.id;
+    function AvoidRapidFire(f) {
+        let lastExecuted = 0;
+        return () => {
+            const t = Time.Now();
+            if (lastExecuted === t)
+                return;
+            lastExecuted = t;
+            f();
+        };
+    }
+    exports_7("AvoidRapidFire", AvoidRapidFire);
+    function JContainersToPreserving(f) {
+        return (k, v) => {
+            f(k, v, true);
+        };
+    }
+    exports_7("JContainersToPreserving", JContainersToPreserving);
+    function PapyrusUtilToPreserving(f, obj) {
+        return (k, v) => {
+            f(obj, k, v);
+        };
+    }
+    exports_7("PapyrusUtilToPreserving", PapyrusUtilToPreserving);
+    function PreserveVar(Store, k) {
+        return (x) => {
+            skyrimPlatform_4.storage[k] = x;
+            Store(k, x);
+            return x;
+        };
+    }
+    exports_7("PreserveVar", PreserveVar);
+    function UpdateEach(seconds) {
+        let lastUpdated = 0;
+        return (f) => {
+            const t = skyrimPlatform_4.Utility.getCurrentRealTime();
+            if (t - lastUpdated < seconds)
+                return;
+            lastUpdated = t;
+            f();
+        };
+    }
+    exports_7("UpdateEach", UpdateEach);
+    function uuidV4() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+            const r = (Math.random() * 16) | 0;
+            const v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    }
+    exports_7("uuidV4", uuidV4);
+    function wait(time, DoSomething) {
+        const F = async () => {
+            await skyrimPlatform_4.Utility.wait(time);
+            DoSomething();
+        };
+        F();
+    }
+    exports_7("wait", wait);
+    function tryE(DoSomething, Logger) {
+        try {
+            DoSomething();
+        }
+        catch (error) {
+            Logger(Error_1.getErrorMsg(error));
+        }
+    }
+    exports_7("tryE", tryE);
+    return {
+        setters: [
+            function (skyrimPlatform_4_1) {
+                skyrimPlatform_4 = skyrimPlatform_4_1;
+            },
+            function (Time_1) {
+                Time = Time_1;
+            },
+            function (Error_1_1) {
+                Error_1 = Error_1_1;
+            }
+        ],
+        execute: function () {
+            exports_7("preserveVar", preserveVar = PreserveVar);
+            exports_7("updateEach", updateEach = UpdateEach);
+            exports_7("guid", guid = uuidV4);
+        }
+    };
+});
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_8, context_8) {
+    "use strict";
+    var skyrimPlatform_5, IsAlchemyLab, ObjRefHasName, defaultUIdFmt;
+    var __moduleName = context_8 && context_8.id;
+    function GetItemType(item) {
+        if (!item)
+            return 0;
+        if (skyrimPlatform_5.Weapon.from(item))
+            return 1;
+        if (skyrimPlatform_5.Ammo.from(item))
+            return 2;
+        if (skyrimPlatform_5.Armor.from(item))
+            return 3;
+        const asP = skyrimPlatform_5.Potion.from(item);
+        if (asP) {
+            if (asP.isPoison())
+                return 5;
+            if (asP.isFood())
+                return 7;
+            return 4;
+        }
+        if (skyrimPlatform_5.Ingredient.from(item))
+            return 8;
+        if (skyrimPlatform_5.Book.from(item))
+            return 9;
+        if (skyrimPlatform_5.Key.from(item))
+            return 10;
+        if (skyrimPlatform_5.SoulGem.from(item))
+            return 12;
+        if (skyrimPlatform_5.MiscObject.from(item))
+            return 11;
+        return 0;
+    }
+    exports_8("GetItemType", GetItemType);
+    function ForEachSlotMask(a, DoSomething) {
+        if (!a)
+            return;
+        for (let i = 1; i < 2147483648; i *= 2) {
+            DoSomething(i);
+        }
+    }
+    exports_8("ForEachSlotMask", ForEachSlotMask);
+    function ForEachEquippedArmor(a, DoSomething) {
+        if (!a)
+            return;
+        for (let i = 1; i < 2147483648; i *= 2) {
+            const x = skyrimPlatform_5.Armor.from(a.getWornForm(i));
+            if (x)
+                DoSomething(x);
+        }
+    }
+    exports_8("ForEachEquippedArmor", ForEachEquippedArmor);
+    function GetEquippedArmors(a, nonRepeated = true, playableOnly = true, namedOnly = true) {
+        if (!a)
+            return [];
+        const all = [];
+        ForEachEquippedArmor(a, (x) => {
+            const p = playableOnly ? (x.isPlayable() ? x : null) : x;
+            const n = p && namedOnly ? (p.getName() !== "" ? p : null) : p;
+            if (n)
+                all.push(n);
+        });
+        const GetNonRepeated = () => {
+            const uIds = [...new Set(all.map((a) => a.getFormID()))];
+            return uIds.map((id) => skyrimPlatform_5.Armor.from(skyrimPlatform_5.Game.getFormEx(id)));
+        };
+        return nonRepeated ? GetNonRepeated() : all;
+    }
+    exports_8("GetEquippedArmors", GetEquippedArmors);
+    function ForEachKeywordR(o, f) {
+        if (!o)
+            return;
+        let i = o.getNumKeywords();
+        while (i > 0) {
+            i--;
+            const k = skyrimPlatform_5.Keyword.from(o.getNthKeyword(i));
+            if (k)
+                f(k);
+        }
+    }
+    exports_8("ForEachKeywordR", ForEachKeywordR);
+    function ForEachOutfitItemR(o, f) {
+        if (!o)
+            return;
+        let i = o.getNumParts();
+        while (i > 0) {
+            i--;
+            const ii = o.getNthPart(i);
+            if (ii)
+                f(ii);
+        }
+    }
+    exports_8("ForEachOutfitItemR", ForEachOutfitItemR);
+    function ForEachFormInCell(cell, formType, f) {
+        if (!cell)
+            return;
+        let i = cell.getNumRefs(formType);
+        while (i > 0) {
+            i--;
+            const frm = cell.getNthRef(i, formType);
+            if (frm)
+                f(frm);
+        }
+    }
+    exports_8("ForEachFormInCell", ForEachFormInCell);
+    function preserveForm(frm) {
+        if (!frm)
+            return () => null;
+        const id = frm.getFormID();
+        return () => skyrimPlatform_5.Game.getFormEx(id);
+    }
+    exports_8("preserveForm", preserveForm);
+    function preserveActor(a) {
+        const f = preserveForm(a);
+        return () => skyrimPlatform_5.Actor.from(f());
+    }
+    exports_8("preserveActor", preserveActor);
+    function getEspAndId(form) {
+        const esp = getFormEsp(form);
+        const id = getFixedFormId(form, esp.type);
+        return { modName: esp.name, type: esp.type, fixedFormId: id };
+    }
+    exports_8("getEspAndId", getEspAndId);
+    function getFixedFormId(form, modType) {
+        if (!form || modType === 2)
+            return -1;
+        const id = form.getFormID();
+        return modType === 0 ? id & 0xffffff : id & 0xfff;
+    }
+    exports_8("getFixedFormId", getFixedFormId);
+    function getUniqueId(form, format = defaultUIdFmt) {
+        if (!form)
+            return "Null form";
+        const d = getEspAndId(form);
+        return format(d.modName, d.fixedFormId, d.type);
+    }
+    exports_8("getUniqueId", getUniqueId);
+    function getFormEsp(form) {
+        const nil = { name: "", type: 2 };
+        if (!form)
+            return nil;
+        const formId = form.getFormID();
+        const modIndex = formId >>> 24;
+        if (modIndex == 0xfe) {
+            const lightIndex = (formId >>> 12) & 0xfff;
+            if (lightIndex < skyrimPlatform_5.Game.getLightModCount())
+                return { name: skyrimPlatform_5.Game.getLightModName(lightIndex), type: 1 };
+        }
+        else
+            return { name: skyrimPlatform_5.Game.getModName(modIndex), type: 0 };
+        return nil;
+    }
+    exports_8("getFormEsp", getFormEsp);
+    function forEachArmorR(o, f) {
+        forEachItem(o, (i) => {
+            const a = skyrimPlatform_5.Armor.from(i);
+            if (!a)
+                return;
+            f(a);
+        });
+    }
+    exports_8("forEachArmorR", forEachArmorR);
     function forEachItemR(o, f) {
         let i = o.getNumItems();
         while (i > 0) {
@@ -1539,13 +710,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             f(o.getNthForm(i));
         }
     }
-    exports_4("forEachItemR", forEachItemR);
-    /**
-     * Iterates over all items belonging to some `ObjectReference`, from last to first.
-     *
-     * @param o - The object reference to iterate over.
-     * @param f - Function applied to each item.
-     */
+    exports_8("forEachItemR", forEachItemR);
     function forEachItem(o, f) {
         forEachItemR(o, (item) => {
             if (!item)
@@ -1553,15 +718,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             f(item);
         });
     }
-    exports_4("forEachItem", forEachItem);
-    /**
-     * Iterates over all items belonging to some `ObjectReference`, from last to first. Waits
-     * some time before each operation.
-     *
-     * @param o - The object reference to iterate over.
-     * @param wait - Time (seconds) to wait.
-     * @param f - Function applied to each item.
-     */
+    exports_8("forEachItem", forEachItem);
     function forEachItemW(o, wait, f) {
         const A = async () => {
             let i = o.getNumItems();
@@ -1571,98 +728,112 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 if (!item)
                     return;
                 f(item);
-                skyrimPlatform_3.Utility.wait(wait);
+                skyrimPlatform_5.Utility.wait(wait);
             }
         };
         A();
     }
-    exports_4("forEachItemW", forEachItemW);
-    return {
-        setters: [
-            function (skyrimPlatform_3_1) {
-                skyrimPlatform_3 = skyrimPlatform_3_1;
-            }
-        ],
-        execute: function () {
-        }
-    };
-});
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachItem"], function (exports_5, context_5) {
-    "use strict";
-    var skyrimPlatform_4, forEachItem_1;
-    var __moduleName = context_5 && context_5.id;
-    /**
-     * Iterates over all armors belonging to some `ObjectReference`, from last to first.
-     *
-     * @param o - The object reference to iterate over.
-     * @param f - Function applied to each armor.
-     */
-    function forEachArmorR(o, f) {
-        forEachItem_1.forEachItem(o, (i) => {
-            const a = skyrimPlatform_4.Armor.from(i);
-            if (!a)
-                return;
-            f(a);
-        });
+    exports_8("forEachItemW", forEachItemW);
+    function createPersistentChest() {
+        const p = skyrimPlatform_5.Game.getPlayer();
+        const c = p.placeAtMe(skyrimPlatform_5.Game.getFormEx(0x70479), 1, true, false);
+        if (!c)
+            return null;
+        const world = skyrimPlatform_5.WorldSpace.from(skyrimPlatform_5.Game.getFormEx(0x3c));
+        skyrimPlatform_5.TESModPlatform.moveRefrToPosition(c, null, world, 0, 0, -10000, 0, 0, 0);
+        return c.getFormID();
     }
-    exports_5("forEachArmorR", forEachArmorR);
+    exports_8("createPersistentChest", createPersistentChest);
+    function getPersistentChest(Getter, Setter, Logger) {
+        let frm = Getter();
+        if (!frm) {
+            const newChest = createPersistentChest();
+            if (!newChest) {
+                const msg = "Could not create a persistent chest in Tamriel. " +
+                    "Are you using a mod that substantially changes the game?";
+                if (Logger)
+                    Logger(msg);
+                else
+                    skyrimPlatform_5.printConsole(msg);
+                return null;
+            }
+            frm = skyrimPlatform_5.Game.getFormEx(newChest);
+            Setter(frm);
+        }
+        return frm;
+    }
+    exports_8("getPersistentChest", getPersistentChest);
     return {
         setters: [
-            function (skyrimPlatform_4_1) {
-                skyrimPlatform_4 = skyrimPlatform_4_1;
-            },
-            function (forEachItem_1_1) {
-                forEachItem_1 = forEachItem_1_1;
+            function (skyrimPlatform_5_1) {
+                skyrimPlatform_5 = skyrimPlatform_5_1;
             }
         ],
         execute: function () {
+            exports_8("IsAlchemyLab", IsAlchemyLab = (furniture) => ObjRefHasName(furniture, "alchemy"));
+            ObjRefHasName = (f, name) => { var _a; return (_a = f.getBaseObject()) === null || _a === void 0 ? void 0 : _a.getName().toLowerCase().includes(name); };
+            exports_8("defaultUIdFmt", defaultUIdFmt = (espName, fixedFormId) => `${espName}|0x${fixedFormId.toString(16)}`);
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib"], function (exports_6, context_6) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form"], function (exports_9, context_9) {
     "use strict";
-    var DmLib_1, L, fs, LogN, LogNT, LogI, LogIT, LogV, LogVT;
-    var __moduleName = context_6 && context_6.id;
+    var skyrimPlatform_6, Form_1, playerId, Player, GetBaseName;
+    var __moduleName = context_9 && context_9.id;
+    function isPlayer(a) {
+        if (!a)
+            return false;
+        return a.getFormID() === playerId;
+    }
+    exports_9("isPlayer", isPlayer);
+    function getBaseName(a) {
+        var _a;
+        const u = "unknown";
+        if (!a)
+            return u;
+        return ((_a = a.getLeveledActorBase()) === null || _a === void 0 ? void 0 : _a.getName()) || u;
+    }
+    exports_9("getBaseName", getBaseName);
+    function isActorTypeNPC(a) {
+        var _a;
+        if (!a)
+            return false;
+        const ActorTypeNPC = skyrimPlatform_6.Keyword.from(skyrimPlatform_6.Game.getFormFromFile(0x13794, "Skyrim.esm"));
+        return ((_a = a.getRace()) === null || _a === void 0 ? void 0 : _a.hasKeyword(ActorTypeNPC)) || false;
+    }
+    exports_9("isActorTypeNPC", isActorTypeNPC);
+    function waitActor(a, time, DoSomething) {
+        const actor = Form_1.preserveActor(a);
+        const f = async () => {
+            await skyrimPlatform_6.Utility.wait(time);
+            const act = actor();
+            if (!act)
+                return;
+            DoSomething(act);
+        };
+        f();
+    }
+    exports_9("waitActor", waitActor);
     return {
         setters: [
-            function (DmLib_1_1) {
-                DmLib_1 = DmLib_1_1;
+            function (skyrimPlatform_6_1) {
+                skyrimPlatform_6 = skyrimPlatform_6_1;
+            },
+            function (Form_1_1) {
+                Form_1 = Form_1_1;
             }
         ],
         execute: function () {
-            L = DmLib_1.DebugLib.Log;
-            fs = DmLib_1.DebugLib.Log.CreateAll("SkimpifyFramework", L.Level.info, L.ConsoleFmt, L.FileFmt);
-            /** Log at `none` level. Basically, ignore logging settings, except when using special modes. */
-            exports_6("LogN", LogN = fs.None);
-            /** Log at `none` level and return value. */
-            exports_6("LogNT", LogNT = fs.TapN);
-            exports_6("LogI", LogI = fs.Info);
-            exports_6("LogIT", LogIT = fs.TapI);
-            /** Log at verbose level. */
-            exports_6("LogV", LogV = fs.Verbose);
-            /** Log at verbose level and return value. */
-            exports_6("LogVT", LogVT = fs.TapV);
+            exports_9("playerId", playerId = 0x14);
+            exports_9("Player", Player = () => skyrimPlatform_6.Game.getPlayer());
+            exports_9("GetBaseName", GetBaseName = getBaseName);
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_7, context_7) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_10, context_10) {
     "use strict";
     var sp, sn, object, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm, hasKey, valueType, allKeys, allKeysPArray, allValues, removeKey, count, clear, addPairs, nextKey, getNthKey;
-    var __moduleName = context_7 && context_7.id;
+    var __moduleName = context_10 && context_10.id;
     return {
         setters: [
             function (sp_1) {
@@ -1670,95 +841,36 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Associative key-value container.
-            *     Inherits JValue functionality
-            */
             sn = sp.JMap;
-            /** creates new container object. returns container's identifier (unique integer number).
-            */
-            exports_7("object", object = () => sn.object());
-            /** Returns the value associated with the @key. If not, returns @default value
-            */
-            exports_7("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
-            exports_7("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
-            exports_7("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
-            exports_7("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
-            exports_7("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
-            /** Inserts @key: @value pair. Replaces existing pair with the same @key
-            */
-            exports_7("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
-            exports_7("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
-            exports_7("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
-            exports_7("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
-            exports_7("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
-            /** Returns true, if the container has @key: value pair
-            */
-            exports_7("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
-            /** Returns type of the value associated with the @key.
-            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
-            */
-            exports_7("valueType", valueType = (object, key) => sn.valueType(object, key));
-            /** Returns a new array containing all keys
-            */
-            exports_7("allKeys", allKeys = (object) => sn.allKeys(object));
-            exports_7("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
-            /** Returns a new array containing all values
-            */
-            exports_7("allValues", allValues = (object) => sn.allValues(object));
-            /** Removes the pair from the container where the key equals to the @key
-            */
-            exports_7("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
-            /** Returns count of pairs in the conainer
-            */
-            exports_7("count", count = (object) => sn.count(object));
-            /** Removes all pairs from the container
-            */
-            exports_7("clear", clear = (object) => sn.clear(object));
-            /** Inserts key-value pairs from the source container
-            */
-            exports_7("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
-            /** Simplifies iteration over container's contents.
-            *     Accepts the @previousKey, returns the next key.
-            *     If @previousKey == @endKey the function returns the first key.
-            *     The function always returns so-called 'valid' keys (the ones != @endKey).
-            *     The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
-            *     In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
-            *     it's ok to omit the @endKey.
-            *
-            *     Usage:
-            *
-            *         string key = JMap.nextKey(map, previousKey="", endKey="")
-            *         while key != ""
-            *           <retrieve values here>
-            *           key = JMap.nextKey(map, key, endKey="")
-            *         endwhile
-            */
-            exports_7("nextKey", nextKey = (object, previousKey = "", endKey = "") => sn.nextKey(object, previousKey, endKey));
-            /** Retrieves N-th key. negative index accesses items from the end of container counting backwards.
-            *     Worst complexity is O(n/2)
-            */
-            exports_7("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
+            exports_10("object", object = () => sn.object());
+            exports_10("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
+            exports_10("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
+            exports_10("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
+            exports_10("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
+            exports_10("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
+            exports_10("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
+            exports_10("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
+            exports_10("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
+            exports_10("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
+            exports_10("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
+            exports_10("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
+            exports_10("valueType", valueType = (object, key) => sn.valueType(object, key));
+            exports_10("allKeys", allKeys = (object) => sn.allKeys(object));
+            exports_10("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
+            exports_10("allValues", allValues = (object) => sn.allValues(object));
+            exports_10("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
+            exports_10("count", count = (object) => sn.count(object));
+            exports_10("clear", clear = (object) => sn.clear(object));
+            exports_10("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
+            exports_10("nextKey", nextKey = (object, previousKey = "", endKey = "") => sn.nextKey(object, previousKey, endKey));
+            exports_10("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_8, context_8) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
     "use strict";
     var sp, sn, object, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm, hasKey, valueType, allKeys, allKeysPArray, allValues, removeKey, count, clear, addPairs, nextKey, getNthKey;
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_11 && context_11.id;
     return {
         setters: [
             function (sp_2) {
@@ -1766,95 +878,36 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Associative key-value container.
-            *     Inherits JValue functionality
-            */
             sn = sp.JFormMap;
-            /** creates new container object. returns container's identifier (unique integer number).
-            */
-            exports_8("object", object = () => sn.object());
-            /** Returns the value associated with the @key. If not, returns @default value
-            */
-            exports_8("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
-            exports_8("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
-            exports_8("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
-            exports_8("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
-            exports_8("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
-            /** Inserts @key: @value pair. Replaces existing pair with the same @key
-            */
-            exports_8("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
-            exports_8("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
-            exports_8("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
-            exports_8("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
-            exports_8("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
-            /** Returns true, if the container has @key: value pair
-            */
-            exports_8("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
-            /** Returns type of the value associated with the @key.
-            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
-            */
-            exports_8("valueType", valueType = (object, key) => sn.valueType(object, key));
-            /** Returns a new array containing all keys
-            */
-            exports_8("allKeys", allKeys = (object) => sn.allKeys(object));
-            exports_8("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
-            /** Returns a new array containing all values
-            */
-            exports_8("allValues", allValues = (object) => sn.allValues(object));
-            /** Removes the pair from the container where the key equals to the @key
-            */
-            exports_8("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
-            /** Returns count of pairs in the conainer
-            */
-            exports_8("count", count = (object) => sn.count(object));
-            /** Removes all pairs from the container
-            */
-            exports_8("clear", clear = (object) => sn.clear(object));
-            /** Inserts key-value pairs from the source container
-            */
-            exports_8("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
-            /** Simplifies iteration over container's contents.
-            *     Accepts the @previousKey, returns the next key.
-            *     If @previousKey == @endKey the function returns the first key.
-            *     The function always returns so-called 'valid' keys (the ones != @endKey).
-            *     The function returns @endKey ('invalid' key) only once to signal that iteration has reached its end.
-            *     In most cases, if the map doesn't contain an invalid key ("" for JMap, None form-key for JFormMap)
-            *     it's ok to omit the @endKey.
-            *
-            *     Usage:
-            *
-            *         string key = JMap.nextKey(map, previousKey="", endKey="")
-            *         while key != ""
-            *           <retrieve values here>
-            *           key = JMap.nextKey(map, key, endKey="")
-            *         endwhile
-            */
-            exports_8("nextKey", nextKey = (object, previousKey = null, endKey = null) => sn.nextKey(object, previousKey, endKey));
-            /** Retrieves N-th key. negative index accesses items from the end of container counting backwards.
-            *     Worst complexity is O(n/2)
-            */
-            exports_8("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
+            exports_11("object", object = () => sn.object());
+            exports_11("getInt", getInt = (object, key, defaultVal = 0) => sn.getInt(object, key, defaultVal));
+            exports_11("getFlt", getFlt = (object, key, defaultVal = 0.0) => sn.getFlt(object, key, defaultVal));
+            exports_11("getStr", getStr = (object, key, defaultVal = "") => sn.getStr(object, key, defaultVal));
+            exports_11("getObj", getObj = (object, key, defaultVal = 0) => sn.getObj(object, key, defaultVal));
+            exports_11("getForm", getForm = (object, key, defaultVal = null) => sn.getForm(object, key, defaultVal));
+            exports_11("setInt", setInt = (object, key, value) => sn.setInt(object, key, value));
+            exports_11("setFlt", setFlt = (object, key, value) => sn.setFlt(object, key, value));
+            exports_11("setStr", setStr = (object, key, value) => sn.setStr(object, key, value));
+            exports_11("setObj", setObj = (object, key, container) => sn.setObj(object, key, container));
+            exports_11("setForm", setForm = (object, key, value) => sn.setForm(object, key, value));
+            exports_11("hasKey", hasKey = (object, key) => sn.hasKey(object, key));
+            exports_11("valueType", valueType = (object, key) => sn.valueType(object, key));
+            exports_11("allKeys", allKeys = (object) => sn.allKeys(object));
+            exports_11("allKeysPArray", allKeysPArray = (object) => sn.allKeysPArray(object));
+            exports_11("allValues", allValues = (object) => sn.allValues(object));
+            exports_11("removeKey", removeKey = (object, key) => sn.removeKey(object, key));
+            exports_11("count", count = (object) => sn.count(object));
+            exports_11("clear", clear = (object) => sn.clear(object));
+            exports_11("addPairs", addPairs = (object, source, overrideDuplicates) => sn.addPairs(object, source, overrideDuplicates));
+            exports_11("nextKey", nextKey = (object, previousKey = null, endKey = null) => sn.nextKey(object, previousKey, endKey));
+            exports_11("getNthKey", getNthKey = (object, keyIndex) => sn.getNthKey(object, keyIndex));
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_9, context_9) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_12, context_12) {
     "use strict";
     var sp, sn, object, objectWithSize, objectWithInts, objectWithStrings, objectWithFloats, objectWithBooleans, objectWithForms, subArray, addFromArray, addFromFormList, getInt, getFlt, getStr, getObj, getForm, asIntArray, asFloatArray, asStringArray, asFormArray, findInt, findFlt, findStr, findObj, findForm, countInteger, countFloat, countString, countObject, countForm, setInt, setFlt, setStr, setObj, setForm, addInt, addFlt, addStr, addObj, addForm, count, clear, eraseIndex, eraseRange, eraseInteger, eraseFloat, eraseString, eraseObject, eraseForm, valueType, swapItems, sort, unique, reverse, writeToIntegerPArray, writeToFloatPArray, writeToFormPArray, writeToStringPArray;
-    var __moduleName = context_9 && context_9.id;
+    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
             function (sp_3) {
@@ -1862,133 +915,71 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Ordered collection of values (value is float, integer, string, form or another container).
-            *     Inherits JValue functionality
-            */
             sn = sp.JArray;
-            /** creates new container object. returns container's identifier (unique integer number).
-            */
-            exports_9("object", object = () => sn.object());
-            /** Creates a new array of given size, filled with empty (None) items
-            */
-            exports_9("objectWithSize", objectWithSize = (size) => sn.objectWithSize(size));
-            /** Creates a new array that contains given values
-            *     objectWithBooleans converts booleans into integers
-            */
-            exports_9("objectWithInts", objectWithInts = (values) => sn.objectWithInts(values));
-            exports_9("objectWithStrings", objectWithStrings = (values) => sn.objectWithStrings(values));
-            exports_9("objectWithFloats", objectWithFloats = (values) => sn.objectWithFloats(values));
-            exports_9("objectWithBooleans", objectWithBooleans = (values) => sn.objectWithBooleans(values));
-            exports_9("objectWithForms", objectWithForms = (values) => sn.objectWithForms(values));
-            /** Creates a new array containing all the values from the source array in range [startIndex, endIndex)
-            */
-            exports_9("subArray", subArray = (object, startIndex, endIndex) => sn.subArray(object, startIndex, endIndex));
-            /** Inserts the values from the source array into this array. If insertAtIndex is -1 (default behaviour) it appends to the end.
-            *     negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("addFromArray", addFromArray = (object, source, insertAtIndex = -1) => sn.addFromArray(object, source, insertAtIndex));
-            exports_9("addFromFormList", addFromFormList = (object, source, insertAtIndex = -1) => sn.addFromFormList(object, source, insertAtIndex));
-            /** Returns the item at the index of the array.
-            *     negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("getInt", getInt = (object, index, defaultVal = 0) => sn.getInt(object, index, defaultVal));
-            exports_9("getFlt", getFlt = (object, index, defaultVal = 0.0) => sn.getFlt(object, index, defaultVal));
-            exports_9("getStr", getStr = (object, index, defaultVal = "") => sn.getStr(object, index, defaultVal));
-            exports_9("getObj", getObj = (object, index, defaultVal = 0) => sn.getObj(object, index, defaultVal));
-            exports_9("getForm", getForm = (object, index, defaultVal = null) => sn.getForm(object, index, defaultVal));
-            /** Copy all items to new native Papyrus array of dynamic size.
-            *     Items not matching the requested type will have default
-            *     values as the ones from the getInt/Flt/Str/Form functions.
-            */
-            exports_9("asIntArray", asIntArray = (object) => sn.asIntArray(object));
-            exports_9("asFloatArray", asFloatArray = (object) => sn.asFloatArray(object));
-            exports_9("asStringArray", asStringArray = (object) => sn.asStringArray(object));
-            exports_9("asFormArray", asFormArray = (object) => sn.asFormArray(object));
-            /** Returns the index of the first found value/container that equals to given the value/container (default behaviour if searchStartIndex is 0).
-            *     If nothing was found it returns -1.
-            *     @searchStartIndex - index of the array where to start search
-            *     negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("findInt", findInt = (object, value, searchStartIndex = 0) => sn.findInt(object, value, searchStartIndex));
-            exports_9("findFlt", findFlt = (object, value, searchStartIndex = 0) => sn.findFlt(object, value, searchStartIndex));
-            exports_9("findStr", findStr = (object, value, searchStartIndex = 0) => sn.findStr(object, value, searchStartIndex));
-            exports_9("findObj", findObj = (object, container, searchStartIndex = 0) => sn.findObj(object, container, searchStartIndex));
-            exports_9("findForm", findForm = (object, value, searchStartIndex = 0) => sn.findForm(object, value, searchStartIndex));
-            /** Returns the number of times given value was found in a JArray.
-            */
-            exports_9("countInteger", countInteger = (object, value) => sn.countInteger(object, value));
-            exports_9("countFloat", countFloat = (object, value) => sn.countFloat(object, value));
-            exports_9("countString", countString = (object, value) => sn.countString(object, value));
-            exports_9("countObject", countObject = (object, container) => sn.countObject(object, container));
-            exports_9("countForm", countForm = (object, value) => sn.countForm(object, value));
-            /** Replaces existing value at the @index of the array with the new @value.
-            *     negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("setInt", setInt = (object, index, value) => sn.setInt(object, index, value));
-            exports_9("setFlt", setFlt = (object, index, value) => sn.setFlt(object, index, value));
-            exports_9("setStr", setStr = (object, index, value) => sn.setStr(object, index, value));
-            exports_9("setObj", setObj = (object, index, container) => sn.setObj(object, index, container));
-            exports_9("setForm", setForm = (object, index, value) => sn.setForm(object, index, value));
-            /** Appends the @value/@container to the end of the array.
-            *     If @addToIndex >= 0 it inserts value at given index. negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("addInt", addInt = (object, value, addToIndex = -1) => sn.addInt(object, value, addToIndex));
-            exports_9("addFlt", addFlt = (object, value, addToIndex = -1) => sn.addFlt(object, value, addToIndex));
-            exports_9("addStr", addStr = (object, value, addToIndex = -1) => sn.addStr(object, value, addToIndex));
-            exports_9("addObj", addObj = (object, container, addToIndex = -1) => sn.addObj(object, container, addToIndex));
-            exports_9("addForm", addForm = (object, value, addToIndex = -1) => sn.addForm(object, value, addToIndex));
-            /** Returns count of the items in the array
-            */
-            exports_9("count", count = (object) => sn.count(object));
-            /** Removes all the items from the array
-            */
-            exports_9("clear", clear = (object) => sn.clear(object));
-            /** Erases the item at the index. negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("eraseIndex", eraseIndex = (object, index) => sn.eraseIndex(object, index));
-            /** Erases [first, last] index range of the items. negative index accesses items from the end of container counting backwards.
-            *     For ex. with [1,-1] range it will erase everything except the first item
-            */
-            exports_9("eraseRange", eraseRange = (object, first, last) => sn.eraseRange(object, first, last));
-            /** Erase all elements of given value. Returns the number of erased elements.
-            */
-            exports_9("eraseInteger", eraseInteger = (object, value) => sn.eraseInteger(object, value));
-            exports_9("eraseFloat", eraseFloat = (object, value) => sn.eraseFloat(object, value));
-            exports_9("eraseString", eraseString = (object, value) => sn.eraseString(object, value));
-            exports_9("eraseObject", eraseObject = (object, container) => sn.eraseObject(object, container));
-            exports_9("eraseForm", eraseForm = (object, value) => sn.eraseForm(object, value));
-            /** Returns type of the value at the @index. negative index accesses items from the end of container counting backwards.
-            *     0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
-            */
-            exports_9("valueType", valueType = (object, index) => sn.valueType(object, index));
-            /** Exchanges the items at @index1 and @index2. negative index accesses items from the end of container counting backwards.
-            */
-            exports_9("swapItems", swapItems = (object, index1, index2) => sn.swapItems(object, index1, index2));
-            /** Sorts the items into ascending order (none < int < float < form < object < string). Returns the array itself
-            */
-            exports_9("sort", sort = (object) => sn.sort(object));
-            /** Sorts the items, removes duplicates. Returns array itself. You can treat it as JSet now
-            */
-            exports_9("unique", unique = (object) => sn.unique(object));
-            /** Reverse the order of elements. Returns the array itself.
-            */
-            exports_9("reverse", reverse = (object) => sn.reverse(object));
-            /** Writes the array's items into the @targetArray array starting at @destIndex
-            *      @writeAtIdx -    [-1, 0] - writes all the items in reverse order
-            *        [0, -1] - writes all the items in straight order
-            *        [1, 3] - writes 3 items in straight order
-            */
-            exports_9("writeToIntegerPArray", writeToIntegerPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0) => sn.writeToIntegerPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_9("writeToFloatPArray", writeToFloatPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0.0) => sn.writeToFloatPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_9("writeToFormPArray", writeToFormPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = null) => sn.writeToFormPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
-            exports_9("writeToStringPArray", writeToStringPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = "") => sn.writeToStringPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_12("object", object = () => sn.object());
+            exports_12("objectWithSize", objectWithSize = (size) => sn.objectWithSize(size));
+            exports_12("objectWithInts", objectWithInts = (values) => sn.objectWithInts(values));
+            exports_12("objectWithStrings", objectWithStrings = (values) => sn.objectWithStrings(values));
+            exports_12("objectWithFloats", objectWithFloats = (values) => sn.objectWithFloats(values));
+            exports_12("objectWithBooleans", objectWithBooleans = (values) => sn.objectWithBooleans(values));
+            exports_12("objectWithForms", objectWithForms = (values) => sn.objectWithForms(values));
+            exports_12("subArray", subArray = (object, startIndex, endIndex) => sn.subArray(object, startIndex, endIndex));
+            exports_12("addFromArray", addFromArray = (object, source, insertAtIndex = -1) => sn.addFromArray(object, source, insertAtIndex));
+            exports_12("addFromFormList", addFromFormList = (object, source, insertAtIndex = -1) => sn.addFromFormList(object, source, insertAtIndex));
+            exports_12("getInt", getInt = (object, index, defaultVal = 0) => sn.getInt(object, index, defaultVal));
+            exports_12("getFlt", getFlt = (object, index, defaultVal = 0.0) => sn.getFlt(object, index, defaultVal));
+            exports_12("getStr", getStr = (object, index, defaultVal = "") => sn.getStr(object, index, defaultVal));
+            exports_12("getObj", getObj = (object, index, defaultVal = 0) => sn.getObj(object, index, defaultVal));
+            exports_12("getForm", getForm = (object, index, defaultVal = null) => sn.getForm(object, index, defaultVal));
+            exports_12("asIntArray", asIntArray = (object) => sn.asIntArray(object));
+            exports_12("asFloatArray", asFloatArray = (object) => sn.asFloatArray(object));
+            exports_12("asStringArray", asStringArray = (object) => sn.asStringArray(object));
+            exports_12("asFormArray", asFormArray = (object) => sn.asFormArray(object));
+            exports_12("findInt", findInt = (object, value, searchStartIndex = 0) => sn.findInt(object, value, searchStartIndex));
+            exports_12("findFlt", findFlt = (object, value, searchStartIndex = 0) => sn.findFlt(object, value, searchStartIndex));
+            exports_12("findStr", findStr = (object, value, searchStartIndex = 0) => sn.findStr(object, value, searchStartIndex));
+            exports_12("findObj", findObj = (object, container, searchStartIndex = 0) => sn.findObj(object, container, searchStartIndex));
+            exports_12("findForm", findForm = (object, value, searchStartIndex = 0) => sn.findForm(object, value, searchStartIndex));
+            exports_12("countInteger", countInteger = (object, value) => sn.countInteger(object, value));
+            exports_12("countFloat", countFloat = (object, value) => sn.countFloat(object, value));
+            exports_12("countString", countString = (object, value) => sn.countString(object, value));
+            exports_12("countObject", countObject = (object, container) => sn.countObject(object, container));
+            exports_12("countForm", countForm = (object, value) => sn.countForm(object, value));
+            exports_12("setInt", setInt = (object, index, value) => sn.setInt(object, index, value));
+            exports_12("setFlt", setFlt = (object, index, value) => sn.setFlt(object, index, value));
+            exports_12("setStr", setStr = (object, index, value) => sn.setStr(object, index, value));
+            exports_12("setObj", setObj = (object, index, container) => sn.setObj(object, index, container));
+            exports_12("setForm", setForm = (object, index, value) => sn.setForm(object, index, value));
+            exports_12("addInt", addInt = (object, value, addToIndex = -1) => sn.addInt(object, value, addToIndex));
+            exports_12("addFlt", addFlt = (object, value, addToIndex = -1) => sn.addFlt(object, value, addToIndex));
+            exports_12("addStr", addStr = (object, value, addToIndex = -1) => sn.addStr(object, value, addToIndex));
+            exports_12("addObj", addObj = (object, container, addToIndex = -1) => sn.addObj(object, container, addToIndex));
+            exports_12("addForm", addForm = (object, value, addToIndex = -1) => sn.addForm(object, value, addToIndex));
+            exports_12("count", count = (object) => sn.count(object));
+            exports_12("clear", clear = (object) => sn.clear(object));
+            exports_12("eraseIndex", eraseIndex = (object, index) => sn.eraseIndex(object, index));
+            exports_12("eraseRange", eraseRange = (object, first, last) => sn.eraseRange(object, first, last));
+            exports_12("eraseInteger", eraseInteger = (object, value) => sn.eraseInteger(object, value));
+            exports_12("eraseFloat", eraseFloat = (object, value) => sn.eraseFloat(object, value));
+            exports_12("eraseString", eraseString = (object, value) => sn.eraseString(object, value));
+            exports_12("eraseObject", eraseObject = (object, container) => sn.eraseObject(object, container));
+            exports_12("eraseForm", eraseForm = (object, value) => sn.eraseForm(object, value));
+            exports_12("valueType", valueType = (object, index) => sn.valueType(object, index));
+            exports_12("swapItems", swapItems = (object, index1, index2) => sn.swapItems(object, index1, index2));
+            exports_12("sort", sort = (object) => sn.sort(object));
+            exports_12("unique", unique = (object) => sn.unique(object));
+            exports_12("reverse", reverse = (object) => sn.reverse(object));
+            exports_12("writeToIntegerPArray", writeToIntegerPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0) => sn.writeToIntegerPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_12("writeToFloatPArray", writeToFloatPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = 0.0) => sn.writeToFloatPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_12("writeToFormPArray", writeToFormPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = null) => sn.writeToFormPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
+            exports_12("writeToStringPArray", writeToStringPArray = (object, targetArray, writeAtIdx = 0, stopWriteAtIdx = -1, readIdx = 0, defaultValRead = "") => sn.writeToStringPArray(object, targetArray, writeAtIdx, stopWriteAtIdx, readIdx, defaultValRead));
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray"], function (exports_10, context_10) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JArray"], function (exports_13, context_13) {
     "use strict";
     var JMap, JFormMap, JArray, JMapL, JFormMapL, JArrayL;
-    var __moduleName = context_10 && context_10.id;
+    var __moduleName = context_13 && context_13.id;
     return {
         setters: [
             function (JMap_1) {
@@ -2002,20 +993,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** JMap related functions. */
             (function (JMapL) {
-                /** Iterates over all JMap keys and executes a function `f` for each key.
-                 *
-                 * @param o Object handle for the JMap.
-                 * @param f Function to execute for each key found.
-                 * It accepts the `key` found and the object `o` as arguments.
-                 *
-                 * @example
-                 * ForAllKeys(JValue.readFromFile(path), (armor, i) => {
-                 *   const data = JMap.getObj(i, armor)
-                 *   DoSomething(data)
-                 * })
-                 */
                 function ForAllKeys(o, f) {
                     if (o === 0)
                         return;
@@ -2037,20 +1015,8 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JMapL.FilterForms = FilterForms;
             })(JMapL || (JMapL = {}));
-            exports_10("JMapL", JMapL);
+            exports_13("JMapL", JMapL);
             (function (JFormMapL) {
-                /** Iterates over all JFormMap keys and executes a function `f` for each key.
-                 *
-                 * @param o Object handle for the JFormMap.
-                 * @param f Function to execute for each key found.
-                 * It accepts the `key` found and the object `o` as arguments.
-                 *
-                 * @example
-                 * ForAllKeys(JValue.readFromFile(path), (armor, i) => {
-                 *   const data = JFormMap.getObj(i, armor)
-                 *   DoSomething(data)
-                 * })
-                 */
                 function ForAllKeys(o, f) {
                     if (o === 0)
                         return;
@@ -2062,7 +1028,7 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JFormMapL.ForAllKeys = ForAllKeys;
             })(JFormMapL || (JFormMapL = {}));
-            exports_10("JFormMapL", JFormMapL);
+            exports_13("JFormMapL", JFormMapL);
             (function (JArrayL) {
                 function ForAllItems(o, f) {
                     if (o === 0)
@@ -2075,33 +1041,14 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
                 }
                 JArrayL.ForAllItems = ForAllItems;
             })(JArrayL || (JArrayL = {}));
-            exports_10("JArrayL", JArrayL);
+            exports_13("JArrayL", JArrayL);
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.3
-==============================================
-
-Functions deleted because they need manual translation and are already deprecated:
-    - GetNodeRotation
-    - ExecuteBat
-    - ScanCellActors
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_11, context_11) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_14, context_14) {
     "use strict";
     var sp, sn, ScanCellObjects, ScanCellNPCs, ScanCellNPCsByFaction, ToggleFreeCamera, SetFreeCameraSpeed, SetFreeCameraState, FilesInFolder, FoldersInFolder, FileExists, ReadFromFile, WriteToFile, PrintConsole, GetRaceEditorID, GetActorRaceEditorID, SetMenus;
-    var __moduleName = context_11 && context_11.id;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [
             function (sp_4) {
@@ -2110,218 +1057,28 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         ],
         execute: function () {
             sn = sp.MiscUtil;
-            /** Cell scanning functions
-            */
-            /** Scans the current cell of the given CenterOn for an object of the given form type ID within radius and returns an array for all that
-            * and (optionally) also has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
-            * search distance from around CenterOn, 0.0 will search entire cell the object is in.
-            * NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
-            */
-            exports_11("ScanCellObjects", ScanCellObjects = (formType, CenterOn, radius = 0.0, HasKeyword = null) => sn.ScanCellObjects(formType, CenterOn, radius, HasKeyword));
-            /** Scans the current cell of the given CenterOn for an actor within the given radius and returns an array for all actors that are
-            * currently alive and (optionally) has the given keyword if changed from default none. Setting radius higher than 0.0 will restrict the
-            * search distance from around CenterOn, 0.0 will search entire cell the object is in.
-            * NOTE: Keyword searches seem a little unpredictable so be sure to test if your usage of it works before using the results.
-            */
-            exports_11("ScanCellNPCs", ScanCellNPCs = (CenterOn, radius = 0.0, HasKeyword = null, IgnoreDead = true) => sn.ScanCellNPCs(CenterOn, radius, HasKeyword, IgnoreDead));
-            /** Same as ScanCellNPCs(), however it filters the return by a given faction and (optionally) their rank in that faction.
-             */
-            exports_11("ScanCellNPCsByFaction", ScanCellNPCsByFaction = (FindFaction, CenterOn, radius = 0.0, minRank = 0, maxRank = 127, IgnoreDead = true) => sn.ScanCellNPCsByFaction(FindFaction, CenterOn, radius, minRank, maxRank, IgnoreDead));
-            /** Camera functions
-            */
-            /** Toggle freefly camera.
-             */
-            exports_11("ToggleFreeCamera", ToggleFreeCamera = (stopTime = false) => sn.ToggleFreeCamera(stopTime));
-            /** Set freefly cam speed.
-             */
-            exports_11("SetFreeCameraSpeed", SetFreeCameraSpeed = (speed) => sn.SetFreeCameraSpeed(speed));
-            /** Set current freefly cam state & set the speed if enabling
-             */
-            exports_11("SetFreeCameraState", SetFreeCameraState = (enable, speed = 10.0) => sn.SetFreeCameraState(enable, speed));
-            /** File related functions
-            */
-            /** Get an array of files in a given parent directory that have the given extension.
-            * directory is relative to the root Skyrim folder (where skyrim.exe is) and is non-recursive.
-            * directory = "." to get all files in root Skyrim folder
-            * directory = "data/meshes" to get all files in the <root>/data/meshes folder
-            * extension = ".nif" to get all .nif mesh files.
-            * (default) extension="*" to get all files
-            */
-            exports_11("FilesInFolder", FilesInFolder = (directory, extension = "*") => sn.FilesInFolder(directory, extension));
-            /** Get an array of folders in a given parent directory
-            * Same rules and examples as above FilesInFolder apply to the directory rule here.
-            */
-            exports_11("FoldersInFolder", FoldersInFolder = (directory) => sn.FoldersInFolder(directory));
-            /** Check if a given file exists relative to root Skyrim directory. Example: FileExists("data/meshes/example.nif")
-             */
-            exports_11("FileExists", FileExists = (fileName) => sn.FileExists(fileName));
-            /** Read string from file. Do not read large files!
-             */
-            exports_11("ReadFromFile", ReadFromFile = (fileName) => sn.ReadFromFile(fileName));
-            /** Write string to file.
-             */
-            exports_11("WriteToFile", WriteToFile = (fileName, text, append = true, timestamp = false) => sn.WriteToFile(fileName, text, append, timestamp));
-            /** Misc
-            */
-            /** Print text to console.
-             */
-            exports_11("PrintConsole", PrintConsole = (text) => sn.PrintConsole(text));
-            /** Get race's editor ID.
-             */
-            exports_11("GetRaceEditorID", GetRaceEditorID = (raceForm) => sn.GetRaceEditorID(raceForm));
-            /** Get race's editor ID.
-             */
-            exports_11("GetActorRaceEditorID", GetActorRaceEditorID = (actorRef) => sn.GetActorRaceEditorID(actorRef));
-            /** Set HUD on / off - NOT CURRENT WORKING IN SKYRIM SPECIAL EDITION
-             */
-            exports_11("SetMenus", SetMenus = (enabled) => sn.SetMenus(enabled));
+            exports_14("ScanCellObjects", ScanCellObjects = (formType, CenterOn, radius = 0.0, HasKeyword = null) => sn.ScanCellObjects(formType, CenterOn, radius, HasKeyword));
+            exports_14("ScanCellNPCs", ScanCellNPCs = (CenterOn, radius = 0.0, HasKeyword = null, IgnoreDead = true) => sn.ScanCellNPCs(CenterOn, radius, HasKeyword, IgnoreDead));
+            exports_14("ScanCellNPCsByFaction", ScanCellNPCsByFaction = (FindFaction, CenterOn, radius = 0.0, minRank = 0, maxRank = 127, IgnoreDead = true) => sn.ScanCellNPCsByFaction(FindFaction, CenterOn, radius, minRank, maxRank, IgnoreDead));
+            exports_14("ToggleFreeCamera", ToggleFreeCamera = (stopTime = false) => sn.ToggleFreeCamera(stopTime));
+            exports_14("SetFreeCameraSpeed", SetFreeCameraSpeed = (speed) => sn.SetFreeCameraSpeed(speed));
+            exports_14("SetFreeCameraState", SetFreeCameraState = (enable, speed = 10.0) => sn.SetFreeCameraState(enable, speed));
+            exports_14("FilesInFolder", FilesInFolder = (directory, extension = "*") => sn.FilesInFolder(directory, extension));
+            exports_14("FoldersInFolder", FoldersInFolder = (directory) => sn.FoldersInFolder(directory));
+            exports_14("FileExists", FileExists = (fileName) => sn.FileExists(fileName));
+            exports_14("ReadFromFile", ReadFromFile = (fileName) => sn.ReadFromFile(fileName));
+            exports_14("WriteToFile", WriteToFile = (fileName, text, append = true, timestamp = false) => sn.WriteToFile(fileName, text, append, timestamp));
+            exports_14("PrintConsole", PrintConsole = (text) => sn.PrintConsole(text));
+            exports_14("GetRaceEditorID", GetRaceEditorID = (raceForm) => sn.GetRaceEditorID(raceForm));
+            exports_14("GetActorRaceEditorID", GetActorRaceEditorID = (actorRef) => sn.GetActorRaceEditorID(actorRef));
+            exports_14("SetMenus", SetMenus = (enabled) => sn.SetMenus(enabled));
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/persistentChest", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_12, context_12) {
-    "use strict";
-    var skyrimPlatform_5;
-    var __moduleName = context_12 && context_12.id;
-    /**
-     * Creates a persistent chest hidden somewhere in Tamriel.
-     *
-     * @returns The FormId of the recently created chest. `null` if no chest could be created.
-     *
-     * @remarks
-     * This chest can be used as a permanent storage that never resets.
-     *
-     * This function expects the "Tamriel" map to exist. The most likely case is that
-     * map exists, since it's the map were all cities are located.
-     *
-     * @privateRemarks
-     * Because of the way things are created in Skyrim, we first need to spawn the chest
-     * at the player's location.
-     */
-    function createPersistentChest() {
-        // Spawn chest at player's location
-        const p = skyrimPlatform_5.Game.getPlayer();
-        const c = p.placeAtMe(skyrimPlatform_5.Game.getFormEx(0x70479), 1, true, false);
-        if (!c)
-            return null;
-        // Move the chest to Tamriel
-        const world = skyrimPlatform_5.WorldSpace.from(skyrimPlatform_5.Game.getFormEx(0x3c));
-        skyrimPlatform_5.TESModPlatform.moveRefrToPosition(c, null, world, 0, 0, -10000, 0, 0, 0);
-        return c.getFormID();
-    }
-    exports_12("createPersistentChest", createPersistentChest);
-    /**
-     * Tries to get a persistent chest defined in some place and creates a new
-     * one if it doesn't exist.
-     *
-     * @param Getter - Function that gets an already existing chest.
-     * @param Setter - Function that saves a newly created chest.
-     * @param Logger - Function to log an error if a new chest couldn't be created.
-     *
-     * @remarks
-     * This function assumes you want to somehow store and retrieve the chest from
-     * some database (most probably, using JContainers or PapyrusUtil).
-     *
-     * This has to be done this way, since at the moment of creating this function,
-     * Skyrim Platform has no means to read and write values directly to the SKSE co-save.
-     *
-     * @example
-     * ```
-     * // This uses a JContainers database to know what chest is being created
-     * const path = "some.JContainers.path"
-     * const h = GetSomeJContainersHandle(path)
-     * const someForm = Game.getFormEx(0x14)
-     *
-     * const Getter = () => {
-     *   return JFormMap.getForm(h, someForm)
-     * }
-     * const Setter = (frm: Form | null) => {
-     *   JFormMap.setForm(h, someForm, frm)
-     *   SaveSomeJContainersHandle(h, path)
-     * }
-     *
-     * const chest = getPersistentChest(Getter, Setter, printConsole)
-     * ```
-     */
-    function getPersistentChest(Getter, Setter, Logger) {
-        let frm = Getter();
-        if (!frm) {
-            const newChest = createPersistentChest();
-            if (!newChest) {
-                const msg = "Could not create a persistent chest in Tamriel. " +
-                    "Are you using a mod that substantially changes the game?";
-                if (Logger)
-                    Logger(msg);
-                else
-                    skyrimPlatform_5.printConsole(msg);
-                return null;
-            }
-            frm = skyrimPlatform_5.Game.getFormEx(newChest);
-            Setter(frm);
-        }
-        return frm;
-    }
-    exports_12("getPersistentChest", getPersistentChest);
-    return {
-        setters: [
-            function (skyrimPlatform_5_1) {
-                skyrimPlatform_5 = skyrimPlatform_5_1;
-            }
-        ],
-        execute: function () {
-        }
-    };
-});
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/isActorTypeNPC", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_13, context_13) {
-    "use strict";
-    var skyrimPlatform_6;
-    var __moduleName = context_13 && context_13.id;
-    /**
-     * Returns wether an `Actor` `Race` has the `ActorTypeNPC` `Keyword`.
-     *
-     * @remarks
-     * This function is useful to check if an `Actor` is a _humanoid_ type of
-     * character. Most of these character types are sentient, playable, use the
-     * installed body modifier (CBBE, UNP, etc), are not creatures...
-     *
-     * @param a `Actor` to check.
-     * @returns Wether the `Actor` has the `Keyword`.
-     */
-    function isActorTypeNPC(a) {
-        var _a;
-        if (!a)
-            return false;
-        const ActorTypeNPC = skyrimPlatform_6.Keyword.from(skyrimPlatform_6.Game.getFormFromFile(0x13794, "Skyrim.esm"));
-        return ((_a = a.getRace()) === null || _a === void 0 ? void 0 : _a.hasKeyword(ActorTypeNPC)) || false;
-    }
-    exports_13("isActorTypeNPC", isActorTypeNPC);
-    return {
-        setters: [
-            function (skyrimPlatform_6_1) {
-                skyrimPlatform_6 = skyrimPlatform_6_1;
-            }
-        ],
-        execute: function () {
-        }
-    };
-});
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_14, context_14) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_15, context_15) {
     "use strict";
     var sp, sn, solveFlt, solveInt, solveStr, solveBool, solveObj, solveForm, solveFltSetter, solveIntSetter, solveBoolSetter, solveStrSetter, solveObjSetter, solveFormSetter, setObj, hasPath, allKeys, allValues, writeToFile, root;
-    var __moduleName = context_14 && context_14.id;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (sp_5) {
@@ -2329,78 +1086,32 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Global entry point to store mod information. Main intent - replace global variables
-            *     Manages keys and values associations (like JMap)
-            */
             sn = sp.JDB;
-            /** Attempts to retrieve the value associated with the @path.
-            *     For ex. the following information associated with 'frosfall' key:
-            *
-            *     "frostfall" : {
-            *         "exposureRate" : 0.5,
-            *         "arrayC" : ["stringValue", 1.5, 10, 1.14]
-            *     }
-            *
-            *     then JDB.solveFlt(".frostfall.exposureRate") will return 0.5 and
-            *     JDB.solveObj(".frostfall.arrayC") will return the array containing ["stringValue", 1.5, 10, 1.14] values
-            */
-            exports_14("solveFlt", solveFlt = (path, defaultVal = 0.0) => sn.solveFlt(path, defaultVal));
-            exports_14("solveInt", solveInt = (path, defaultVal = 0) => sn.solveInt(path, defaultVal));
-            exports_14("solveStr", solveStr = (path, defaultVal = "") => sn.solveStr(path, defaultVal));
-            exports_14("solveBool", solveBool = (path, defaultVal = false) => sn.solveInt(path, defaultVal ? 1 : 0) === 1);
-            exports_14("solveObj", solveObj = (path, defaultVal = 0) => sn.solveObj(path, defaultVal));
-            exports_14("solveForm", solveForm = (path, defaultVal = null) => sn.solveForm(path, defaultVal));
-            /** Attempts to assign the @value. Returns false if no such path.
-            *     If 'createMissingKeys=true' it creates any missing path elements: JDB.solveIntSetter(".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure
-            */
-            exports_14("solveFltSetter", solveFltSetter = (path, value, createMissingKeys = false) => sn.solveFltSetter(path, value, createMissingKeys));
-            exports_14("solveIntSetter", solveIntSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value, createMissingKeys));
-            exports_14("solveBoolSetter", solveBoolSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value ? 1 : 0, createMissingKeys));
-            exports_14("solveStrSetter", solveStrSetter = (path, value, createMissingKeys = false) => sn.solveStrSetter(path, value, createMissingKeys));
-            exports_14("solveObjSetter", solveObjSetter = (path, value, createMissingKeys = false) => sn.solveObjSetter(path, value, createMissingKeys));
-            exports_14("solveFormSetter", solveFormSetter = (path, value, createMissingKeys = false) => sn.solveFormSetter(path, value, createMissingKeys));
-            /** Associates(and replaces previous association) container object with a string key.
-            *     destroys association if object is zero
-            *     for ex. JDB.setObj("frostfall", frostFallInformation) will associate 'frostall' key and frostFallInformation so you can access it later
-            */
-            exports_14("setObj", setObj = (key, object) => sn.setObj(key, object));
-            /** Returns true, if JDB capable resolve given @path, i.e. if it able to execute solve* or solver*Setter functions successfully
-            */
-            exports_14("hasPath", hasPath = (path) => sn.hasPath(path));
-            /** returns new array containing all JDB keys
-            */
-            exports_14("allKeys", allKeys = () => sn.allKeys());
-            /** returns new array containing all containers associated with JDB
-            */
-            exports_14("allValues", allValues = () => sn.allValues());
-            /** writes storage data into JSON file at given path
-            */
-            exports_14("writeToFile", writeToFile = (path) => sn.writeToFile(path));
-            /** Returns underlying JDB's container - an instance of JMap.
-            *     The object being owned (retained) internally, so you don't have to (but can) retain or release it.
-            */
-            exports_14("root", root = () => sn.root());
+            exports_15("solveFlt", solveFlt = (path, defaultVal = 0.0) => sn.solveFlt(path, defaultVal));
+            exports_15("solveInt", solveInt = (path, defaultVal = 0) => sn.solveInt(path, defaultVal));
+            exports_15("solveStr", solveStr = (path, defaultVal = "") => sn.solveStr(path, defaultVal));
+            exports_15("solveBool", solveBool = (path, defaultVal = false) => sn.solveInt(path, defaultVal ? 1 : 0) === 1);
+            exports_15("solveObj", solveObj = (path, defaultVal = 0) => sn.solveObj(path, defaultVal));
+            exports_15("solveForm", solveForm = (path, defaultVal = null) => sn.solveForm(path, defaultVal));
+            exports_15("solveFltSetter", solveFltSetter = (path, value, createMissingKeys = false) => sn.solveFltSetter(path, value, createMissingKeys));
+            exports_15("solveIntSetter", solveIntSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value, createMissingKeys));
+            exports_15("solveBoolSetter", solveBoolSetter = (path, value, createMissingKeys = false) => sn.solveIntSetter(path, value ? 1 : 0, createMissingKeys));
+            exports_15("solveStrSetter", solveStrSetter = (path, value, createMissingKeys = false) => sn.solveStrSetter(path, value, createMissingKeys));
+            exports_15("solveObjSetter", solveObjSetter = (path, value, createMissingKeys = false) => sn.solveObjSetter(path, value, createMissingKeys));
+            exports_15("solveFormSetter", solveFormSetter = (path, value, createMissingKeys = false) => sn.solveFormSetter(path, value, createMissingKeys));
+            exports_15("setObj", setObj = (key, object) => sn.setObj(key, object));
+            exports_15("hasPath", hasPath = (path) => sn.hasPath(path));
+            exports_15("allKeys", allKeys = () => sn.allKeys());
+            exports_15("allValues", allValues = () => sn.allValues());
+            exports_15("writeToFile", writeToFile = (path) => sn.writeToFile(path));
+            exports_15("root", root = () => sn.root());
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_15, context_15) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_16, context_16) {
     "use strict";
     var sp, sn, setEntry, makeEntry, findEntry, solveFlt, solveInt, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveStrSetter, solveObjSetter, solveFormSetter, hasPath, allKeys, allValues, getInt, getFlt, getStr, getObj, getForm, setInt, setFlt, setStr, setObj, setForm;
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_16 && context_16.id;
     return {
         setters: [
             function (sp_6) {
@@ -2408,140 +1119,74 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Manages form related information (entry).
-            */
             sn = sp.JFormDB;
-            /** associates given form key and entry (container). set entry to zero to destroy association
-            */
-            exports_15("setEntry", setEntry = (storageName, fKey, entry) => sn.setEntry(storageName, fKey, entry));
-            /** returns (or creates new if not found) JMap entry for given storage and form
-            */
-            exports_15("makeEntry", makeEntry = (storageName, fKey) => sn.makeEntry(storageName, fKey));
-            /** search for entry for given storage and form
-            */
-            exports_15("findEntry", findEntry = (storageName, fKey) => sn.findEntry(storageName, fKey));
-            /** attempts to get value associated with path.
-            */
-            exports_15("solveFlt", solveFlt = (fKey, path, defaultVal = 0.0) => sn.solveFlt(fKey, path, defaultVal));
-            exports_15("solveInt", solveInt = (fKey, path, defaultVal = 0) => sn.solveInt(fKey, path, defaultVal));
-            exports_15("solveStr", solveStr = (fKey, path, defaultVal = "") => sn.solveStr(fKey, path, defaultVal));
-            exports_15("solveObj", solveObj = (fKey, path, defaultVal = 0) => sn.solveObj(fKey, path, defaultVal));
-            exports_15("solveForm", solveForm = (fKey, path, defaultVal = null) => sn.solveForm(fKey, path, defaultVal));
-            /** Attempts to assign value. Returns false if no such path
-            *     With 'createMissingKeys=true' it creates any missing path elements: JFormDB.solveIntSetter(formKey, ".frostfall.keyB", 10, true) creates {frostfall: {keyB: 10}} structure
-            */
-            exports_15("solveFltSetter", solveFltSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFltSetter(fKey, path, value, createMissingKeys));
-            exports_15("solveIntSetter", solveIntSetter = (fKey, path, value, createMissingKeys = false) => sn.solveIntSetter(fKey, path, value, createMissingKeys));
-            exports_15("solveStrSetter", solveStrSetter = (fKey, path, value, createMissingKeys = false) => sn.solveStrSetter(fKey, path, value, createMissingKeys));
-            exports_15("solveObjSetter", solveObjSetter = (fKey, path, value, createMissingKeys = false) => sn.solveObjSetter(fKey, path, value, createMissingKeys));
-            exports_15("solveFormSetter", solveFormSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFormSetter(fKey, path, value, createMissingKeys));
-            /** returns true, if capable resolve given path, e.g. it able to execute solve* or solver*Setter functions successfully
-            */
-            exports_15("hasPath", hasPath = (fKey, path) => sn.hasPath(fKey, path));
-            /** JMap-like interface functions:
-            *
-            *     returns new array containing all keys
-            */
-            exports_15("allKeys", allKeys = (fKey, key) => sn.allKeys(fKey, key));
-            /** returns new array containing all values
-            */
-            exports_15("allValues", allValues = (fKey, key) => sn.allValues(fKey, key));
-            /** returns value associated with key
-            */
-            exports_15("getInt", getInt = (fKey, key) => sn.getInt(fKey, key));
-            exports_15("getFlt", getFlt = (fKey, key) => sn.getFlt(fKey, key));
-            exports_15("getStr", getStr = (fKey, key) => sn.getStr(fKey, key));
-            exports_15("getObj", getObj = (fKey, key) => sn.getObj(fKey, key));
-            exports_15("getForm", getForm = (fKey, key) => sn.getForm(fKey, key));
-            /** creates key-value association. replaces existing value if any
-            */
-            exports_15("setInt", setInt = (fKey, key, value) => sn.setInt(fKey, key, value));
-            exports_15("setFlt", setFlt = (fKey, key, value) => sn.setFlt(fKey, key, value));
-            exports_15("setStr", setStr = (fKey, key, value) => sn.setStr(fKey, key, value));
-            exports_15("setObj", setObj = (fKey, key, container) => sn.setObj(fKey, key, container));
-            exports_15("setForm", setForm = (fKey, key, value) => sn.setForm(fKey, key, value));
+            exports_16("setEntry", setEntry = (storageName, fKey, entry) => sn.setEntry(storageName, fKey, entry));
+            exports_16("makeEntry", makeEntry = (storageName, fKey) => sn.makeEntry(storageName, fKey));
+            exports_16("findEntry", findEntry = (storageName, fKey) => sn.findEntry(storageName, fKey));
+            exports_16("solveFlt", solveFlt = (fKey, path, defaultVal = 0.0) => sn.solveFlt(fKey, path, defaultVal));
+            exports_16("solveInt", solveInt = (fKey, path, defaultVal = 0) => sn.solveInt(fKey, path, defaultVal));
+            exports_16("solveStr", solveStr = (fKey, path, defaultVal = "") => sn.solveStr(fKey, path, defaultVal));
+            exports_16("solveObj", solveObj = (fKey, path, defaultVal = 0) => sn.solveObj(fKey, path, defaultVal));
+            exports_16("solveForm", solveForm = (fKey, path, defaultVal = null) => sn.solveForm(fKey, path, defaultVal));
+            exports_16("solveFltSetter", solveFltSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFltSetter(fKey, path, value, createMissingKeys));
+            exports_16("solveIntSetter", solveIntSetter = (fKey, path, value, createMissingKeys = false) => sn.solveIntSetter(fKey, path, value, createMissingKeys));
+            exports_16("solveStrSetter", solveStrSetter = (fKey, path, value, createMissingKeys = false) => sn.solveStrSetter(fKey, path, value, createMissingKeys));
+            exports_16("solveObjSetter", solveObjSetter = (fKey, path, value, createMissingKeys = false) => sn.solveObjSetter(fKey, path, value, createMissingKeys));
+            exports_16("solveFormSetter", solveFormSetter = (fKey, path, value, createMissingKeys = false) => sn.solveFormSetter(fKey, path, value, createMissingKeys));
+            exports_16("hasPath", hasPath = (fKey, path) => sn.hasPath(fKey, path));
+            exports_16("allKeys", allKeys = (fKey, key) => sn.allKeys(fKey, key));
+            exports_16("allValues", allValues = (fKey, key) => sn.allValues(fKey, key));
+            exports_16("getInt", getInt = (fKey, key) => sn.getInt(fKey, key));
+            exports_16("getFlt", getFlt = (fKey, key) => sn.getFlt(fKey, key));
+            exports_16("getStr", getStr = (fKey, key) => sn.getStr(fKey, key));
+            exports_16("getObj", getObj = (fKey, key) => sn.getObj(fKey, key));
+            exports_16("getForm", getForm = (fKey, key) => sn.getForm(fKey, key));
+            exports_16("setInt", setInt = (fKey, key, value) => sn.setInt(fKey, key, value));
+            exports_16("setFlt", setFlt = (fKey, key, value) => sn.setFlt(fKey, key, value));
+            exports_16("setStr", setStr = (fKey, key, value) => sn.setStr(fKey, key, value));
+            exports_16("setObj", setObj = (fKey, key, container) => sn.setObj(fKey, key, container));
+            exports_16("setForm", setForm = (fKey, key, value) => sn.setForm(fKey, key, value));
         }
     };
 });
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/persistentChest", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/isActorTypeNPC", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_16, context_16) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JFormMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_17, context_17) {
     "use strict";
-    var persistentChest_1, isActorTypeNPC_1, DmLib_2, JDB, JFormDB, JFormMap, skyrimPlatform_7, SkimpifyFramework, GetAllSkimpy, GetAllModest, HasSlip, GetSlip, HasChange, GetChange, HasDamage, GetDamage, HasModest, IsSkimpy, HasSkimpy, IsModest, IsRegistered, IsNotRegistered, SwapToSlip, SwapToChange, SwapToDamage, CanUseArmor, defaultType, DbHandle, cfgDir, fwKey, chestPath, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
-    var __moduleName = context_16 && context_16.id;
-    // ;>========================================================
-    // ;>===                ARMOR FUNCTIONS                 ===<;
-    // ;>========================================================
-    /** Returns the closest _modest version_ of an `Armor`.
-     *
-     * @param a Armor to get the modest version from.
-     * @returns An `Armor`, or `null | undefined` if the modest version doesn't exist.
-     */
+    var Actor_1, Form_2, JDB, JFormDB, JFormMap, skyrimPlatform_7, SkimpifyFramework, GetAllSkimpy, GetAllModest, HasSlip, GetSlip, HasChange, GetChange, HasDamage, GetDamage, HasModest, IsSkimpy, HasSkimpy, IsModest, IsRegistered, IsNotRegistered, SwapToSlip, SwapToChange, SwapToDamage, CanUseArmor, defaultType, DbHandle, cfgDir, fwKey, chestPath, ArmorK, ChangeK, JcChangeK, ClearDB, SetRel, HasKey, ValidateChangeRel;
+    var __moduleName = context_17 && context_17.id;
     function GetModest(a) {
         return GetArmor(a, "prev");
     }
-    exports_16("GetModest", GetModest);
-    /** Returns the closest _skimpy version_ of an `Armor`.
-     *
-     * @param a Armor to get the skimpy version from.
-     * @returns An `Armor`, or `null | undefined` if the skimpy version doesn't exist.
-     */
+    exports_17("GetModest", GetModest);
     function GetSkimpy(a) {
         return GetArmor(a, "next");
     }
-    exports_16("GetSkimpy", GetSkimpy);
-    /** Returns what kind of change an `Armor` has with its modest version.
-     *
-     * @param a `Armor` to see how it changes.
-     * @returns The kind of change. `null` if there's no modest version.
-     */
+    exports_17("GetSkimpy", GetSkimpy);
     function GetModestType(a) {
         return GetChangeType(a, "prev");
     }
-    exports_16("GetModestType", GetModestType);
-    /** Returns what kind of change an `Armor` has with its skimpier version.
-     *
-     * @param a `Armor` to see how it changes.
-     * @returns The kind of change. `null` if there's no skimpier version.
-     */
+    exports_17("GetModestType", GetModestType);
     function GetSkimpyType(a) {
         return GetChangeType(a, "next");
     }
-    exports_16("GetSkimpyType", GetSkimpyType);
-    /** Gets the {@link SkimpyData} for the modest version of an `Armor`.
-     *
-     * @param a The `Armor` to get the modest version from.
-     * @returns The {@link SkimpyData} for the modest version of `a`.
-     * The `armor` part of that data may be `null` if said armor doesn't exist.
-     
-     */
+    exports_17("GetSkimpyType", GetSkimpyType);
     function GetModestData(a) {
         return { armor: GetModest(a), kind: GetModestType(a) };
     }
-    exports_16("GetModestData", GetModestData);
-    /** Gets the {@link SkimpyData} for the skimpy version of an `Armor`.
-     *
-     * @param a The `Armor` to get the skimpy version from.
-     * @returns The {@link SkimpyData} for the skimpy version of `a`.
-     * The `armor` part of that data may be `null` if said armor doesn't exist.
-     */
+    exports_17("GetModestData", GetModestData);
     function GetSkimpyData(a) {
         return { armor: GetSkimpy(a), kind: GetSkimpyType(a) };
     }
-    exports_16("GetSkimpyData", GetSkimpyData);
-    /** Returns the most modest version of an armor.
-     * @param  {Armor} a Armor to check.
-     * @param  {boolean} getBroken Return the most modest version even if the current one is broken? Default = `false`.
-     * @returns Armor
-     */
+    exports_17("GetSkimpyData", GetSkimpyData);
     function GetMostModest(a, getBroken = false) {
         const p = GetModestData(a);
         if (!p.armor)
             return null;
-        if (p.kind === "damage" /* damage */ && !getBroken)
+        if (p.kind === "damage" && !getBroken)
             return null;
         const pp = GetMostModest(p.armor);
         return pp ? pp : p.armor;
     }
-    exports_16("GetMostModest", GetMostModest);
+    exports_17("GetMostModest", GetMostModest);
     function RestoreMostModest(act, skimpyArmor) {
         if (!act || !skimpyArmor)
             return false;
@@ -2551,52 +1196,31 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         GoModest(act, skimpyArmor, to);
         return true;
     }
-    exports_16("RestoreMostModest", RestoreMostModest);
+    exports_17("RestoreMostModest", RestoreMostModest);
     function RestoreAllMostModest(act) {
-        DmLib_2.FormLib.ForEachEquippedArmor(act, (a) => {
+        Form_2.ForEachEquippedArmor(act, (a) => {
             RestoreMostModest(act, a);
         });
     }
-    exports_16("RestoreAllMostModest", RestoreAllMostModest);
-    // ;>========================================================
-    // ;>===             RELATIONSHIP FUNCTIONS             ===<;
-    // ;>========================================================
-    /** Adds a _Change Relationship_ between two armors.\
-     * ***WARNING***: this relationship is saved to the game.
-     *
-     * @param modest More modest version of some armor.
-     * @param skimpy More skimpy version of that armor.
-     * @param change What kind of change this relationship entails.
-     */
-    function AddChangeRel(modest, skimpy, change = "change" /* change */) {
+    exports_17("RestoreAllMostModest", RestoreAllMostModest);
+    function AddChangeRel(modest, skimpy, change = "change") {
         if (!modest || !skimpy)
             return;
         SetRel(modest, skimpy, "next", change);
         SetRel(skimpy, modest, "prev", change);
     }
-    exports_16("AddChangeRel", AddChangeRel);
-    /** Clears all _Change Relationships_ of some armor.
-     *
-     * @param a Armor to clear relationship to.
-     */
+    exports_17("AddChangeRel", AddChangeRel);
     function ClearChangeRel(a) {
         const C = (parent, child) => {
             if (!parent || !child)
                 return;
-            SetRel(parent, null, "next", "change" /* change */);
-            SetRel(child, null, "prev", "change" /* change */);
+            SetRel(parent, null, "next", "change");
+            SetRel(child, null, "prev", "change");
         };
         C(GetModest(a), a);
         C(a, GetSkimpy(a));
     }
-    exports_16("ClearChangeRel", ClearChangeRel);
-    /** Gets an Armor given an internal key.
-     * This isn't meant to be used by final users.
-     *
-     * @param a Armors.
-     * @param key Key from where we want to retrieve the armor from.
-     * @returns `Armor` or `null | undefined`.
-     */
+    exports_17("ClearChangeRel", ClearChangeRel);
     function GetArmor(a, key) {
         if (!a)
             return null;
@@ -2609,11 +1233,11 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         if (!a)
             return null;
         const r = JFormDB.solveStr(a, ChangeK(key), defaultType).toLowerCase();
-        return r === "slip" /* slip */
-            ? "slip" /* slip */
-            : r === "damage" /* damage */
-                ? "damage" /* damage */
-                : "change" /* change */;
+        return r === "slip"
+            ? "slip"
+            : r === "damage"
+                ? "damage"
+                : "change";
     }
     function NextByType(a, t) {
         const aa = GetSkimpy(a);
@@ -2623,43 +1247,21 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             return aa;
         return null;
     }
-    /** @experimental From all equipped armors, returns all the ones that have
-     * other versions.
-     *
-     * @remarks
-     * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
-     * it's recommended to be used with caution in real production code.
-     *
-     * However, it can be safely used sparingly.
-     *
-     * @param a Actor to check armors from.
-     * @param Next Function that will get the other versions.
-     * @param Curr Function that returns the opposite of `Next`.
-     * @returns An array with all equipped armors that have another version and the
-     * array with those versions.
-     */
     function GetAll(a, Next, Curr) {
-        const aa = DmLib_2.FormLib.GetEquippedArmors(a);
+        const aa = Form_2.GetEquippedArmors(a);
         const n = aa.map((v) => Next(v)).filter((v) => v.armor);
         const c = n.map((v) => Curr(v.armor));
         return { current: c, next: n };
     }
-    exports_16("GetAll", GetAll);
-    /** Gets a global chest for storing armors from an `Actor`.
-     * @remarks
-     * To avoid bloat, this function returns `null` on non-unique actors so
-     * they never get a chest.
-     */
+    exports_17("GetAll", GetAll);
     function GetChest(a) {
         var _a;
         if (!((_a = a.getLeveledActorBase()) === null || _a === void 0 ? void 0 : _a.isUnique()))
             return null;
-        /** Gets the handle to the chests database */
         const GetChestDbHandle = () => {
             const r = JDB.solveObj(chestPath);
             return r !== 0 ? r : JFormMap.object();
         };
-        /** Saves the chest database by handle */
         const SaveChestDbHandle = (h) => {
             JDB.solveObjSetter(chestPath, h, true);
         };
@@ -2672,24 +1274,17 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             SaveChestDbHandle(h);
         };
         const Logger = (msg) => skyrimPlatform_7.printConsole(`***Error on Skimpify Framework***: ${msg}`);
-        return skyrimPlatform_7.ObjectReference.from(persistentChest_1.getPersistentChest(Getter, Setter, Logger));
+        return skyrimPlatform_7.ObjectReference.from(Form_2.getPersistentChest(Getter, Setter, Logger));
     }
-    /** Swaps an armor on an actor. This function preserves the original armor
-     * (tempering, enchantments...) by storing it in a special global chest.
-     */
     function GoSkimpy(a, from, to) {
         const chest = GetChest(a);
-        // Remove all possible lingering armors to avoid bugs because of duplicate items.
         if (chest)
             chest.removeItem(from, chest.getItemCount(from), true, null);
         a.removeItem(from, 1, true, chest);
         a.equipItem(to, false, true);
     }
-    /** Swaps an skimpy armor for its modest version that was saved on a global chest. */
     function GoModest(a, from, to) {
         const chest = GetChest(a);
-        // Skimpy armor is discarded because tempering and enchantments from original
-        // can't be transferred, anyway.
         a.removeItem(from, 1, true, null);
         if (chest)
             chest.removeItem(to, 1, true, a);
@@ -2706,14 +1301,11 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
     }
     return {
         setters: [
-            function (persistentChest_1_1) {
-                persistentChest_1 = persistentChest_1_1;
+            function (Actor_1_1) {
+                Actor_1 = Actor_1_1;
             },
-            function (isActorTypeNPC_1_1) {
-                isActorTypeNPC_1 = isActorTypeNPC_1_1;
-            },
-            function (DmLib_2_1) {
-                DmLib_2 = DmLib_2_1;
+            function (Form_2_1) {
+                Form_2 = Form_2_1;
             },
             function (JDB_1) {
                 JDB = JDB_1;
@@ -2729,190 +1321,76 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /**
-             *     █████╗ ██████╗ ██╗
-             *    ██╔══██╗██╔══██╗██║
-             *    ███████║██████╔╝██║
-             *    ██╔══██║██╔═══╝ ██║
-             *    ██║  ██║██║     ██║
-             *    ╚═╝  ╚═╝╚═╝     ╚═╝
-             *
-             *  Public functions, constants and types.
-             *  Use them as you please.
-             *
-             *  This file should be inside "Data\Platform\Modules".
-             */
             (function (SkimpifyFramework) {
-                /** Function to check if the player installed this framework.
-                 * @example
-                 *  if(SkimpifyFramework.IsInstalled()){
-                 *    // Do all your magic
-                 *  }
-                 */
                 SkimpifyFramework.IsInstalled = () => DbHandle() !== 0;
             })(SkimpifyFramework || (SkimpifyFramework = {}));
-            exports_16("SkimpifyFramework", SkimpifyFramework);
-            /** @experimental From all equipped armors, returns all the ones that have
-             * skimpier versions.
-             *
-             * @remarks
-             * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
-             * it's recommended to be used with caution in real production code.
-             *
-             * However, it can be safely used sparingly.
-             *
-             * @param a Actor to check armors from.
-             * @returns An array with all equipped armors that have an skimpy version and the
-             * array with those versions.
-             */
-            exports_16("GetAllSkimpy", GetAllSkimpy = (a) => GetAll(a, GetSkimpyData, GetModestData));
-            /** @experimental From all equipped armors, returns all the ones that have
-             * more modest versions.
-             *
-             * @remarks
-             * ***WARNING***. This function ***may*** be slow (not to Papyrus levels, of course) and
-             * it's recommended to be used with caution in real production code.
-             *
-             * However, it can be safely used sparingly.
-             *
-             * @param a Actor to check armors from.
-             * @returns An array with all equipped armors that have a modest version and the
-             * array with those versions.
-             */
-            exports_16("GetAllModest", GetAllModest = (a) => GetAll(a, GetModestData, GetSkimpyData));
-            /** Does this armor have a slip version?
-             * @param  {ArmorArg} a Armor to check.
-             */
-            exports_16("HasSlip", HasSlip = (a) => GetSkimpyType(a) === "slip" /* slip */);
-            /** If the skimpy version of an `Armor` is a `slip`, returns it.
-             *
-             * @param a Armor to check.
-             * @returns The slip `Armor`. `null` if `a` has no Skimpy version or if it isn't a `slip`.
-             */
-            exports_16("GetSlip", GetSlip = (a) => NextByType(a, "slip" /* slip */));
-            /** Does this armor have a changed version?
-             * @param  {ArmorArg} a Armor to check.
-             */
-            exports_16("HasChange", HasChange = (a) => GetSkimpyType(a) === "change" /* change */);
-            /** If the skimpy version of an `Armor` is a `change`, returns it.
-             *
-             * @param a Armor to check.
-             * @returns The changed `Armor`. `null` if `a` has no Skimpy version or if it isn't a `change`.
-             */
-            exports_16("GetChange", GetChange = (a) => NextByType(a, "change" /* change */));
-            /** Does this armor have a damaged version?
-             * @param  {ArmorArg} a Armor to check.
-             */
-            exports_16("HasDamage", HasDamage = (a) => GetSkimpyType(a) === "damage" /* damage */);
-            /** If the skimpy version of an `Armor` is a `damage`, returns it.
-             *
-             * @param a Armor to check.
-             * @returns The damaged `Armor`. `null` if `a` has no Skimpy version or if it isn't a `damage`.
-             */
-            exports_16("GetDamage", GetDamage = (a) => NextByType(a, "damage" /* damage */));
-            /** Checks if an armor has a registered modest version of itself. */
-            exports_16("HasModest", HasModest = (a) => HasKey(a, "prev"));
-            /** Checks if an armor is a registered skimpy version of another. */
-            exports_16("IsSkimpy", IsSkimpy = HasModest);
-            /** Checks if an armor has a registered skimpy version of itself. */
-            exports_16("HasSkimpy", HasSkimpy = (a) => HasKey(a, "next"));
-            /** Checks if an armor is a registered modest version of another. */
-            exports_16("IsModest", IsModest = HasSkimpy);
-            /** Checks if an armor has any registered variant of itself. */
-            exports_16("IsRegistered", IsRegistered = (a) => HasSkimpy(a) || HasModest(a));
-            /** Checks if an armor has any registered variant of itself. */
-            exports_16("IsNotRegistered", IsNotRegistered = (a) => !HasSkimpy(a) && !HasModest(a));
-            /** Swaps an equipped armor from an `Actor` to its slip version. Returns wether
-             * the operation could be done or not.
-             *
-             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
-             *
-             * @param  {ActorArg} act `Actor` to work on.
-             * @param  {ArmorArg} modestArmor Armor to swap from.
-             *
-             * @remarks
-             * If the actor is unique, this preserves the modest version of the armor on a special
-             * chest, so tempering and enchantments are not lost.\
-             * On non unique actors, their original armors will simply be discarded.
-             */
-            exports_16("SwapToSlip", SwapToSlip = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetSlip));
-            /** Swaps an equipped armor from an `Actor` to its changed version. Returns wether
-             * the operation could be done or not.
-             *
-             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
-             *
-             * @param  {ActorArg} act `Actor` to work on.
-             * @param  {ArmorArg} modestArmor Armor to swap from.
-             *
-             * @remarks
-             * If the actor is unique, this preserves the modest version of the armor on a special
-             * chest, so tempering and enchantments are not lost.\
-             * On non unique actors, their original armors will simply be discarded.
-             */
-            exports_16("SwapToChange", SwapToChange = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetChange));
-            /** Swaps an equipped armor from an `Actor` to its damaged version. Returns wether
-             * the operation could be done or not.
-             *
-             * **THIS FUNCTION IS THE PREFERRED WAY TO SWAP ARMORS ON ACTORS**.
-             *
-             * @param  {ActorArg} act `Actor` to work on.
-             * @param  {ArmorArg} modestArmor Armor to swap from.
-             *
-             * @remarks
-             * If the actor is unique, this preserves the modest version of the armor on a special
-             * chest, so tempering and enchantments are not lost.\
-             * On non unique actors, their original armors will simply be discarded.
-             */
-            exports_16("SwapToDamage", SwapToDamage = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetDamage));
-            /** Tells wether an `Actor` can even equip armors.\
-             * Use this to check if your mod should try to change armors on an `Actor`.
-             * @param  {Actor} act Actor to check.
-             *
-             * @remarks
-             * It currently works by checking if the Actor's Race has the `ActorTypeNPC`
-             * keyword.
-             *
-             * Checking for this will inmediatly discard animals and creatures in most cases.
-             */
-            exports_16("CanUseArmor", CanUseArmor = (act) => isActorTypeNPC_1.isActorTypeNPC(act));
-            /** Default type to assume what an armor version is when it has no associated/valid type. */
-            exports_16("defaultType", defaultType = "change" /* change */);
-            /** Direct handle to the JContainers DB. Don't use this if you don't know what you are doing. */
-            exports_16("DbHandle", DbHandle = () => JDB.solveObj(fwKey));
-            /** Dir where armor configuration files are located. */
-            exports_16("cfgDir", cfgDir = "data/SKSE/Plugins/Skimpify Framework/");
-            /** Key used to save values added by this framework. */
+            exports_17("SkimpifyFramework", SkimpifyFramework);
+            exports_17("GetAllSkimpy", GetAllSkimpy = (a) => GetAll(a, GetSkimpyData, GetModestData));
+            exports_17("GetAllModest", GetAllModest = (a) => GetAll(a, GetModestData, GetSkimpyData));
+            exports_17("HasSlip", HasSlip = (a) => GetSkimpyType(a) === "slip");
+            exports_17("GetSlip", GetSlip = (a) => NextByType(a, "slip"));
+            exports_17("HasChange", HasChange = (a) => GetSkimpyType(a) === "change");
+            exports_17("GetChange", GetChange = (a) => NextByType(a, "change"));
+            exports_17("HasDamage", HasDamage = (a) => GetSkimpyType(a) === "damage");
+            exports_17("GetDamage", GetDamage = (a) => NextByType(a, "damage"));
+            exports_17("HasModest", HasModest = (a) => HasKey(a, "prev"));
+            exports_17("IsSkimpy", IsSkimpy = HasModest);
+            exports_17("HasSkimpy", HasSkimpy = (a) => HasKey(a, "next"));
+            exports_17("IsModest", IsModest = HasSkimpy);
+            exports_17("IsRegistered", IsRegistered = (a) => HasSkimpy(a) || HasModest(a));
+            exports_17("IsNotRegistered", IsNotRegistered = (a) => !HasSkimpy(a) && !HasModest(a));
+            exports_17("SwapToSlip", SwapToSlip = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetSlip));
+            exports_17("SwapToChange", SwapToChange = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetChange));
+            exports_17("SwapToDamage", SwapToDamage = (act, modestArmor) => SwapToSkimpy(act, modestArmor, GetDamage));
+            exports_17("CanUseArmor", CanUseArmor = (act) => Actor_1.isActorTypeNPC(act));
+            exports_17("defaultType", defaultType = "change");
+            exports_17("DbHandle", DbHandle = () => JDB.solveObj(fwKey));
+            exports_17("cfgDir", cfgDir = "data/SKSE/Plugins/Skimpify Framework/");
             fwKey = ".Skimpify-Framework";
-            /** Key to find chests. */
             chestPath = `${fwKey}.globalChests`;
-            /** Key used to save armors. */
             ArmorK = (k) => `${fwKey}.${k}`;
-            /** Key used to save armor change relationships. */
             ChangeK = (k) => `${ArmorK(k)}T`;
-            /** Key used to read armor change relationships from JContainers. */
-            exports_16("JcChangeK", JcChangeK = (k) => `${k}T`);
-            exports_16("ClearDB", ClearDB = () => JDB.setObj(fwKey, 0));
-            /** Sets a _Change Relationship_ between two armors. */
-            exports_16("SetRel", SetRel = (a1, a2, r, c) => {
-                JFormDB.solveFormSetter(a1, ArmorK(r), a2, true); // Save form
-                JFormDB.solveStrSetter(a1, ChangeK(r), c, true); // Save change type
+            exports_17("JcChangeK", JcChangeK = (k) => `${k}T`);
+            exports_17("ClearDB", ClearDB = () => JDB.setObj(fwKey, 0));
+            exports_17("SetRel", SetRel = (a1, a2, r, c) => {
+                JFormDB.solveFormSetter(a1, ArmorK(r), a2, true);
+                JFormDB.solveStrSetter(a1, ChangeK(r), c, true);
             });
-            /** Checks if an armor has a registered variant. */
             HasKey = (a, r) => !a ? false : JFormDB.solveForm(a, ArmorK(r)) !== null;
-            /** Ensures a string is a valid {@link ChangeRel}. Returns {@link defaultType} if string was invalid. */
-            exports_16("ValidateChangeRel", ValidateChangeRel = (rel) => rel.toLowerCase() === "slip" /* slip */
-                ? "slip" /* slip */
-                : rel.toLowerCase() === "damage" /* damage */
-                    ? "damage" /* damage */
+            exports_17("ValidateChangeRel", ValidateChangeRel = (rel) => rel.toLowerCase() === "slip"
+                ? "slip"
+                : rel.toLowerCase() === "damage"
+                    ? "damage"
                     : defaultType);
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_17, context_17) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Log"], function (exports_18, context_18) {
     "use strict";
-    var debug_1, forEachArmor_1, DmLib_3, JTs_1, MiscUtil_1, skimpify_api_1, skyrimPlatform_8, LogR, AddVal, ArmorUniqueId, GetUniqueId, AddKey, autoN, skimpyNames;
-    var __moduleName = context_17 && context_17.id;
-    /** Saves all registered armors to json files. */
+    var Log, L, fs, LogN, LogNT, LogI, LogIT, LogV, LogVT;
+    var __moduleName = context_18 && context_18.id;
+    return {
+        setters: [
+            function (Log_2) {
+                Log = Log_2;
+            }
+        ],
+        execute: function () {
+            L = Log;
+            fs = Log.CreateAll("SkimpifyFramework", L.Level.info, L.ConsoleFmt, L.FileFmt);
+            exports_18("LogN", LogN = fs.None);
+            exports_18("LogNT", LogNT = fs.TapN);
+            exports_18("LogI", LogI = fs.Info);
+            exports_18("LogIT", LogIT = fs.TapI);
+            exports_18("LogV", LogV = fs.Verbose);
+            exports_18("LogVT", LogVT = fs.TapV);
+        }
+    };
+});
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Log", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/PapyrusUtil/MiscUtil", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_19, context_19) {
+    "use strict";
+    var Form_3, Log, JTs_1, MiscUtil_1, skimpify_api_1, skyrimPlatform_8, debug_1, LogR, AddVal, ArmorUniqueId, GetUniqueId, AddKey, autoN, skimpyNames;
+    var __moduleName = context_19 && context_19.id;
     function SaveJson() {
         const m = new Map();
         JTs_1.JFormMapL.ForAllKeys(skimpify_api_1.DbHandle(), (k) => {
@@ -2922,8 +1400,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
                 return;
             const n = skimpify_api_1.GetSkimpyData(a);
             if (!n.armor)
-                return; // No need to write to file an armor with no children
-            const curr = DmLib_3.FormLib.GetFormEspAndId(a);
+                return;
+            const curr = Form_3.getEspAndId(a);
             AddKey(curr.modName, m);
             AddVal(curr.modName, m, {
                 uId: GetUniqueId(curr.modName, curr.fixedFormId),
@@ -2937,7 +1415,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         });
         OutputMapToJSon(m);
     }
-    exports_17("SaveJson", SaveJson);
+    exports_19("SaveJson", SaveJson);
     function AutoGenArmors() {
         debug_1.LogN("\n");
         debug_1.LogN("=================================");
@@ -2949,11 +1427,11 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
 
   Now you can test in game if things are as you expected, then you can export them to json.`);
     }
-    exports_17("AutoGenArmors", AutoGenArmors);
+    exports_19("AutoGenArmors", AutoGenArmors);
     function GetInventoryArmors() {
         debug_1.LogN("Armors in inventory:\n");
         const r = new Array();
-        forEachArmor_1.forEachArmorR(skyrimPlatform_8.Game.getPlayer(), (a) => {
+        Form_3.forEachArmorR(skyrimPlatform_8.Game.getPlayer(), (a) => {
             const d = ArmorToData(a);
             if (d)
                 r.push(d);
@@ -2977,7 +1455,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         const L = (uID) => `${uID}\n`;
         if (!a.isPlayable() || a.getName() === "")
             return null;
-        const info = DmLib_3.FormLib.GetFormEspAndId(a);
+        const info = Form_3.getEspAndId(a);
         return {
             esp: info.modName,
             name: debug_1.LogNT("", a.getName()),
@@ -2987,7 +1465,6 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         };
     }
     function PreprocessName(n, search) {
-        // LogI(`-------- ${search} ${n}`)
         const i = n.indexOf(search);
         if (i < 0)
             return n;
@@ -3013,22 +1490,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
     }
     function GenSkimpyGroupsByName(armors) {
         let output = new Map();
-        // This assumes the armor list is alphabetically sorted
         while (armors.length > 1) {
-            // Put the _tentative_ base armor in some array with its possible matches
             let matches = new Array();
             matches.push(armors[0]);
-            // Take out all armors that share the same name as the base
             const n = armors[0].name;
             while (armors.length > 1 && armors[1].name.indexOf(n) >= 0) {
-                // Put them in a new array
                 matches.push(armors.splice(1, 1)[0]);
             }
-            // Process matching items
             ProcessMatches(matches, output);
-            // Delete the tentative base armor
             armors.shift();
-            // Do the same for all elements in the list
         }
         return output;
     }
@@ -3039,17 +1509,11 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         debug_1.LogI("These armors seem to be variants");
         debug_1.LogI("=================================");
         const l = debug_1.LogVT("Base name length", m[0].name.length);
-        // Sorting by word length makes it easier to get correct matches
         m = m.sort((a, b) => a.name.length - b.name.length);
         m.forEach((a, i) => debug_1.LogV(`${a.name}${i === n - 1 ? "\n" : ""}`));
-        /** If some element of the list contains some word, adds a relationship with
-         * both the start of this list and that element.
-         */
-        const TestWord = (s, rel = "change" /* change */) => {
+        const TestWord = (s, rel = "change") => {
             let fIdx = 0;
-            /** Checks if next items' name end with some particular word */
             const CheckFor = (s) => m.slice(1).some((a, i) => {
-                // Find searched word after the end of the base
                 const t = a.name.toLowerCase().indexOf(s, l) > -1;
                 fIdx = t ? i + 1 : 0;
                 return t;
@@ -3058,13 +1522,11 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
                 return false;
             debug_1.LogI(`*** ${m[fIdx].name} is a(n) "${s}" variant.\n`);
             MakeChild(m[0], m[fIdx], rel, output);
-            const b = m.splice(fIdx, 1); // Move match to start of list
-            m.splice(0, 1); // Delete first element
-            // Process again the rest of the list
+            const b = m.splice(fIdx, 1);
+            m.splice(0, 1);
             ProcessMatches(b.concat(m), output);
             return true;
         };
-        // Test for relationships with next elements. Give priority to items with names containing "slut"
         for (const e of skimpyNames)
             if (TestWord(e.search, e.rel))
                 return;
@@ -3076,28 +1538,22 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
         const L = () => {
             debug_1.LogI(`-- Relationship changed from ${p.name} -> ${armor === null || armor === void 0 ? void 0 : armor.getName()}. To ${p.name} -> ${c.name}`);
         };
-        // Child is different to what was already registered. Return new relationship.
         if (armor && armor.getFormID() !== c.armor.getFormID())
             return LogR(L(), r);
-        // Return old relationship if it exists. Otherwise, return new.
         return kind && kind !== skimpify_api_1.defaultType ? kind : r;
     }
     function MakeChild(parent, child, relationship, output, saveToMem = true) {
-        // Test if Change Relationship already exists.
         const ch = ChangeExists(parent, child, relationship);
-        // Add relationship
         parent.next = child.uId;
         parent.nextT = ch;
         child.prev = parent.uId;
         child.prevT = ch;
-        // Add it to memory, so player can test changes right away
         if (saveToMem)
             skimpify_api_1.AddChangeRel(parent.armor, child.armor, ch);
         autoN++;
         debug_1.LogI(`${child.name} is now registered as a skimpy version of ${parent.name}. Change type: ${ch}.\n`);
     }
     function OutputMapToJSon(m) {
-        /** Transforms an ArmorData[] to an object with armor unique ids as object properties. */
         const Transform = (x) => {
             const o = x.map((v) => {
                 return {
@@ -3123,14 +1579,11 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
     }
     return {
         setters: [
-            function (debug_1_1) {
-                debug_1 = debug_1_1;
+            function (Form_3_1) {
+                Form_3 = Form_3_1;
             },
-            function (forEachArmor_1_1) {
-                forEachArmor_1 = forEachArmor_1_1;
-            },
-            function (DmLib_3_1) {
-                DmLib_3 = DmLib_3_1;
+            function (Log_3) {
+                Log = Log_3;
             },
             function (JTs_1_1) {
                 JTs_1 = JTs_1_1;
@@ -3143,59 +1596,46 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", ["Skyri
             },
             function (skyrimPlatform_8_1) {
                 skyrimPlatform_8 = skyrimPlatform_8_1;
+            },
+            function (debug_1_1) {
+                debug_1 = debug_1_1;
             }
         ],
         execute: function () {
-            LogR = DmLib_3.DebugLib.Log.R;
+            LogR = Log.R;
             AddVal = (esp, m, v) => {
                 const k = esp;
                 const a = m.get(k);
                 a.push(v);
                 m.set(k, a);
             };
-            ArmorUniqueId = (a) => !a ? undefined : DmLib_3.FormLib.GetFormUniqueId(a, GetUniqueId);
+            ArmorUniqueId = (a) => !a ? undefined : Form_3.getUniqueId(a, GetUniqueId);
             GetUniqueId = (esp, fixedFormId) => `${esp}|${fixedFormId.toString(16)}`;
-            // Add keys to the json file they should be output to.
             AddKey = (k, output) => {
                 if (!output.has(k))
                     output.set(k, []);
             };
-            /** Number of automatically generated armors. */
             autoN = 0;
             skimpyNames = [
-                { search: "slutty", rel: "change" /* change */ },
-                { search: "slut", rel: "change" /* change */ },
-                { search: "xtra", rel: "change" /* change */ },
-                { search: "naked", rel: "change" /* change */ },
-                { search: "nude", rel: "change" /* change */ },
-                { search: "topless", rel: "change" /* change */ },
-                { search: "sex", rel: "change" /* change */ },
-                { search: "damaged", rel: "damage" /* damage */ },
-                { search: "damage", rel: "damage" /* damage */ },
-                { search: "broken", rel: "damage" /* damage */ },
-                { search: "broke", rel: "damage" /* damage */ },
+                { search: "slutty", rel: "change" },
+                { search: "slut", rel: "change" },
+                { search: "xtra", rel: "change" },
+                { search: "naked", rel: "change" },
+                { search: "nude", rel: "change" },
+                { search: "topless", rel: "change" },
+                { search: "sex", rel: "change" },
+                { search: "damaged", rel: "damage" },
+                { search: "damage", rel: "damage" },
+                { search: "broken", rel: "damage" },
+                { search: "broke", rel: "damage" },
             ];
         }
     };
 });
-/*
-==============================================
-Typescript definitions for v4.2.2
-==============================================
-
-***********************************************************************
- 
-This file was automatically generated by Papyrus-2-Typescript.exe
-https://github.com/CarlosLeyvaAyala/Papyrus-2-Typescript
-
-The program has no way to know the intention of the humans that made
-the scripts, so it's always advisable to manually check all generated
-files to make sure everything is declared as it should.
-*/
-System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_18, context_18) {
+System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform"], function (exports_20, context_20) {
     "use strict";
     var sp, sn, enableAPILog, retain, release, releaseAndRetain, releaseObjectsWithTag, zeroLifetime, addToPool, cleanPool, shallowCopy, deepCopy, isExists, isArray, isMap, isFormMap, isIntegerMap, empty, count, clear, readFromFile, readFromDirectory, objectFromPrototype, writeToFile, solvedValueType, hasPath, solveFlt, solveInt, solveStr, solveObj, solveForm, solveFltSetter, solveIntSetter, solveStrSetter, solveObjSetter, solveFormSetter, evalLuaFlt, evalLuaInt, evalLuaStr, evalLuaObj, evalLuaForm;
-    var __moduleName = context_18 && context_18.id;
+    var __moduleName = context_20 && context_20.id;
     return {
         setters: [
             function (sp_7) {
@@ -3203,123 +1643,53 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
             }
         ],
         execute: function () {
-            /** Common functionality, shared by JArray, JMap, JFormMap, JIntMap
-            */
             sn = sp.JValue;
-            /** Most call entries made to JC will be logged. Heavy traffic, by default is disabled.
-            *     Not thread safe for multiple users (though harmless).
-            */
-            exports_18("enableAPILog", enableAPILog = (arg0) => sn.enableAPILog(arg0));
-            /** --- Lifetime management functionality.
-            *     Read this https://github.com/ryobg/JContainers/wiki/Lifetime-Management before using any of lifetime management functions
-            *
-            *     Retains and returns the object.
-            */
-            exports_18("retain", retain = (object, tag = "") => sn.retain(object, tag));
-            /** Releases the object and returns zero, so you can release and nullify with one line of code: object = JValue.release(object)
-            */
-            exports_18("release", release = (object) => sn.release(object));
-            /** Just a union of retain-release calls. Releases @previousObject, retains and returns @newObject.
-            */
-            exports_18("releaseAndRetain", releaseAndRetain = (previousObject, newObject, tag = "") => sn.releaseAndRetain(previousObject, newObject, tag));
-            /** Releases all objects tagged with @tag.
-            *     Internally invokes JValue.release on each object same amount of times it has been retained.
-            */
-            exports_18("releaseObjectsWithTag", releaseObjectsWithTag = (tag) => sn.releaseObjectsWithTag(tag));
-            /** Minimizes the time JC temporarily owns the object, returns the object.
-            *     By using this function you help JC to delete unused objects as soon as possible.
-            *     Has zero effect if the object is being retained or if another object contains/references it.
-            */
-            exports_18("zeroLifetime", zeroLifetime = (object) => sn.zeroLifetime(object));
-            /** Handly for temporary objects (objects with no owners) - the pool 'locationName' owns any amount of objects, preventing their destuction, extends lifetime.
-            *     Do not forget to clean the pool later! Typical use:
-            *     int jTempMap = JValue.addToPool(JMap.object(), "uniquePoolName")
-            *     int jKeys = JValue.addToPool(JMap.allKeys(someJMap), "uniquePoolName")
-            *     and anywhere later:
-            *     JValue.cleanPool("uniquePoolName")
-            */
-            exports_18("addToPool", addToPool = (object, poolName) => sn.addToPool(object, poolName));
-            exports_18("cleanPool", cleanPool = (poolName) => sn.cleanPool(poolName));
-            /** --- Mics. functionality
-            *
-            *     Returns shallow copy (won't copy child objects)
-            */
-            exports_18("shallowCopy", shallowCopy = (object) => sn.shallowCopy(object));
-            /** Returns deep copy
-            */
-            exports_18("deepCopy", deepCopy = (object) => sn.deepCopy(object));
-            /** Tests whether given object identifier is not the null object.
-            *     Note that many other API functions already check that too.
-            */
-            exports_18("isExists", isExists = (object) => sn.isExists(object));
-            /** Returns true if the object is map, array or formmap container
-            */
-            exports_18("isArray", isArray = (object) => sn.isArray(object));
-            exports_18("isMap", isMap = (object) => sn.isMap(object));
-            exports_18("isFormMap", isFormMap = (object) => sn.isFormMap(object));
-            exports_18("isIntegerMap", isIntegerMap = (object) => sn.isIntegerMap(object));
-            /** Returns true, if the container is empty
-            */
-            exports_18("empty", empty = (object) => sn.empty(object));
-            /** Returns amount of items in the container
-            */
-            exports_18("count", count = (object) => sn.count(object));
-            /** Removes all items from the container
-            */
-            exports_18("clear", clear = (object) => sn.clear(object));
-            /** JSON serialization/deserialization:
-            *
-            *     Creates and returns a new container object containing contents of JSON file
-            */
-            exports_18("readFromFile", readFromFile = (filePath) => sn.readFromFile(filePath));
-            /** Parses JSON files in a directory (non recursive) and returns JMap containing {filename, container-object} pairs.
-            *     Note: by default it does not filter files by extension and will try to parse everything
-            */
-            exports_18("readFromDirectory", readFromDirectory = (directoryPath, extension = "") => sn.readFromDirectory(directoryPath, extension));
-            /** Creates a new container object using given JSON string-prototype
-            */
-            exports_18("objectFromPrototype", objectFromPrototype = (prototype) => sn.objectFromPrototype(prototype));
-            /** Writes the object into JSON file
-            */
-            exports_18("writeToFile", writeToFile = (object, filePath) => sn.writeToFile(object, filePath));
-            /** Returns type of resolved value. 0 - no value, 1 - none, 2 - int, 3 - float, 4 - form, 5 - object, 6 - string
-            */
-            exports_18("solvedValueType", solvedValueType = (object, path) => sn.solvedValueType(object, path));
-            /** Path resolving:
-            *
-            *     Returns true, if it's possible to resolve given path, i.e. if it's possible to retrieve the value at the path.
-            *     For ex. JValue.hasPath(container, ".player.health") will test whether @container structure close to this one - {'player': {'health': health_value}}
-            */
-            exports_18("hasPath", hasPath = (object, path) => sn.hasPath(object, path));
-            /** Attempts to retrieve value at given path. If fails, returns @default value
-            */
-            exports_18("solveFlt", solveFlt = (object, path, defaultVal = 0.0) => sn.solveFlt(object, path, defaultVal));
-            exports_18("solveInt", solveInt = (object, path, defaultVal = 0) => sn.solveInt(object, path, defaultVal));
-            exports_18("solveStr", solveStr = (object, path, defaultVal = "") => sn.solveStr(object, path, defaultVal));
-            exports_18("solveObj", solveObj = (object, path, defaultVal = 0) => sn.solveObj(object, path, defaultVal));
-            exports_18("solveForm", solveForm = (object, path, defaultVal = null) => sn.solveForm(object, path, defaultVal));
-            /** Attempts to assign the value. If @createMissingKeys is False it may fail to assign - if no such path exist.
-            *     With 'createMissingKeys=true' it creates any missing path element: solveIntSetter(map, ".keyA.keyB", 10, true) on empty JMap creates {keyA: {keyB: 10}} structure
-            */
-            exports_18("solveFltSetter", solveFltSetter = (object, path, value, createMissingKeys = false) => sn.solveFltSetter(object, path, value, createMissingKeys));
-            exports_18("solveIntSetter", solveIntSetter = (object, path, value, createMissingKeys = false) => sn.solveIntSetter(object, path, value, createMissingKeys));
-            exports_18("solveStrSetter", solveStrSetter = (object, path, value, createMissingKeys = false) => sn.solveStrSetter(object, path, value, createMissingKeys));
-            exports_18("solveObjSetter", solveObjSetter = (object, path, value, createMissingKeys = false) => sn.solveObjSetter(object, path, value, createMissingKeys));
-            exports_18("solveFormSetter", solveFormSetter = (object, path, value, createMissingKeys = false) => sn.solveFormSetter(object, path, value, createMissingKeys));
-            /** Evaluates piece of lua code. Lua support is experimental
-            */
-            exports_18("evalLuaFlt", evalLuaFlt = (object, luaCode, defaultVal = 0.0) => sn.evalLuaFlt(object, luaCode, defaultVal));
-            exports_18("evalLuaInt", evalLuaInt = (object, luaCode, defaultVal = 0) => sn.evalLuaInt(object, luaCode, defaultVal));
-            exports_18("evalLuaStr", evalLuaStr = (object, luaCode, defaultVal = "") => sn.evalLuaStr(object, luaCode, defaultVal));
-            exports_18("evalLuaObj", evalLuaObj = (object, luaCode, defaultVal = 0) => sn.evalLuaObj(object, luaCode, defaultVal));
-            exports_18("evalLuaForm", evalLuaForm = (object, luaCode, defaultVal = null) => sn.evalLuaForm(object, luaCode, defaultVal));
+            exports_20("enableAPILog", enableAPILog = (arg0) => sn.enableAPILog(arg0));
+            exports_20("retain", retain = (object, tag = "") => sn.retain(object, tag));
+            exports_20("release", release = (object) => sn.release(object));
+            exports_20("releaseAndRetain", releaseAndRetain = (previousObject, newObject, tag = "") => sn.releaseAndRetain(previousObject, newObject, tag));
+            exports_20("releaseObjectsWithTag", releaseObjectsWithTag = (tag) => sn.releaseObjectsWithTag(tag));
+            exports_20("zeroLifetime", zeroLifetime = (object) => sn.zeroLifetime(object));
+            exports_20("addToPool", addToPool = (object, poolName) => sn.addToPool(object, poolName));
+            exports_20("cleanPool", cleanPool = (poolName) => sn.cleanPool(poolName));
+            exports_20("shallowCopy", shallowCopy = (object) => sn.shallowCopy(object));
+            exports_20("deepCopy", deepCopy = (object) => sn.deepCopy(object));
+            exports_20("isExists", isExists = (object) => sn.isExists(object));
+            exports_20("isArray", isArray = (object) => sn.isArray(object));
+            exports_20("isMap", isMap = (object) => sn.isMap(object));
+            exports_20("isFormMap", isFormMap = (object) => sn.isFormMap(object));
+            exports_20("isIntegerMap", isIntegerMap = (object) => sn.isIntegerMap(object));
+            exports_20("empty", empty = (object) => sn.empty(object));
+            exports_20("count", count = (object) => sn.count(object));
+            exports_20("clear", clear = (object) => sn.clear(object));
+            exports_20("readFromFile", readFromFile = (filePath) => sn.readFromFile(filePath));
+            exports_20("readFromDirectory", readFromDirectory = (directoryPath, extension = "") => sn.readFromDirectory(directoryPath, extension));
+            exports_20("objectFromPrototype", objectFromPrototype = (prototype) => sn.objectFromPrototype(prototype));
+            exports_20("writeToFile", writeToFile = (object, filePath) => sn.writeToFile(object, filePath));
+            exports_20("solvedValueType", solvedValueType = (object, path) => sn.solvedValueType(object, path));
+            exports_20("hasPath", hasPath = (object, path) => sn.hasPath(object, path));
+            exports_20("solveFlt", solveFlt = (object, path, defaultVal = 0.0) => sn.solveFlt(object, path, defaultVal));
+            exports_20("solveInt", solveInt = (object, path, defaultVal = 0) => sn.solveInt(object, path, defaultVal));
+            exports_20("solveStr", solveStr = (object, path, defaultVal = "") => sn.solveStr(object, path, defaultVal));
+            exports_20("solveObj", solveObj = (object, path, defaultVal = 0) => sn.solveObj(object, path, defaultVal));
+            exports_20("solveForm", solveForm = (object, path, defaultVal = null) => sn.solveForm(object, path, defaultVal));
+            exports_20("solveFltSetter", solveFltSetter = (object, path, value, createMissingKeys = false) => sn.solveFltSetter(object, path, value, createMissingKeys));
+            exports_20("solveIntSetter", solveIntSetter = (object, path, value, createMissingKeys = false) => sn.solveIntSetter(object, path, value, createMissingKeys));
+            exports_20("solveStrSetter", solveStrSetter = (object, path, value, createMissingKeys = false) => sn.solveStrSetter(object, path, value, createMissingKeys));
+            exports_20("solveObjSetter", solveObjSetter = (object, path, value, createMissingKeys = false) => sn.solveObjSetter(object, path, value, createMissingKeys));
+            exports_20("solveFormSetter", solveFormSetter = (object, path, value, createMissingKeys = false) => sn.solveFormSetter(object, path, value, createMissingKeys));
+            exports_20("evalLuaFlt", evalLuaFlt = (object, luaCode, defaultVal = 0.0) => sn.evalLuaFlt(object, luaCode, defaultVal));
+            exports_20("evalLuaInt", evalLuaInt = (object, luaCode, defaultVal = 0) => sn.evalLuaInt(object, luaCode, defaultVal));
+            exports_20("evalLuaStr", evalLuaStr = (object, luaCode, defaultVal = "") => sn.evalLuaStr(object, luaCode, defaultVal));
+            exports_20("evalLuaObj", evalLuaObj = (object, luaCode, defaultVal = 0) => sn.evalLuaObj(object, luaCode, defaultVal));
+            exports_20("evalLuaForm", evalLuaForm = (object, luaCode, defaultVal = null) => sn.evalLuaForm(object, luaCode, defaultVal));
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor/player", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form/forEachArmor", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_19, context_19) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Log", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Hotkeys", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Misc", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Actor", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/DmLib/Form", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/genJson", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JDB", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JMap", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JTs", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/JContainers/JValue", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skimpify-api", "SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/skyrimPlatform", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/debug"], function (exports_21, context_21) {
     "use strict";
-    var DmLib_4, player_1, forEachArmor_2, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_9, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, unintrusiveMessages, hk, FO, HK, ShowMessage, PlayerF, Armors, Load, Mark;
-    var __moduleName = context_19 && context_19.id;
+    var Log, Hk, Misc_1, Actor_2, Form_4, genJson_1, JDB, JMap, JTs_2, JValue, skimpify_api_2, skyrimPlatform_9, debug_2, invalid, initK, MarkInitialized, WasInitialized, storeK, MemOnly, SK, kIni, kMModest, SIni, SMModest, allowInit, mModest, n, develop, unintrusiveMessages, hk, FO, HK, ShowMessage, PlayerF, Armors, Load, Mark;
+    var __moduleName = context_21 && context_21.id;
     function main() {
         skyrimPlatform_9.on("loadGame", () => {
             InitPlugin();
@@ -3369,18 +1739,15 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
         });
         const i = develop ? " in DEVELOPER MODE" : "";
         skyrimPlatform_9.printConsole(`Skimpify Framework successfully initialized${i}.`);
+        skyrimPlatform_9.printConsole("*".repeat(200));
+        skyrimPlatform_9.printConsole("*".repeat(200));
+        skyrimPlatform_9.printConsole("*".repeat(200));
     }
-    exports_19("main", main);
+    exports_21("main", main);
     function RunTest() {
-        // const p = FormLib.Player()
-        // SwapToSlip(p, Armor.from(p.getWornForm(SlotMask.Body)))
-        // FormLib.WaitActor(p, 4, (a) => {
-        //   RestoreMostModest(a, Armor.from(a.getWornForm(SlotMask.Body)))
-        // })
         PlayerF.Reveal();
     }
     function Dump() {
-        // ClearDB()
         const f = `${skimpify_api_2.cfgDir}dump/dump.json`;
         JValue.writeToFile(skimpify_api_2.DbHandle(), f);
         JDB.writeToFile(`${skimpify_api_2.cfgDir}dump/dump all.json`);
@@ -3388,14 +1755,20 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
     }
     return {
         setters: [
-            function (DmLib_4_1) {
-                DmLib_4 = DmLib_4_1;
+            function (Log_4) {
+                Log = Log_4;
             },
-            function (player_1_1) {
-                player_1 = player_1_1;
+            function (Hk_1) {
+                Hk = Hk_1;
             },
-            function (forEachArmor_2_1) {
-                forEachArmor_2 = forEachArmor_2_1;
+            function (Misc_1_1) {
+                Misc_1 = Misc_1_1;
+            },
+            function (Actor_2_1) {
+                Actor_2 = Actor_2_1;
+            },
+            function (Form_4_1) {
+                Form_4 = Form_4_1;
             },
             function (genJson_1_1) {
                 genJson_1 = genJson_1_1;
@@ -3432,74 +1805,62 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             SK = (k) => `${storeK}${k}`;
             kIni = SK("init");
             kMModest = SK("mmodest");
-            // Avoid values to be lost on game reloading
-            SIni = DmLib_4.Misc.PreserveVar(MemOnly, kIni);
-            SMModest = DmLib_4.Misc.PreserveVar(MemOnly, kMModest);
+            SIni = Misc_1.preserveVar(MemOnly, kIni);
+            SMModest = Misc_1.preserveVar(MemOnly, kMModest);
             allowInit = skyrimPlatform_9.storage[kIni] || false;
             mModest = skyrimPlatform_9.storage[kMModest];
             n = "skimpify-framework";
             develop = skyrimPlatform_9.settings[n]["developerMode"];
             unintrusiveMessages = skyrimPlatform_9.settings[n]["unintrusiveMessages"];
             hk = "devHotkeys";
-            FO = (k) => DmLib_4.Hotkeys.FromObject(n, hk, k);
-            /** Gets a hotkey from settings */
-            HK = (k) => DmLib_4.Hotkeys.ListenTo(FO(k), develop);
+            FO = (k) => Hk.FromObject(n, hk, k);
+            HK = (k) => Hk.ListenTo(FO(k), develop);
             ShowMessage = unintrusiveMessages ? skyrimPlatform_9.Debug.notification : skyrimPlatform_9.Debug.messageBox;
-            /**Functions made for playing */
             (function (PlayerF) {
                 const SkimpyAt = (a) => {
                     if (skimpify_api_2.HasSlip(a))
-                        return "slip" /* slip */;
+                        return "slip";
                     if (skimpify_api_2.HasChange(a))
-                        return "change" /* change */;
+                        return "change";
                     return undefined;
                 };
                 const TrySkimpify = (slot) => {
-                    const p = player_1.Player();
+                    const p = Actor_2.Player();
                     const a = skyrimPlatform_9.Armor.from(p.getWornForm(slot));
                     const t = SkimpyAt(a);
                     if (!t)
                         return false;
-                    if (t === "slip" /* slip */)
+                    if (t === "slip")
                         skimpify_api_2.SwapToSlip(p, a);
-                    if (t === "change" /* change */)
+                    if (t === "change")
                         skimpify_api_2.SwapToChange(p, a);
-                    // Armor.swa
                 };
-                /** Makes the player use revealing clothes. Gives preference to torso, then boots, skirts...*/
                 function Reveal() {
-                    if (TrySkimpify(4 /* Body */))
+                    if (TrySkimpify(4))
                         return;
-                    if (TrySkimpify(524288 /* PelvisPrimary */))
+                    if (TrySkimpify(524288))
                         return;
-                    if (TrySkimpify(4194304 /* PelvisSecondary */))
+                    if (TrySkimpify(4194304))
                         return;
-                    DmLib_4.FormLib.ForEachSlotMask(player_1.Player(), (slot) => TrySkimpify(slot));
-                    // const all = FormLib.GetEquippedArmors(p)
+                    Form_4.ForEachSlotMask(Actor_2.Player(), (slot) => TrySkimpify(slot));
                 }
                 PlayerF.Reveal = Reveal;
             })(PlayerF || (PlayerF = {}));
             (function (Armors) {
-                /** Unequips all armor on the player. */
                 function UnequipAll() {
                     const pl = skyrimPlatform_9.Game.getPlayer();
-                    // Don't use unequipAll() because it doesn't discriminate on what it will unequip
-                    const aa = DmLib_4.FormLib.GetEquippedArmors(pl);
+                    const aa = Form_4.GetEquippedArmors(pl);
                     aa.forEach((a) => {
                         pl.unequipItem(a, false, true);
                     });
                 }
                 Armors.UnequipAll = UnequipAll;
-                /** Swap an armor on an actor. */
                 Armors.SwapArmor = (act, from, to) => {
                     act.unequipItem(from, false, true);
                     act.equipItem(to, false, true);
                 };
-                /** Changes all equipped armors to their skimpier counterparts. */
                 Armors.AllSkimpy = () => ChangeAll(skimpify_api_2.GetAllSkimpy);
-                /** Changes all equipped armors to their modest counterparts. */
                 Armors.AllModest = () => ChangeAll(skimpify_api_2.GetAllModest);
-                /** Swaps all armors the player is using for some variant. */
                 function ChangeAll(f) {
                     const pl = skyrimPlatform_9.Game.getPlayer();
                     const aa = f(pl);
@@ -3509,10 +1870,9 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                             skyrimPlatform_9.Debug.notification(a.kind);
                     });
                 }
-                /** Deletes all armors in player inventory. */
                 function Discard() {
                     const p = skyrimPlatform_9.Game.getPlayer();
-                    forEachArmor_2.forEachArmorR(p, (a) => {
+                    Form_4.forEachArmorR(p, (a) => {
                         p.removeItem(a, p.getItemCount(a), true, null);
                     });
                     ShowMessage(`All armors in the player inventory were deleted.`);
@@ -3521,10 +1881,8 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
             })(Armors || (Armors = {}));
             (function (Load) {
                 function Armors() {
-                    // Read from all files
                     const d = JValue.readFromDirectory(skimpify_api_2.cfgDir, ".json");
                     let n = 0;
-                    // JValue.writeToFile(d, `${cfgDir}dump/dump load.json`)
                     JTs_2.JMapL.ForAllKeys(d, (k) => {
                         const fileO = JMap.getObj(d, k);
                         JTs_2.JMapL.ForAllKeys(fileO, (armor, i) => {
@@ -3547,7 +1905,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                 function SaveVariant(parent, data, rel) {
                     const n = StrToArmor(JMap.getStr(data, rel));
                     if (!n)
-                        return; // Don't save inexisting variants
+                        return;
                     const c = JMap.getStr(data, skimpify_api_2.JcChangeK(rel));
                     const cT = skimpify_api_2.ValidateChangeRel(c);
                     skimpify_api_2.AddChangeRel(parent, n, cT);
@@ -3560,17 +1918,10 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     return skyrimPlatform_9.Armor.from(f);
                 }
             })(Load || (Load = {}));
-            /** Functions for marking armors in manual mode. All of these only work on
-             * armors the player is wearing.
-             */
             (function (Mark) {
-                /** Does an operation only if the player has equipped one armor.
-                 *
-                 * @param Continue What to do if only one piece of armor is equipped.
-                 */
                 function OnlyOneArmor(Continue) {
-                    const aa = DmLib_4.FormLib.GetEquippedArmors(skyrimPlatform_9.Game.getPlayer());
-                    aa.forEach((v) => debug_2.LogV(`${DmLib_4.DebugLib.Log.IntToHex(v.getFormID())}. Slot: ${v.getSlotMask()}. Name: ${v.getName()}`));
+                    const aa = Form_4.GetEquippedArmors(skyrimPlatform_9.Game.getPlayer());
+                    aa.forEach((v) => debug_2.LogV(`${Log.IntToHex(v.getFormID())}. Slot: ${v.getSlotMask()}. Name: ${v.getName()}`));
                     if (aa.length !== 1) {
                         ShowMessage(`This functionality only works with just one piece of armor equipped.
         Equip only the piece you want to work on.`);
@@ -3578,10 +1929,6 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     }
                     Continue(aa[0]);
                 }
-                /** Manually adds a _Change Relationship_ between a marked piece of armor and the one the player is wearing.
-                 *
-                 * @param c What kind of _Change Relationship_ will be added between two armors.
-                 */
                 function Child(c) {
                     OnlyOneArmor((a) => {
                         const ShowInvalid = () => {
@@ -3601,23 +1948,18 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                         mModest = SMModest(invalid);
                     });
                 }
-                /** Marks a `slip` relationship between two armors. */
-                Mark.Slip = () => Child("slip" /* slip */);
-                /** Marks a `change` relationship between two armors. */
-                Mark.Change = () => Child("change" /* change */);
-                /** Marks a `damage` relationship between two armors. */
-                Mark.Damage = () => Child("damage" /* damage */);
-                /** Marks the armor the player is using as the modest version of another. */
+                Mark.Slip = () => Child("slip");
+                Mark.Change = () => Child("change");
+                Mark.Damage = () => Child("damage");
                 function Modest() {
                     OnlyOneArmor((a) => {
                         const m = `"${a.getName()}" was marked as a modest version of some armor.
       Mark another piece to create a Change Relationship.`;
                         ShowMessage(m);
-                        mModest = debug_2.LogVT("Manual mode. Modest armor id", SMModest(a.getFormID()), DmLib_4.DebugLib.Log.IntToHex);
+                        mModest = debug_2.LogVT("Manual mode. Modest armor id", SMModest(a.getFormID()), Log.IntToHex);
                     });
                 }
                 Mark.Modest = Modest;
-                /** Clears all _Change Relationships_ of the current weared armor. */
                 function Clear() {
                     OnlyOneArmor((a) => {
                         skimpify_api_2.ClearChangeRel(a);
@@ -3626,7 +1968,6 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                     });
                 }
                 Mark.Clear = Clear;
-                /** Show info about the armor the player is currently wearing. */
                 function DebugOne() {
                     OnlyOneArmor((a) => {
                         const M = (d, r) => {
@@ -3654,10 +1995,10 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
         }
     };
 });
-System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/index", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry"], function (exports_20, context_20) {
+System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/index", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry"], function (exports_22, context_22) {
     "use strict";
     var entry;
-    var __moduleName = context_20 && context_20.id;
+    var __moduleName = context_22 && context_22.id;
     return {
         setters: [
             function (entry_1) {
