@@ -360,6 +360,16 @@ export function RestoreAllMostModest(act: Actor) {
  */
 export const CanUseArmor = (act: ActorArg) => isActorTypeNPC(act)
 
+/** Checks if an `Actor` has equipped ANY skimpy armor.
+ *
+ * @param a The `Actor` to check.
+ * @returns `boolean`
+ */
+export function HasSkimpyArmorEquipped(a: Actor | null) {
+  const armors = GetEquippedArmors(a)
+  return armors.some((armor) => HasModest(armor))
+}
+
 // ;>========================================================
 // ;>===             RELATIONSHIP FUNCTIONS             ===<;
 // ;>========================================================
