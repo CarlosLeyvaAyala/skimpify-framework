@@ -334,6 +334,12 @@ export const SwapToChange = (act: ActorArg, modestArmor: ArmorArg) =>
 export const SwapToDamage = (act: ActorArg, modestArmor: ArmorArg) =>
   SwapToSkimpy(act, modestArmor, GetDamage)
 
+/** Swaps an armor with its most modest version.
+ *
+ * @param act Actor to swap armor on.
+ * @param skimpyArmor Armor to try to swap.
+ * @returns Wheter the armor could be swapped.
+ */
 export function RestoreMostModest(act: ActorArg, skimpyArmor: ArmorArg) {
   if (!act || !skimpyArmor) return false
   const to = GetMostModest(skimpyArmor)
@@ -342,6 +348,10 @@ export function RestoreMostModest(act: ActorArg, skimpyArmor: ArmorArg) {
   return true
 }
 
+/** Restores all equipped armors on an Actor to their most modest versions.
+ *
+ * @param act
+ */
 export function RestoreAllMostModest(act: Actor) {
   ForEachEquippedArmor(act, (a) => {
     RestoreMostModest(act, a)
@@ -577,9 +587,8 @@ function GoSkimpy(a: Actor, from: Armor, to: Armor) {
 /** Swaps an skimpy armor for its modest version that was saved on a global chest. */
 function GoModest(a: Actor, from: Armor, to: Armor) {
   const chest = GetChest(a)
-  // Skimpy armor is discarded because tempering and enchantments from original
-  // can't be transferred, anyway.
-  a.removeItem(from, 1, true, null)
+
+  a.removeItem(from, 1, true, chest)
   if (chest) chest.removeItem(to, 1, true, a)
   a.equipItem(to, false, true)
 }

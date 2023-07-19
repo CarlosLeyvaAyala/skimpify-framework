@@ -1,0 +1,20 @@
+{
+  "[NINI] Stellar Cancer.esp|806": {
+    "name": "Stellar Cancer Upper",
+    "next": "[NINI] Stellar Cancer.esp|80a",
+    "nextN": "Stellar Cancer Upper Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Stellar Cancer.esp|807": {
+    "name": "Stellar Cancer Lower",
+    "next": "[NINI] Stellar Cancer.esp|80b",
+    "nextN": "Stellar Cancer Lower Slutty",
+    "nextT": "change"
+  },
+  "[NINI] Stellar Cancer.esp|821": {
+    "name": "Stellar Cancer Lower [SMP]",
+    "next": "[NINI] Stellar Cancer.esp|823",
+    "nextN": "Stellar Cancer Lower Slutty [SMP]",
+    "nextT": "change"
+  }
+}
