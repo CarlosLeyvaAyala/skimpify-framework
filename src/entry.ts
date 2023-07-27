@@ -1,17 +1,16 @@
-import * as Log from "DmLib/Log"
-import * as Hk from "DmLib/Hotkeys"
-import { preserveVar } from "DmLib/Misc"
 import { Player } from "DmLib/Actor"
 import { ForEachSlotMask, GetEquippedArmors, forEachArmorR } from "DmLib/Form"
-import { AutoGenArmors, SaveJson } from "genJson"
+import * as Hk from "DmLib/Hotkeys"
+import * as Log from "DmLib/Log"
+import { preserveVar } from "DmLib/Misc"
 import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
+import { AutoGenArmors, SaveJson } from "genJson"
 import {
   ActorArg,
   AddChangeRel,
-  cfgDir,
   ChangeRel,
   ClearChangeRel,
   DbHandle,
@@ -28,17 +27,18 @@ import {
   SwapToChange,
   SwapToSlip,
   ValidateChangeRel,
+  cfgDir,
 } from "skimpify-api"
 import {
   Actor,
   Armor,
   Debug,
   Game,
+  SlotMask,
   on,
   once,
   printConsole,
   settings,
-  SlotMask,
   storage,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
@@ -133,9 +133,6 @@ export function main() {
 
   const i = develop ? " in DEVELOPER MODE" : ""
   printConsole(`Skimpify Framework successfully initialized${i}.`)
-  printConsole("*".repeat(200))
-  printConsole("*".repeat(200))
-  printConsole("*".repeat(200))
 }
 
 function RunTest() {

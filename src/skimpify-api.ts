@@ -448,7 +448,7 @@ export const cfgDir = "data/SKSE/Plugins/Skimpify Framework/"
 /** Key used to save values added by this framework. */
 const fwKey = ".Skimpify-Framework"
 /** Key to find chests. */
-const chestPath = `${fwKey}.globalChests`
+const chestPath = `${fwKey}-globalChests`
 
 /** Key used to save armors. */
 const ArmorK = (k: RelType) => `${fwKey}.${k}`
@@ -544,8 +544,9 @@ export const ValidateChangeRel = (rel: string) =>
  * To avoid bloat, this function returns `null` on non-unique actors so
  * they never get a chest.
  */
-function GetChest(a: Actor) {
-  if (!a.getLeveledActorBase()?.isUnique()) return null
+export function GetChest(a: Actor) {
+  const l = a.getLeveledActorBase()
+  if (!l || !l.isUnique()) return null
 
   /** Gets the handle to the chests database */
   const GetChestDbHandle = () => {

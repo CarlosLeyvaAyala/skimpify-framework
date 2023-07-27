@@ -107,3 +107,4 @@ dist
 
 _img/*
 .vscode/numbered-bookmarks.json
+Platform/Plugins/skimpify-framework.js
