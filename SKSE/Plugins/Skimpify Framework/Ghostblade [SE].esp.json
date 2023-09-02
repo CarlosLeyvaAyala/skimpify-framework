@@ -1,0 +1,80 @@
+{
+  "Ghostblade [SE].esp|810": {
+    "name": "Ghostblade - Cuirass 02",
+    "next": "Ghostblade [SE].esp|8ae",
+    "nextN": "Ghostblade - Cuirass 02 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|854": {
+    "name": "Ghostblade - Cuirass 03",
+    "next": "Ghostblade [SE].esp|8af",
+    "nextN": "Ghostblade - Cuirass 03 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|855": {
+    "name": "Ghostblade - Cuirass 04",
+    "next": "Ghostblade [SE].esp|8b0",
+    "nextN": "Ghostblade - Cuirass 04 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|856": {
+    "name": "Ghostblade - CuirassTR",
+    "next": "Ghostblade [SE].esp|8b1",
+    "nextN": "Ghostblade - CuirassTR (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|858": {
+    "name": "Ghostblade - CuirassTR 02",
+    "next": "Ghostblade [SE].esp|8b2",
+    "nextN": "Ghostblade - CuirassTR 02 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|859": {
+    "name": "Ghostblade - CuirassTR 03",
+    "next": "Ghostblade [SE].esp|8b3",
+    "nextN": "Ghostblade - CuirassTR 03 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85a": {
+    "name": "Ghostblade - CuirassTR 04",
+    "next": "Ghostblade [SE].esp|8b4",
+    "nextN": "Ghostblade - CuirassTR 04 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85b": {
+    "name": "Ghostblade - CuirassTR 05",
+    "next": "Ghostblade [SE].esp|8b5",
+    "nextN": "Ghostblade - CuirassTR 05 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85c": {
+    "name": "Ghostblade - CuirassTR 06",
+    "next": "Ghostblade [SE].esp|8b6",
+    "nextN": "Ghostblade - CuirassTR 06 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85d": {
+    "name": "Ghostblade - CuirassTR 07",
+    "next": "Ghostblade [SE].esp|8b7",
+    "nextN": "Ghostblade - CuirassTR 07 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85e": {
+    "name": "Ghostblade - CuirassTR 08",
+    "next": "Ghostblade [SE].esp|8b8",
+    "nextN": "Ghostblade - CuirassTR 08 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|85f": {
+    "name": "Ghostblade - CuirassTR 09",
+    "next": "Ghostblade [SE].esp|8b9",
+    "nextN": "Ghostblade - CuirassTR 09 (Slutty)",
+    "nextT": "change"
+  },
+  "Ghostblade [SE].esp|df1": {
+    "name": "Ghostblade - Cuirass",
+    "next": "Ghostblade [SE].esp|8ab",
+    "nextN": "Ghostblade - Cuirass (Slutty)",
+    "nextT": "change"
+  }
+}
