@@ -1,10 +1,11 @@
 {
-  "playerHotkeys":{
+  "playerHotkeys": {
     "reveal": "Ctrl RightArrow",
     "cover": "Ctrl LeftArrow"
   },
   "developerMode": false,
   "unintrusiveMessages": true,
+  "usingSkimpifyEnchantments": true,
   "devHotkeys": {
     "loadJson": "Alt Q",
     "saveJson": "Alt W",

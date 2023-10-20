@@ -1,13 +1,13 @@
 {
-  "StalkerMix.esp|d64": {
+  "StalkerMix.esp|801": {
     "name": "StalkerMix Armor",
-    "next": "StalkerMix.esp|d8f",
+    "next": "StalkerMix.esp|806",
     "nextN": "StalkerMix ArmorXtra",
     "nextT": "slip"
   },
-  "StalkerMix.esp|d8f": {
+  "StalkerMix.esp|806": {
     "name": "StalkerMix ArmorXtra",
-    "next": "StalkerMix.esp|d90",
+    "next": "StalkerMix.esp|807",
     "nextN": "StalkerMix ArmorXXtra",
     "nextT": "change"
   }

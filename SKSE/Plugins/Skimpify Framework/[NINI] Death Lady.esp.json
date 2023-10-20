@@ -1,14 +1,14 @@
 {
   "[NINI] Death Lady.esp|807": {
-    "name": "  Death Lady Upper",
+    "name": "Death Lady Upper",
     "next": "[NINI] Death Lady.esp|81b",
-    "nextN": "  Death Lady Upper Slutty",
+    "nextN": "Death Lady Upper Slutty",
     "nextT": "change"
   },
   "[NINI] Death Lady.esp|809": {
-    "name": "  Death Lady Lower",
+    "name": "Death Lady Lower",
     "next": "[NINI] Death Lady.esp|819",
-    "nextN": "  Death Lady Lower Slutty",
+    "nextN": "Death Lady Lower Slutty",
     "nextT": "change"
   }
 }

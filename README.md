@@ -17,6 +17,7 @@ It's just now that [Skyrim Platform][] exists that this idea was finally able to
 
 - [Skyrim Platform][]
 - [JContainers SE][]
+- [Equip Enchantment Fix][]
 
 # Usage for both modders and users
 
@@ -56,7 +57,6 @@ Right now there's not a list of API functions and what they do, but they all are
 
 **You should also [read the documentation][Help]** so you can understand what this framework is capable of and how to use it.
 
-
 [ArmorDefs]: https://github.com/CarlosLeyvaAyala/skimpify-framework/tree/main/SKSE/Plugins/Skimpify%20Framework
 [Compiled]: Platform/Plugins
 [Easy Containers]: https://github.com/CarlosLeyvaAyala/Easy-Containers
@@ -64,3 +64,4 @@ Right now there's not a list of API functions and what they do, but they all are
 [JContainers SE]: https://www.nexusmods.com/skyrimspecialedition/mods/16495
 [Skyrim Platform]: https://www.nexusmods.com/skyrimspecialedition/mods/54909
 [Wardrobe Malfunction]: https://github.com/CarlosLeyvaAyala/wardrobe-malfunction
+[Equip Enchantment Fix]: https://www.nexusmods.com/skyrimspecialedition/mods/42839

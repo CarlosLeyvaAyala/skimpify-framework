@@ -3,6 +3,7 @@ import { ForEachSlotMask, GetEquippedArmors, forEachArmorR } from "DmLib/Form"
 import * as Hk from "DmLib/Hotkeys"
 import * as Log from "DmLib/Log"
 import { preserveVar } from "DmLib/Misc"
+import "DmLib/typescript/Array"
 import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
@@ -42,6 +43,7 @@ import {
   storage,
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
+import { setSkimpySpells, init as initSpells } from "./spells/functions"
 
 const invalid = -1
 
@@ -65,6 +67,9 @@ let mModest = storage[kMModest] as number | -1
 const n = "skimpify-framework"
 const develop = settings[n]["developerMode"] as boolean
 const unintrusiveMessages = settings[n]["unintrusiveMessages"] as boolean
+const usingSkimpifyEnchantments = settings[n][
+  "usingSkimpifyEnchantments"
+] as boolean
 
 const hk = "devHotkeys"
 const FO = (k: string) => Hk.FromObject(n, hk, k)
@@ -81,6 +86,16 @@ export function main() {
 
   once("update", () => {
     if (allowInit || !WasInitialized()) InitPlugin()
+    if (usingSkimpifyEnchantments) {
+      initSpells()
+      setSkimpySpells(Player())
+      on("equip", (e) => {
+        const a = Actor.from(e.actor)
+        if (!a) return
+        printConsole("Skimpy spell can be set")
+        setSkimpySpells(a)
+      })
+    }
   })
 
   function InitPlugin() {

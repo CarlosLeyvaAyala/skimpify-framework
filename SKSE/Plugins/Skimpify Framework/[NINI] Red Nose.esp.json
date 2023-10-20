@@ -1,0 +1,14 @@
+{
+  "[NINI] Red Nose.esp|80b": {
+    "name": "Red Nose Upper",
+    "next": "[NINI] Red Nose.esp|819",
+    "nextN": "Red Nose Upper Slutty",
+    "nextT": "slip"
+  },
+  "[NINI] Red Nose.esp|819": {
+    "name": "Red Nose Upper Slutty",
+    "next": "[NINI] Red Nose.esp|81d",
+    "nextN": "Red Nose Just Bones",
+    "nextT": "change"
+  }
+}

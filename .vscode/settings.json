@@ -303,6 +303,24 @@
         "separators.functions.borderColor": "#3c4262",
         "separators.interfaces.borderColor": "#ff6d01",
         "separators.methods.borderColor": "#3c4262",
-        "separators.namespaces.borderColor": "#4f8a35"
-    }
+        "separators.namespaces.borderColor": "#4f8a35",
+        "activityBar.activeBackground": "#c07aa5",
+        "activityBar.background": "#c07aa5",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#c4d6a8",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#c07aa5",
+        "statusBar.background": "#b0578d",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#c07aa5",
+        "statusBarItem.remoteBackground": "#b0578d",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#b0578d",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#b0578d99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#B0578D"
 }
