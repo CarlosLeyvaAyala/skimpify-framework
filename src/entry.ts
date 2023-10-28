@@ -1,4 +1,4 @@
-import { Player } from "DmLib/Actor"
+import { Player, playerId } from "DmLib/Actor"
 import { ForEachSlotMask, GetEquippedArmors, forEachArmorR } from "DmLib/Form"
 import * as Hk from "DmLib/Hotkeys"
 import * as Log from "DmLib/Log"
@@ -90,9 +90,9 @@ export function main() {
       initSpells()
       setSkimpySpells(Player())
       on("equip", (e) => {
+        if (e.actor.getFormID() !== playerId) return
         const a = Actor.from(e.actor)
         if (!a) return
-        printConsole("Skimpy spell can be set")
         setSkimpySpells(a)
       })
     }

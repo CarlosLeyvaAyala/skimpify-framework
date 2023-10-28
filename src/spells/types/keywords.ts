@@ -1,6 +1,5 @@
-import { Player } from "DmLib/Actor"
 import { ForEachEquippedArmor, getFormFromUniqueId } from "DmLib/Form"
-import { Actor, Game, Keyword, Spell, printConsole } from "skyrimPlatform"
+import { Actor, Game, Keyword } from "skyrimPlatform"
 
 export type keyword =
   | "Skimpy_DontCare" // Used for checking if is showing
@@ -152,7 +151,7 @@ export function initKeywords() {
   )
     .filter((v) => v.id)
     .iter((v) => {
-      printConsole(`Adding keyword: ${v.k}, ${v.id}`)
+      //   printConsole(`Adding keyword: ${v.k}, ${v.id}`)
       keywords.set(v.k, v.id ?? 0)
     })
 }

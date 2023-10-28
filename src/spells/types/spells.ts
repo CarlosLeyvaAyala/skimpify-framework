@@ -1,5 +1,5 @@
 import { getFormFromUniqueId } from "DmLib/Form"
-import { Game, Spell, printConsole } from "skyrimPlatform"
+import { Game, Spell } from "skyrimPlatform"
 
 export type spell =
   | "Skimpy_CombatSpellNC_01"
@@ -48,7 +48,7 @@ export function initSpells() {
   )
     .filter((v) => v.id)
     .iter((v) => {
-      printConsole(`Adding spell: ${v.k}, ${v.id}`)
+      //   printConsole(`Adding spell: ${v.k}, ${v.id}`)
       spells.set(v.k, v.id ?? 0)
     })
 }

@@ -20,8 +20,10 @@ export function setSkimpySpells(a: Actor) {
   //   )
   //   spells.iter((s) => p.removeSpell(Spell.from(s)))
   setCombatSpell(a)
+  setSpeechSpell(a)
 }
 
+//////////////////////////////////////////////////////////
 function setCombatSpell(a: Actor) {
   const lvl = getCombatShowingLvl(a)
   const sp1 = getSpell("Skimpy_CombatSpellNC_01")
@@ -89,6 +91,85 @@ const isShowingCombatPubis = (a: Actor) =>
     "Skimpy_CoverCombatPubis"
   )
 
+//////////////////////////////////////////////////////////
+function setSpeechSpell(a: Actor) {
+  const lvl = getSpeechShowingLvl(a)
+  const sp1 = getSpell("Skimpy_SpeechSpellNC_01")
+  const sp2 = getSpell("Skimpy_SpeechSpellNC_02")
+  const sp3 = getSpell("Skimpy_SpeechSpellNC_03")
+  const sp4 = getSpell("Skimpy_SpeechSpellNC_04")
+
+  switch (lvl.lvl) {
+    case 0:
+      a.removeSpell(sp1)
+      a.removeSpell(sp2)
+      a.removeSpell(sp3)
+      a.removeSpell(sp4)
+      break
+    case 1:
+      a.removeSpell(sp2)
+      a.removeSpell(sp3)
+      a.removeSpell(sp4)
+      a.addSpell(sp1, false)
+      break
+    case 2:
+      a.removeSpell(sp1)
+      a.removeSpell(sp3)
+      a.removeSpell(sp4)
+      a.addSpell(sp2, false)
+      break
+    case 3:
+      a.removeSpell(sp1)
+      a.removeSpell(sp2)
+      a.removeSpell(sp4)
+      a.addSpell(sp3, false)
+      break
+    case 4:
+      a.removeSpell(sp1)
+      a.removeSpell(sp2)
+      a.removeSpell(sp3)
+      a.addSpell(sp4, false)
+      break
+  }
+}
+const getSpeechShowingLvl = (a: Actor) =>
+  new Array(
+    isShowingSpeechBoobs(a),
+    isShowingSpeechAss(a),
+    isShowingSpeechPubis(a)
+  ).maxBy((a, b) => a.lvl - b.lvl)
+
+const isShowingSpeechBoobs = (a: Actor) =>
+  isShowing(
+    a,
+    "Skimpy_ExposeSpeechBoobs_04",
+    "Skimpy_ExposeSpeechBoobs_03",
+    "Skimpy_ExposeSpeechBoobs_02",
+    "Skimpy_ExposeSpeechBoobs_01",
+    "Skimpy_CoverSpeechBoobs"
+  )
+
+const isShowingSpeechAss = (a: Actor) =>
+  isShowing(
+    a,
+    "Skimpy_ExposeSpeechAss_04",
+    "Skimpy_ExposeSpeechAss_03",
+    "Skimpy_ExposeSpeechAss_02",
+    "Skimpy_ExposeSpeechAss_01",
+    "Skimpy_CoverSpeechAss"
+  )
+
+const isShowingSpeechPubis = (a: Actor) =>
+  isShowing(
+    a,
+    "Skimpy_ExposeSpeechPubis_04",
+    "Skimpy_ExposeSpeechPubis_03",
+    "Skimpy_ExposeSpeechPubis_02",
+    "Skimpy_ExposeSpeechPubis_01",
+    "Skimpy_CoverSpeechPubis"
+  )
+
+//////////////////////////////////////////////////////////
 function isShowing(
   a: Actor,
   l4: keyword,

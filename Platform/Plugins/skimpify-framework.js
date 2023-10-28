@@ -322,6 +322,12 @@ System.register("SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platf
         return getHeadPartsB(skyrimPlatform_2.ActorBase.from(a.getBaseObject()));
     }
     exports_3("getHeadParts", getHeadParts);
+    function isCurrentFollower(a) {
+        var _a;
+        const currentFollower = skyrimPlatform_2.Faction.from(skyrimPlatform_2.Game.getFormEx(0x5c84e));
+        return (_a = a === null || a === void 0 ? void 0 : a.isInFaction(currentFollower)) !== null && _a !== void 0 ? _a : false;
+    }
+    exports_3("isCurrentFollower", isCurrentFollower);
     return {
         setters: [
             function (skyrimPlatform_2_1) {
@@ -1862,7 +1868,6 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/types/keyw
             .filter((v) => v.id)
             .iter((v) => {
             var _a;
-            skyrimPlatform_9.printConsole(`Adding keyword: ${v.k}, ${v.id}`);
             keywords.set(v.k, (_a = v.id) !== null && _a !== void 0 ? _a : 0);
         });
     }
@@ -1924,7 +1929,6 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/types/spel
             .filter((v) => v.id)
             .iter((v) => {
             var _a;
-            skyrimPlatform_10.printConsole(`Adding spell: ${v.k}, ${v.id}`);
             spells.set(v.k, (_a = v.id) !== null && _a !== void 0 ? _a : 0);
         });
     }
@@ -1946,7 +1950,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/types/spel
 });
 System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/functions", ["Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/types/keywords", "Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/types/spells"], function (exports_24, context_24) {
     "use strict";
-    var keywords_1, spells_1, getCombatShowingLvl, isShowingCombatBoobs, isShowingCombatAss, isShowingCombatPubis;
+    var keywords_1, spells_1, getCombatShowingLvl, isShowingCombatBoobs, isShowingCombatAss, isShowingCombatPubis, getSpeechShowingLvl, isShowingSpeechBoobs, isShowingSpeechAss, isShowingSpeechPubis;
     var __moduleName = context_24 && context_24.id;
     function init() {
         keywords_1.initKeywords();
@@ -1955,6 +1959,7 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/functions"
     exports_24("init", init);
     function setSkimpySpells(a) {
         setCombatSpell(a);
+        setSpeechSpell(a);
     }
     exports_24("setSkimpySpells", setSkimpySpells);
     function setCombatSpell(a) {
@@ -1985,6 +1990,45 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/functions"
                 break;
         }
     }
+    function setSpeechSpell(a) {
+        const lvl = getSpeechShowingLvl(a);
+        const sp1 = spells_1.getSpell("Skimpy_SpeechSpellNC_01");
+        const sp2 = spells_1.getSpell("Skimpy_SpeechSpellNC_02");
+        const sp3 = spells_1.getSpell("Skimpy_SpeechSpellNC_03");
+        const sp4 = spells_1.getSpell("Skimpy_SpeechSpellNC_04");
+        switch (lvl.lvl) {
+            case 0:
+                a.removeSpell(sp1);
+                a.removeSpell(sp2);
+                a.removeSpell(sp3);
+                a.removeSpell(sp4);
+                break;
+            case 1:
+                a.removeSpell(sp2);
+                a.removeSpell(sp3);
+                a.removeSpell(sp4);
+                a.addSpell(sp1, false);
+                break;
+            case 2:
+                a.removeSpell(sp1);
+                a.removeSpell(sp3);
+                a.removeSpell(sp4);
+                a.addSpell(sp2, false);
+                break;
+            case 3:
+                a.removeSpell(sp1);
+                a.removeSpell(sp2);
+                a.removeSpell(sp4);
+                a.addSpell(sp3, false);
+                break;
+            case 4:
+                a.removeSpell(sp1);
+                a.removeSpell(sp2);
+                a.removeSpell(sp3);
+                a.addSpell(sp4, false);
+                break;
+        }
+    }
     function isShowing(a, l4, l3, l2, l1, cover) {
         if (keywords_1.keywordCount(a, cover) > 0)
             return { key: cover, lvl: 0 };
@@ -2012,6 +2056,10 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/spells/functions"
             isShowingCombatBoobs = (a) => isShowing(a, "Skimpy_DontCare", "Skimpy_ExposeCombatBoobs_03", "Skimpy_ExposeCombatBoobs_02", "Skimpy_ExposeCombatBoobs_01", "Skimpy_CoverCombatBoobs");
             isShowingCombatAss = (a) => isShowing(a, "Skimpy_DontCare", "Skimpy_ExposeCombatAss_03", "Skimpy_ExposeCombatAss_02", "Skimpy_ExposeCombatAss_01", "Skimpy_CoverCombatAss");
             isShowingCombatPubis = (a) => isShowing(a, "Skimpy_DontCare", "Skimpy_ExposeCombatPubis_03", "Skimpy_ExposeCombatPubis_02", "Skimpy_ExposeCombatPubis_01", "Skimpy_CoverCombatPubis");
+            getSpeechShowingLvl = (a) => new Array(isShowingSpeechBoobs(a), isShowingSpeechAss(a), isShowingSpeechPubis(a)).maxBy((a, b) => a.lvl - b.lvl);
+            isShowingSpeechBoobs = (a) => isShowing(a, "Skimpy_ExposeSpeechBoobs_04", "Skimpy_ExposeSpeechBoobs_03", "Skimpy_ExposeSpeechBoobs_02", "Skimpy_ExposeSpeechBoobs_01", "Skimpy_CoverSpeechBoobs");
+            isShowingSpeechAss = (a) => isShowing(a, "Skimpy_ExposeSpeechAss_04", "Skimpy_ExposeSpeechAss_03", "Skimpy_ExposeSpeechAss_02", "Skimpy_ExposeSpeechAss_01", "Skimpy_CoverSpeechAss");
+            isShowingSpeechPubis = (a) => isShowing(a, "Skimpy_ExposeSpeechPubis_04", "Skimpy_ExposeSpeechPubis_03", "Skimpy_ExposeSpeechPubis_02", "Skimpy_ExposeSpeechPubis_01", "Skimpy_CoverSpeechPubis");
         }
     };
 });
@@ -2031,10 +2079,11 @@ System.register("Skyrim SE/MO2/mods/Skimpify Framework-src/src/entry", ["SteamLi
                 functions_1.init();
                 functions_1.setSkimpySpells(Actor_2.Player());
                 skyrimPlatform_11.on("equip", (e) => {
+                    if (e.actor.getFormID() !== Actor_2.playerId)
+                        return;
                     const a = skyrimPlatform_11.Actor.from(e.actor);
                     if (!a)
                         return;
-                    skyrimPlatform_11.printConsole("Skimpy spell can be set");
                     functions_1.setSkimpySpells(a);
                 });
             }
