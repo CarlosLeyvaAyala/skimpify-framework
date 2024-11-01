@@ -5,7 +5,6 @@
   },
   "developerMode": false,
   "unintrusiveMessages": true,
-  "usingSkimpifyEnchantments": true,
   "devHotkeys": {
     "loadJson": "Alt Q",
     "saveJson": "Alt W",
@@ -23,5 +22,102 @@
     "unequipAll1": "DownArrow",
     "unequipAll2": "UpArrow",
     "test": "Ctrl S"
+  },
+  "enchantments": {
+    "activate": true,
+    "levels": {
+      "combat": {
+        "1": {
+          "description": "You distract the opposite sex and deal 10% more damage to them.",
+          "keywords": [
+            "Skimpy_ExposeAss_TightClothes",
+            "Skimpy_ExposeAss_Crack",
+            "Skimpy_ExposeAss_Bare",
+            "Skimpy_ExposeBoobs_TightClothes",
+            "Skimpy_ExposeBoobs_Bare",
+            "Skimpy_ExposePubis_Bare",
+            "Skimpy_ExposeCombatAss_01",
+            "Skimpy_ExposeCombatBoobs_01",
+            "Skimpy_ExposeCombatPubis_01"
+          ]
+        },
+        "2": {
+          "description": "You distract all people on the battefield. Same sex gets 5% more damage. Opposite sex gets 20%.",
+          "keywords": [
+            "Skimpy_ExposeAss_SeeThrough",
+            "Skimpy_ExposeBoobs_NipSlip",
+            "Skimpy_ExposeBoobs_SeeThrough",
+            "Skimpy_ExposePubis_SeeThrough",
+            "Skimpy_ExposeCombatAss_02",
+            "Skimpy_ExposeCombatBoobs_02",
+            "Skimpy_ExposeCombatPubis_02"
+          ]
+        },
+        "3": {
+          "description": "You distract all people on the battefield. Same sex gets 5% more damage. Opposite sex gets 20% and 10% higher chance of getting a critical hit.",
+          "keywords": [
+            "Skimpy_ExposeAss_TornClothes",
+            "Skimpy_ExposeBoobs_TornClothes",
+            "Skimpy_ExposeBoobs_BreastCurtain",
+            "Skimpy_ExposePubis_Slip",
+            "Skimpy_ExposePubis_TornClothes",
+            "Skimpy_ExposePubis_Curtain",
+            "Skimpy_ExposeCombatAss_03",
+            "Skimpy_ExposeCombatBoobs_03",
+            "Skimpy_ExposeCombatPubis_03"
+          ]
+        }
+      },
+      "speech": {
+        "1": {
+          "description": "You distract the opposite sex and get 10% better prices.",
+          "keywords": [
+            "Skimpy_ExposeAss_TightClothes",
+            "Skimpy_ExposeAss_Crack",
+            "Skimpy_ExposeBoobs_TightClothes",
+            "Skimpy_ExposeSpeechAss_01",
+            "Skimpy_ExposeSpeechBoobs_01",
+            "Skimpy_ExposeSpeechPubis_01"
+          ]
+        },
+        "2": {
+          "description": "You distract the opposite sex and get 20% better prices.",
+          "keywords": [
+            "Skimpy_ExposeAss_SeeThrough",
+            "Skimpy_ExposeBoobs_NipSlip",
+            "Skimpy_ExposePubis_Slip",
+            "Skimpy_ExposeSpeechAss_02",
+            "Skimpy_ExposeSpeechBoobs_02",
+            "Skimpy_ExposeSpeechPubis_02"
+          ]
+        },
+        "3": {
+          "description": "You distract the opposite sex and get 30% better prices.",
+          "keywords": [
+            "Skimpy_ExposeAss_TornClothes",
+            "Skimpy_ExposeBoobs_BreastCurtain",
+            "Skimpy_ExposeBoobs_SeeThrough",
+            "Skimpy_ExposePubis_SeeThrough",
+            "Skimpy_ExposePubis_Curtain",
+            "Skimpy_ExposeSpeechAss_03",
+            "Skimpy_ExposeSpeechBoobs_03",
+            "Skimpy_ExposeSpeechPubis_03"
+          ]
+        },
+        "4": {
+          "description": "You distract the opposite sex and get 40% better prices.",
+          "keywords": [
+            "Skimpy_ExposeAss_Bare",
+            "Skimpy_ExposeBoobs_TornClothes",
+            "Skimpy_ExposeBoobs_Bare",
+            "Skimpy_ExposePubis_TornClothes",
+            "Skimpy_ExposePubis_Bare",
+            "Skimpy_ExposeSpeechAss_04",
+            "Skimpy_ExposeSpeechBoobs_04",
+            "Skimpy_ExposeSpeechPubis_04"
+          ]
+        }
+      }
+    }
   }
 }

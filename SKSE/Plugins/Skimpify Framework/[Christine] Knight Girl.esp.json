@@ -1,0 +1,14 @@
+{
+  "[Christine] Knight Girl.esp|804": {
+    "name": "Knight Girl Boots",
+    "next": "[Christine] Knight Girl.esp|80b",
+    "nextN": "Knight Girl Boots Slutty",
+    "nextT": "change"
+  },
+  "[Christine] Knight Girl.esp|807": {
+    "name": "Knight Girl Cuirass",
+    "next": "[Christine] Knight Girl.esp|80c",
+    "nextN": "Knight Girl Cuirass Slutty",
+    "nextT": "change"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "Fantasia Outfit.esp|808": {
+    "name": "Fantasia Cuirass 00",
+    "next": "Fantasia Outfit.esp|809",
+    "nextN": "Fantasia Cuirass Slutty 00",
+    "nextT": "slip"
+  },
+  "Fantasia Outfit.esp|820": {
+    "name": "Fantasia Cuirass 01",
+    "next": "Fantasia Outfit.esp|822",
+    "nextN": "Fantasia Cuirass Slutty 01",
+    "nextT": "slip"
+  },
+  "Fantasia Outfit.esp|821": {
+    "name": "Fantasia Cuirass 02",
+    "next": "Fantasia Outfit.esp|823",
+    "nextN": "Fantasia Cuirass Slutty 02",
+    "nextT": "slip"
+  }
+}

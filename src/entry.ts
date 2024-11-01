@@ -4,10 +4,12 @@ import * as Hk from "DmLib/Hotkeys"
 import * as Log from "DmLib/Log"
 import { preserveVar } from "DmLib/Misc"
 import "DmLib/typescript/Array"
+import "DmLib/typescript/Set"
 import * as JDB from "JContainers/JDB"
 import * as JMap from "JContainers/JMap"
 import { JMapL } from "JContainers/JTs"
 import * as JValue from "JContainers/JValue"
+import { config } from "config"
 import { AutoGenArmors, SaveJson } from "genJson"
 import {
   ActorArg,
@@ -39,11 +41,10 @@ import {
   on,
   once,
   printConsole,
-  settings,
-  storage,
+  storage
 } from "skyrimPlatform"
 import { LogV, LogVT } from "./debug"
-import { setSkimpySpells, init as initSpells } from "./spells/functions"
+import { init as initSpells, setSkimpySpells } from "./spells/functions"
 
 const invalid = -1
 
@@ -52,7 +53,7 @@ const MarkInitialized = () => JDB.solveBoolSetter(initK, true, true)
 const WasInitialized = () => JDB.solveBool(initK, false)
 
 const storeK = "Skimpify-FW-"
-const MemOnly = () => {}
+const MemOnly = () => { }
 const SK = (k: string) => `${storeK}${k}`
 const kIni = SK("init")
 const kMModest = SK("mmodest")
@@ -65,18 +66,13 @@ let allowInit = (storage[kIni] as boolean) || false
 let mModest = storage[kMModest] as number | -1
 
 const n = "skimpify-framework"
-const develop = settings[n]["developerMode"] as boolean
-const unintrusiveMessages = settings[n]["unintrusiveMessages"] as boolean
-const usingSkimpifyEnchantments = settings[n][
-  "usingSkimpifyEnchantments"
-] as boolean
-
+const develop = config.developerMode
 const hk = "devHotkeys"
 const FO = (k: string) => Hk.FromObject(n, hk, k)
 /** Gets a hotkey from settings */
 const HK = (k: string) => Hk.ListenTo(FO(k), develop)
 
-const ShowMessage = unintrusiveMessages ? Debug.notification : Debug.messageBox
+const ShowMessage = config.unintrusiveMessages ? Debug.notification : Debug.messageBox
 
 export function main() {
   on("loadGame", () => {
@@ -86,7 +82,7 @@ export function main() {
 
   once("update", () => {
     if (allowInit || !WasInitialized()) InitPlugin()
-    if (usingSkimpifyEnchantments) {
+    if (config.enchantments.activate) {
       initSpells()
       setSkimpySpells(Player())
       on("equip", (e) => {

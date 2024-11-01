@@ -17,14 +17,15 @@
         "paths": {
             "*": [
                 "*",
-                "F:/SteamLibrary/steamapps/common/Skyrim Special Edition/Data/Platform/Modules/*",
-                "F:/Skyrim SE/MO2/mods/DM-Lib-Typescript/DmLib/*"
+                "../Skyrim Platform 1.5.97/Platform/Modules/*",
+                "../DM-Lib-Typescript/*",
+                "../Typescript Libraries/*"
             ],
             "chai": [
                 "./node_modules/@types/chai"
             ]
         },
-        "outFile": "F:/Skyrim SE/MO2/overwrite/Platform/Plugins/skimpify-framework.js",
+        "outFile": "../../overwrite/Platform/Plugins/skimpify-framework.js",
         "baseUrl": "."
     },
     "include": [

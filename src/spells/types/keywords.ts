@@ -1,8 +1,31 @@
+import { getKeywords } from "DmLib/Armor"
 import { ForEachEquippedArmor, getFormFromUniqueId } from "DmLib/Form"
-import { Actor, Game, Keyword } from "skyrimPlatform"
+import { Actor, printConsole } from "skyrimPlatform"
+import { config, SkimpySpellLvl } from "src/config"
 
 export type keyword =
   | "Skimpy_DontCare" // Used for checking if is showing
+  | "Skimpy_ExposeAss_TightClothes"
+  | "Skimpy_ExposeAss_Crack"
+  | "Skimpy_ExposeAss_SeeThrough"
+  | "Skimpy_ExposeAss_Bare"
+  | "Skimpy_ExposeAss_TornClothes"
+  | "Skimpy_ExposeBoobs_TightClothes"
+  | "Skimpy_ExposeBoobs_NipSlip"
+  | "Skimpy_ExposeBoobs_BreastCurtain"
+  | "Skimpy_ExposeBoobs_TornClothes"
+  | "Skimpy_ExposeBoobs_Bare"
+  | "Skimpy_ExposeBoobs_SeeThrough"
+  | "Skimpy_ExposePubis_Slip"
+  | "Skimpy_ExposePubis_SeeThrough"
+  | "Skimpy_ExposePubis_TornClothes"
+  | "Skimpy_ExposePubis_Bare"
+  | "Skimpy_ExposePubis_Curtain"
+  | "Skimpy_CoverAss"
+  | "Skimpy_CoverBoobs"
+  | "Skimpy_CoverPubis"
+  ///////////////////////////////////////////////////////////////
+  // Old
   | "Skimpy_CoverCombatAss"
   | "Skimpy_CoverCombatBoobs"
   | "Skimpy_CoverCombatPubis"
@@ -37,9 +60,100 @@ interface KeywordMap {
 }
 
 const keywords = new Map<string, number>()
+const keywordIds = new Map<number, string>()
+export const combatLevelKeywords = new Map<string, number>()
+export const speechLevelKeywords = new Map<string, number>()
+
+function addLevel(map: Map<string, number>, lvl: number, cfg: SkimpySpellLvl) {
+  cfg.keywords.iter(k => map.set(k, lvl))
+}
 
 export function initKeywords() {
+  for (let i = 1; i <= 3; i++)
+    addLevel(combatLevelKeywords, i, config.enchantments.levels.combat[i])
+
+  for (let i = 1; i <= 4; i++)
+    addLevel(speechLevelKeywords, i, config.enchantments.levels.speech[i])
+
   new Array<KeywordMap>(
+    {
+      k: "Skimpy_ExposeAss_TightClothes",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDA5")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeAss_Crack",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDA6")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeAss_SeeThrough",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDA7")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeAss_Bare",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDA8")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeAss_TornClothes",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDA9")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_TightClothes",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAA")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_NipSlip",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAB")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_BreastCurtain",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAC")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_TornClothes",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAD")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_Bare",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAE")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposeBoobs_SeeThrough",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDAF")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposePubis_Slip",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB0")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposePubis_SeeThrough",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB1")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposePubis_TornClothes",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB2")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposePubis_Bare",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB3")?.getFormID(),
+    },
+    {
+      k: "Skimpy_ExposePubis_Curtain",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB4")?.getFormID(),
+    },
+    {
+      k: "Skimpy_CoverAss",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB5")?.getFormID(),
+    },
+    {
+      k: "Skimpy_CoverBoobs",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB6")?.getFormID(),
+    },
+    {
+      k: "Skimpy_CoverPubis",
+      id: getFormFromUniqueId("Skimpify Enchantments.esp|0xDB7")?.getFormID(),
+    },
+    ////////////////////////////////////////////////////////////////////
+    // Old
     {
       k: "Skimpy_CoverSpeechAss",
       id: getFormFromUniqueId("Skimpify Enchantments.esp|0x82F")?.getFormID(),
@@ -151,21 +265,18 @@ export function initKeywords() {
   )
     .filter((v) => v.id)
     .iter((v) => {
-      //   printConsole(`Adding keyword: ${v.k}, ${v.id}`)
-      keywords.set(v.k, v.id ?? 0)
+      // printConsole(`Adding keyword: ${v.k}, ${v.id?.toString(16)}`)
+      keywords.set(v.k, v.id!)
+      keywordIds.set(v.id!, v.k)
     })
 }
 
-export const getKeyword = (keyword: keyword) =>
-  Keyword.from(Game.getFormEx(keywords.get(keyword) ?? 0))
+/** Gets all the skimpy keywords on all equipped armors. */
+export function getAllArmorKeywords(a: Actor | null) {
+  const allArmorKeys = new Set<number>()
+  ForEachEquippedArmor(a, armor => getKeywords(armor).iter(k => allArmorKeys.add(k)))
 
-export function keywordCount(a: Actor | null, keyword: keyword) {
-  const k = getKeyword(keyword)
-  if (!k) return 0
-
-  let count = 0
-  ForEachEquippedArmor(a, (armor) => {
-    count += armor.hasKeyword(k) ? 1 : 0
-  })
-  return count
+  const r: string[] = []
+  for (let [id, k] of keywordIds) if (allArmorKeys.has(id)) r.push(k)
+  return r
 }
