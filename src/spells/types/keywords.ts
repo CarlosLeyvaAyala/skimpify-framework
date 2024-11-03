@@ -1,6 +1,7 @@
 import { getKeywords } from "DmLib/Armor"
 import { ForEachEquippedArmor, getFormFromUniqueId } from "DmLib/Form"
-import { Actor, printConsole } from "skyrimPlatform"
+import { fst } from "DmLib/typescript/Array"
+import { Actor } from "skyrimPlatform"
 import { config, SkimpySpellLvl } from "src/config"
 
 export type keyword =
@@ -64,16 +65,162 @@ const keywordIds = new Map<number, string>()
 export const combatLevelKeywords = new Map<string, number>()
 export const speechLevelKeywords = new Map<string, number>()
 
-function addLevel(map: Map<string, number>, lvl: number, cfg: SkimpySpellLvl) {
-  cfg.keywords.iter(k => map.set(k, lvl))
+const assKeywords = new Set<keyword>([
+  "Skimpy_ExposeAss_TightClothes",
+  "Skimpy_ExposeAss_Crack",
+  "Skimpy_ExposeAss_SeeThrough",
+  "Skimpy_ExposeAss_TornClothes",
+  "Skimpy_ExposeAss_Bare",
+  "Skimpy_ExposeCombatAss_01",
+  "Skimpy_ExposeCombatAss_02",
+  "Skimpy_ExposeCombatAss_03",
+  "Skimpy_ExposeSpeechAss_01",
+  "Skimpy_ExposeSpeechAss_02",
+  "Skimpy_ExposeSpeechAss_03",
+  "Skimpy_ExposeSpeechAss_04",
+  "Skimpy_CoverAss",
+  "Skimpy_CoverCombatAss",
+  "Skimpy_CoverSpeechAss",
+])
+
+const assKeywordsLevel = new Map<keyword, number>([
+  ["Skimpy_CoverAss", 0],
+  ["Skimpy_CoverCombatAss", 0],
+  ["Skimpy_CoverSpeechAss", 0],
+  ["Skimpy_ExposeAss_TightClothes", 10],
+  ["Skimpy_ExposeAss_Crack", 20],
+  ["Skimpy_ExposeAss_SeeThrough", 30],
+  ["Skimpy_ExposeAss_TornClothes", 40],
+  ["Skimpy_ExposeAss_Bare", 50],
+  ["Skimpy_ExposeCombatAss_01", 10],
+  ["Skimpy_ExposeCombatAss_02", 20],
+  ["Skimpy_ExposeCombatAss_03", 30],
+  ["Skimpy_ExposeSpeechAss_01", 10],
+  ["Skimpy_ExposeSpeechAss_02", 20],
+  ["Skimpy_ExposeSpeechAss_03", 30],
+  ["Skimpy_ExposeSpeechAss_04", 40],
+])
+
+const boobsKeywords = new Set<keyword>([
+  "Skimpy_ExposeBoobs_TightClothes",
+  "Skimpy_ExposeBoobs_NipSlip",
+  "Skimpy_ExposeBoobs_BreastCurtain",
+  "Skimpy_ExposeBoobs_TornClothes",
+  "Skimpy_ExposeBoobs_Bare",
+  "Skimpy_ExposeBoobs_SeeThrough",
+  "Skimpy_ExposeCombatBoobs_01",
+  "Skimpy_ExposeCombatBoobs_02",
+  "Skimpy_ExposeCombatBoobs_03",
+  "Skimpy_ExposeSpeechBoobs_01",
+  "Skimpy_ExposeSpeechBoobs_02",
+  "Skimpy_ExposeSpeechBoobs_03",
+  "Skimpy_ExposeSpeechBoobs_04",
+  "Skimpy_CoverBoobs",
+  "Skimpy_CoverCombatBoobs",
+  "Skimpy_CoverSpeechBoobs",
+])
+
+const boobsKeywordsLevel = new Map<keyword, number>([
+  ["Skimpy_CoverBoobs", 0],
+  ["Skimpy_CoverCombatBoobs", 0],
+  ["Skimpy_CoverSpeechBoobs", 0],
+  ["Skimpy_ExposeBoobs_TightClothes", 10],
+  ["Skimpy_ExposeBoobs_SeeThrough", 20],
+  ["Skimpy_ExposeBoobs_NipSlip", 30],
+  ["Skimpy_ExposeBoobs_BreastCurtain", 40],
+  ["Skimpy_ExposeBoobs_TornClothes", 50],
+  ["Skimpy_ExposeBoobs_Bare", 60],
+  ["Skimpy_ExposeCombatBoobs_01", 10],
+  ["Skimpy_ExposeCombatBoobs_02", 20],
+  ["Skimpy_ExposeCombatBoobs_03", 30],
+  ["Skimpy_ExposeSpeechBoobs_01", 10],
+  ["Skimpy_ExposeSpeechBoobs_02", 20],
+  ["Skimpy_ExposeSpeechBoobs_03", 30],
+  ["Skimpy_ExposeSpeechBoobs_04", 40],
+])
+
+const pubisKeywords = new Set<keyword>([
+  "Skimpy_ExposePubis_Slip",
+  "Skimpy_ExposePubis_SeeThrough",
+  "Skimpy_ExposePubis_TornClothes",
+  "Skimpy_ExposePubis_Bare",
+  "Skimpy_ExposePubis_Curtain",
+  "Skimpy_ExposeCombatPubis_01",
+  "Skimpy_ExposeCombatPubis_02",
+  "Skimpy_ExposeCombatPubis_03",
+  "Skimpy_ExposeSpeechPubis_01",
+  "Skimpy_ExposeSpeechPubis_02",
+  "Skimpy_ExposeSpeechPubis_03",
+  "Skimpy_ExposeSpeechPubis_04",
+  "Skimpy_CoverPubis",
+  "Skimpy_CoverCombatPubis",
+  "Skimpy_CoverSpeechPubis",
+])
+
+const pubisKeywordsLevel = new Map<keyword, number>([
+  ["Skimpy_CoverPubis", 0],
+  ["Skimpy_CoverCombatPubis", 0],
+  ["Skimpy_CoverSpeechPubis", 0],
+  ["Skimpy_ExposePubis_SeeThrough", 10],
+  ["Skimpy_ExposePubis_Curtain", 20],
+  ["Skimpy_ExposePubis_Slip", 30],
+  ["Skimpy_ExposePubis_TornClothes", 40],
+  ["Skimpy_ExposePubis_Bare", 50],
+  ["Skimpy_ExposeCombatPubis_01", 10],
+  ["Skimpy_ExposeCombatPubis_02", 20],
+  ["Skimpy_ExposeCombatPubis_03", 30],
+  ["Skimpy_ExposeSpeechPubis_01", 10],
+  ["Skimpy_ExposeSpeechPubis_02", 20],
+  ["Skimpy_ExposeSpeechPubis_03", 30],
+  ["Skimpy_ExposeSpeechPubis_04", 40],
+])
+
+interface KeywordLevel {
+  combat: number | undefined
+  speech: number | undefined
+}
+
+function initLevels() {
+  function addLevel(
+    map: Map<string, number>,
+    lvl: number,
+    cfg: SkimpySpellLvl
+  ) {
+    cfg.keywords.iter(k => map.set(k, lvl))
+  }
+
+  for (let i = 0; i <= 3; i++)
+    addLevel(combatLevelKeywords, i, config.enchantments.levels.combat[i])
+
+  for (let i = 0; i <= 4; i++)
+    addLevel(speechLevelKeywords, i, config.enchantments.levels.speech[i])
+
+  // function setKeywordLevels(
+  //   keywords: Set<keyword>,
+  //   destination: Map<string, KeywordLevel>
+  // ) {
+  //   const c = combatLevelKeywords.filter((_, k) => keywords.has(k as keyword))
+  //   const s = speechLevelKeywords.filter((_, k) => keywords.has(k as keyword))
+
+  //   const j: [string, KeywordLevel][] = keywords
+  //     .toArray()
+  //     .map(k => [k, { combat: c.get(k), speech: s.get(k) }])
+  //   j.iter(([k, o]) => destination.set(k, o))
+
+  //   printConsole("=========== Full level =============")
+  //   destination
+  //     .toArray()
+  //     .iter(([k, o]) =>
+  //       printConsole(`${k}, combat: ${o.combat}, speech: ${o.speech}`)
+  //     )
+  // }
+  // setKeywordLevels(assKeywords, assKeywordsLevel)
+  // setKeywordLevels(boobsKeywords, boobsKeywordsLevel)
+  // setKeywordLevels(pubisKeywords, pubisKeywordsLevel)
 }
 
 export function initKeywords() {
-  for (let i = 1; i <= 3; i++)
-    addLevel(combatLevelKeywords, i, config.enchantments.levels.combat[i])
-
-  for (let i = 1; i <= 4; i++)
-    addLevel(speechLevelKeywords, i, config.enchantments.levels.speech[i])
+  initLevels()
 
   new Array<KeywordMap>(
     {
@@ -263,8 +410,8 @@ export function initKeywords() {
       id: getFormFromUniqueId("Skimpify Enchantments.esp|0x804")?.getFormID(),
     }
   )
-    .filter((v) => v.id)
-    .iter((v) => {
+    .filter(v => v.id)
+    .iter(v => {
       // printConsole(`Adding keyword: ${v.k}, ${v.id?.toString(16)}`)
       keywords.set(v.k, v.id!)
       keywordIds.set(v.id!, v.k)
@@ -274,9 +421,46 @@ export function initKeywords() {
 /** Gets all the skimpy keywords on all equipped armors. */
 export function getAllArmorKeywords(a: Actor | null) {
   const allArmorKeys = new Set<number>()
-  ForEachEquippedArmor(a, armor => getKeywords(armor).iter(k => allArmorKeys.add(k)))
+
+  ForEachEquippedArmor(a, armor => {
+    getKeywords(armor).iter(k => allArmorKeys.add(k))
+  })
 
   const r: string[] = []
   for (let [id, k] of keywordIds) if (allArmorKeys.has(id)) r.push(k)
   return r
+}
+
+export function getMostCoveredKeywords(keywords: string[]) {
+  function mostCovered(
+    keywords: Set<string>,
+    coverLevels: Map<keyword, number>
+  ) {
+    const selectMostCovered = () => {
+      const a: [string, number][] = []
+      keywords.forEach(k => {
+        const v = coverLevels.get(k as keyword)
+        if (v === undefined) return
+        a.push([k, v])
+      })
+
+      return fst(a.minBy(([_, a], [__, b]) => a - b)!)
+    }
+
+    return keywords.size > 1
+      ? [selectMostCovered()]
+      : keywords.size === 0
+      ? []
+      : keywords.toArray()
+  }
+
+  const k = new Set(keywords)
+  const ass = k.intersection(assKeywords)
+  const boobs = k.intersection(boobsKeywords)
+  const pubis = k.intersection(pubisKeywords)
+
+  const a = mostCovered(ass, assKeywordsLevel)
+  const b = mostCovered(boobs, boobsKeywordsLevel)
+  const p = mostCovered(pubis, pubisKeywordsLevel)
+  return [...a, ...b, ...p]
 }

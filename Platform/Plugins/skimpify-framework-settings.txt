@@ -66,6 +66,20 @@
             "Skimpy_ExposeCombatBoobs_03",
             "Skimpy_ExposeCombatPubis_03"
           ]
+        },
+        "0": {
+          "description": "Using this piece will cover some body part.",
+          "keywords": [
+            "Skimpy_CoverAss",
+            "Skimpy_CoverCombatAss",
+            "Skimpy_CoverSpeechAss",
+            "Skimpy_CoverBoobs",
+            "Skimpy_CoverCombatBoobs",
+            "Skimpy_CoverSpeechBoobs",
+            "Skimpy_CoverPubis",
+            "Skimpy_CoverCombatPubis",
+            "Skimpy_CoverSpeechPubis"
+          ]
         }
       },
       "speech": {
@@ -115,6 +129,20 @@
             "Skimpy_ExposeSpeechAss_04",
             "Skimpy_ExposeSpeechBoobs_04",
             "Skimpy_ExposeSpeechPubis_04"
+          ]
+        },
+        "0": {
+          "description": "Using this piece will cover some body part.",
+          "keywords": [
+            "Skimpy_CoverAss",
+            "Skimpy_CoverCombatAss",
+            "Skimpy_CoverSpeechAss",
+            "Skimpy_CoverBoobs",
+            "Skimpy_CoverCombatBoobs",
+            "Skimpy_CoverSpeechBoobs",
+            "Skimpy_CoverPubis",
+            "Skimpy_CoverCombatPubis",
+            "Skimpy_CoverSpeechPubis"
           ]
         }
       }

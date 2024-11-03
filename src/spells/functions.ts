@@ -1,5 +1,11 @@
 import { Actor } from "skyrimPlatform"
-import { combatLevelKeywords, getAllArmorKeywords, initKeywords, speechLevelKeywords } from "./types/keywords"
+import {
+  combatLevelKeywords,
+  getAllArmorKeywords,
+  getMostCoveredKeywords,
+  initKeywords,
+  speechLevelKeywords,
+} from "./types/keywords"
 import { getSpell, initSpells } from "./types/spells"
 
 export function init() {
@@ -10,19 +16,23 @@ export function init() {
 /** Returns skimpy level.
  * @returns `0`        - No skimpy level is applied
  * @returns `1 .. n`   - Level
- * @returns `Infinity` - Armor is being being blocked by `Skimpy_CoverAss`, `Skimpy_CoverBoobs` or `Skimpy_CoverPubis`.
  */
-const getMaxLvl = (armorKeywords: string[], levels: Map<string, number>) =>
-  (armorKeywords.map(k => levels.get(k) ?? Infinity).sort().reverse())[0] ?? 0
+const getSkimpyLvl = (armorKeywords: string[], levels: Map<string, number>) =>
+  armorKeywords
+    .map(k => levels.get(k) ?? 0)
+    .sort()
+    .reverse()[0] ?? 0
 
 /** Adds the spells that will be activated when skimpy clothes are equipped */
 export function setSkimpySpells(a: Actor) {
-  const skKeys = getAllArmorKeywords(a)
-  const combatKeys = getMaxLvl(skKeys, combatLevelKeywords)
-  const speechKeys = getMaxLvl(skKeys, speechLevelKeywords)
+  const skKeys = getMostCoveredKeywords(getAllArmorKeywords(a))
+  const combatKeys = getSkimpyLvl(skKeys, combatLevelKeywords)
+  const speechKeys = getSkimpyLvl(skKeys, speechLevelKeywords)
 
   setCombatSpell(a, combatKeys)
   setSpeechSpell(a, speechKeys)
+  // printConsole("==================")
+  // skKeys.iter(printConsole)
 }
 
 //////////////////////////////////////////////////////////
@@ -48,7 +58,7 @@ function setCombatSpell(a: Actor, lvl: number) {
       a.addSpell(sp3, false)
       break
     default:
-      // Either no skimpy armor or view is blocked 
+      // Either no skimpy armor or view is blocked
       a.removeSpell(sp1)
       a.removeSpell(sp2)
       a.removeSpell(sp3)
@@ -89,7 +99,7 @@ function setSpeechSpell(a: Actor, lvl: number) {
       a.addSpell(sp4, false)
       break
     default:
-      // Either no skimpy armor or view is blocked 
+      // Either no skimpy armor or view is blocked
       a.removeSpell(sp1)
       a.removeSpell(sp2)
       a.removeSpell(sp3)
