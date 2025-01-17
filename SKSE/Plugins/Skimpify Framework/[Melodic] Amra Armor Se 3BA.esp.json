@@ -1,0 +1,14 @@
+{
+  "[Melodic] Amra Armor Se 3BA.esp|80d": {
+    "name": "Amra Armor Body",
+    "next": "[Melodic] Amra Armor Se 3BA.esp|81a",
+    "nextN": "Amra Armor Body Xtra",
+    "nextT": "change"
+  },
+  "[Melodic] Amra Armor Se 3BA.esp|81a": {
+    "name": "Amra Armor Body Xtra",
+    "next": "[Melodic] Amra Armor Se 3BA.esp|81e",
+    "nextN": "Amra Armor Body XXtra",
+    "nextT": "change"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "[Melodic] Kitana Revenant MKX.esp|806": {
+    "name": "Kitana Revenant Top",
+    "next": "[Melodic] Kitana Revenant MKX.esp|81c",
+    "nextN": "Kitana Revenant Top Xtra",
+    "nextT": "change"
+  },
+  "[Melodic] Kitana Revenant MKX.esp|80a": {
+    "name": "Kitana Revenant Belt",
+    "next": "[Melodic] Kitana Revenant MKX.esp|81d",
+    "nextN": "Kitana Revenant Belt Xtra",
+    "nextT": "change"
+  }
+}
